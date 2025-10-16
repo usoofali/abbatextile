@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# deployment.mdc
+
+# ======================================================
+
+# Deployment Rules
+
+# ======================================================
+
+## ⚙️ Requirements
+
+-   PHP 8.2+
+-   sqlite
+-   Composer + Git
+
+## 🚀 Deployment Steps
+
+1. `git clone` repo
+2. `composer install`
+3. Copy `.env.example` to `.env`
+4. Configure DB and app keys
+5. `php artisan migrate --seed`
+6. `npm install && npm run build`
+7. `php artisan serve`
+
+## 🔄 Maintenance
+
+-   Run `php artisan optimize` weekly.
+-   Backup DB daily.
+-   Keep `.env` secret.

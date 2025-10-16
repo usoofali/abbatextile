@@ -1,0 +1,35 @@
+---
+alwaysApply: true
+---
+
+# dashboard.mdc
+
+# ======================================================
+
+# Dashboard & Overview
+
+# ======================================================
+
+## 🎯 Objective
+
+Provide an overview of key business metrics for each role.
+
+## 🧱 Features
+
+-   Admin Dashboard:
+    -   Total sales (all shops)
+    -   Profit overview
+    -   Shop performance comparison
+    -   Top-selling materials
+-   Manager Dashboard:
+    -   Only own shop data
+    -   Daily/weekly/monthly summaries
+-   Salesperson Dashboard:
+    -   Personal sales history summary
+
+## ✅ Tasks
+
+-   [ ] Create shared dashboard layout.
+-   [ ] Build dashboard components for each role.
+-   [ ] Use Eloquent queries for metrics.
+-   [ ] Add charts using Livewire components (e.g., `wire-charts`).

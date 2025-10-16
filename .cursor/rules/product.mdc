@@ -1,0 +1,53 @@
+alwaysApply: true
+product.mdc
+======================================================
+Product Management (Textile Materials)
+======================================================
+🎯 Objective
+
+Allow managers to manage textile products per shop with dual pricing (yard & meter), barcode generation, and stock tracking. Products are scoped to the manager's shop.
+
+🧩 Data Model
+
+Table: products
+
+id (bigIncrements)
+
+shop_id (foreignId -> shops.id)
+
+name (string)
+
+code (string, unique) — product code / barcode value
+
+description (text, nullable)
+
+cost_price (decimal 12,2)
+
+price_per_yard (decimal 12,2, nullable)
+
+price_per_meter (decimal 12,2, nullable)
+
+stock_quantity (decimal 10,2) — allow decimals (textiles)
+
+created_by (foreignId -> users.id) — manager user who created it
+
+timestamps (created_at, updated_at)
+
+Note: price_per_yard or price_per_meter may be NULL depending on category/unit_type. Validation enforces at least the relevant price is provided.
+
+🧱 Features
+
+CRUD operations (Manager only).
+
+Product scoped to shop_id — managers only manage products for their assigned shop.
+
+System auto-generates unique product code (barcode value) at creation.
+
+Products searchable by name or code.
+
+Numeric validation for all price/quantity fields.
+
+Profit is computed at sale time as (unit_sale_price - cost_price) \* quantity.
+
+✅ Tasks (Cursor-ready; each task includes a direct prompt/instruction)
+Task 1 — Create Product migration & model

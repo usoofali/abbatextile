@@ -1,0 +1,44 @@
+---
+alwaysApply: true
+---
+
+# shop.mdc
+
+# ======================================================
+
+# Shop Module Specification
+
+# ======================================================
+
+## 🎯 Objective
+
+Manage multiple textile shops. Each shop has its own products, transactions, and users.
+
+## 🧩 Data Model
+
+Table: `shops`
+
+-   id
+-   name
+-   location
+-   description (optional)
+-   created_by (admin_id)
+-   timestamps
+
+Relationships:
+
+-   Shop hasMany Products
+-   Shop hasMany Transactions
+-   Shop hasMany Users
+
+## 🧱 Features
+
+-   Admin can create/update/delete shops.
+-   Assign managers and salespersons to specific shops.
+
+## ✅ Tasks
+
+-   [ ] Create Shop model and migration.
+-   [ ] Build Admin Livewire component: `Admin/ShopsManager`.
+-   [ ] Add CRUD UI for shops.
+-   [ ] Integrate assignment of users to shops.

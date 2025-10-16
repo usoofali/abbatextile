@@ -1,0 +1,109 @@
+<?php
+
+use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
+use Livewire\Volt\Component;
+
+new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class extends Component {
+    public Category $category;
+    public $name = '';
+    public $description = '';
+    public $default_unit_type = 'yard';
+
+    public function mount(Category $category): void
+    {
+        $this->category = $category;
+        $this->name = $category->name;
+        $this->description = $category->description;
+        $this->default_unit_type = $category->default_unit_type ?? 'yard';
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255|unique:categories,name,' . $this->category->id,
+            'description' => 'nullable|string|max:1000',
+            'default_unit_type' => 'required|in:yard,meter',
+        ];
+    }
+
+    public function save(): void
+    {
+        $validated = $this->validate();
+
+        $this->category->update($validated);
+
+        session()->flash('success', 'Category updated successfully.');
+        $this->redirect(route('manager.categories.index'), navigate: true);
+    }
+}; ?>
+
+    <div class="flex h-full w-full flex-1 flex-col gap-6">
+        <!-- Header -->
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+                <flux:heading size="xl" level="1">Edit Category</flux:heading>
+                <flux:subheading size="lg">{{ $category->name }}</flux:subheading>
+            </div>
+            <flux:button variant="outline" :href="route('manager.categories.index')" wire:navigate class="max-md:w-full">
+                <flux:icon name="arrow-left" />
+                Back to Categories
+            </flux:button>
+        </div>
+
+        <!-- Form -->
+        <div class="max-w-2xl">
+            <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
+                <form wire:submit="save" class="space-y-6">
+                    <!-- Category Name -->
+                    <flux:input
+                        wire:model="name"
+                        label="Category Name"
+                        placeholder="Enter category name"
+                        required
+                        autofocus
+                    />
+
+                    <!-- Description -->
+                    <flux:textarea
+                        wire:model="description"
+                        label="Description"
+                        placeholder="Enter category description (optional)"
+                        rows="4"
+                    />
+
+                    <!-- Default Unit Type -->
+                    <flux:select wire:model="default_unit_type" label="Default Unit Type" required>
+                        <option value="yard">Yard</option>
+                        <option value="meter">Meter</option>
+                    </flux:select>
+
+                    <!-- Category Stats -->
+                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+                        <flux:heading size="sm" class="mb-3">Category Statistics</flux:heading>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="text-center">
+                                <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Products</flux:text>
+                                <flux:text class="text-lg font-semibold">{{ $category->products()->count() }}</flux:text>
+                            </div>
+                            <div class="text-center">
+                                <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Created</flux:text>
+                                <flux:text class="text-lg font-semibold">{{ $category->created_at->format('M j, Y') }}</flux:text>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6">
+                        <flux:button variant="outline" type="button" :href="route('manager.categories.index')" wire:navigate class="w-full sm:w-auto">
+                            Cancel
+                        </flux:button>
+                        <flux:button variant="primary" type="submit" class="w-full sm:w-auto">
+                            Update Category
+                        </flux:button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

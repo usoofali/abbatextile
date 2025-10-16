@@ -1,0 +1,23 @@
+---
+alwaysApply: true
+---
+# core.mdc
+# ======================================================
+# Core project configuration for Multi-Shop Textile POS
+# ======================================================
+
+## 🧠 Purpose
+A multi-branch POS system for textile material sales, supporting three roles:
+- Admin
+- Shop Manager
+- Salesperson
+
+## 🧰 Tech Stack
+- Laravel 11+
+- Livewire 3 + Volt
+- TailwindCSS
+- Flux Starter Kit
+- MySQL
+
+## 📁 Folder Structure
+Follow Laravel standard layout:

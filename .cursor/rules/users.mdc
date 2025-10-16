@@ -1,0 +1,42 @@
+---
+alwaysApply: true
+---
+
+# users.mdc
+
+# ======================================================
+
+# User Management
+
+# ======================================================
+
+## 🎯 Objective
+
+Admin can create and manage all users with roles.
+
+## 🧩 Data Model
+
+Table: `users`
+
+-   id
+-   name
+-   email
+-   password
+-   role
+-   shop_id (nullable for admin)
+-   timestamps
+
+## 🧱 Features
+
+-   Admin can:
+    -   Create users
+    -   Assign shop & role
+    -   Deactivate/activate users
+-   Users can update profile.
+
+## ✅ Tasks
+
+-   [ ] Build `Admin/UsersManager` Livewire component.
+-   [ ] Role dropdown on creation.
+-   [ ] Link user to shop.
+-   [ ] Add account status toggle.

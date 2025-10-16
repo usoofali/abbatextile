@@ -1,0 +1,29 @@
+---
+alwaysApply: true
+---
+
+# analytics.mdc
+
+# ======================================================
+
+# Sales & Profit Analytics
+
+# ======================================================
+
+## 🎯 Objective
+
+Provide clear financial insight.
+
+## 🧱 Metrics
+
+-   Total sales revenue
+-   Total profit (sum of all (selling - cost))
+-   Per-shop sales
+-   Top 5 products
+-   Sales by day/week/month
+
+## ✅ Tasks
+
+-   [ ] Create `AnalyticsService` class for reusable calculations.
+-   [ ] Build charts using Livewire Charts.
+-   [ ] Integrate with dashboards.

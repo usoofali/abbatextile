@@ -1,0 +1,51 @@
+---
+alwaysApply: true
+---
+
+# pos.mdc
+
+# ======================================================
+
+# POS (Point of Sale) Module
+
+# ======================================================
+
+## 🎯 Objective
+
+Allow Salesperson to record and process sales transactions quickly.
+
+## 🧩 Data Model
+
+Table: `transactions`
+
+-   id
+-   shop_id
+-   salesperson_id
+-   total_amount
+-   created_at
+
+Table: `transaction_items`
+
+-   id
+-   transaction_id
+-   product_id
+-   quantity
+-   unit_type (yard/meter)
+-   price
+-   subtotal
+
+## 🧱 Features*
+
+-   Add multiple materials to one sale.
+-   Select unit (yard/meter) with price switch.
+-   Calculate totals dynamically.
+-   Save all transactions.
+-   Generate printable receipt.
+
+## ✅ Tasks
+
+-   [ ] Create models and migrations for `transactions` and `transaction_items`.
+-   [ ] Sales Livewire component: `Sales/POSPanel`.
+-   [ ] Dynamic pricing toggle between yard/meter.
+-   [ ] Auto-calculate total and store records.
+-   [ ] Generate and print receipt (optional).

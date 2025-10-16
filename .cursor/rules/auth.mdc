@@ -1,0 +1,34 @@
+---
+alwaysApply: true
+---
+
+# auth.mdc
+
+# ======================================================
+
+# Authentication & Role Management
+
+# ======================================================
+
+## 🎯 Objective
+
+Implement a secure authentication system with three user roles.
+
+## 🔑 Requirements
+
+-   Use Laravel authentication (Plux starter kit or Breeze).
+-   Add `role` and `shop_id` columns to `users` table.
+-   Roles: `admin`, `manager`, `salesperson`.
+
+## 🧩 Tasks
+
+-   [ ] Extend `User` model with role constants.
+-   [ ] Middleware: `IsAdmin`, `IsManager`, `IsSalesperson`.
+-   [ ] Seeder: Create one admin user for testing.
+-   [ ] Use policies to restrict access to modules.
+
+## 🧠 Verification
+
+-   Login form works.
+-   Redirect to dashboard based on role.
+-   Unauthorized routes redirect to `/login`.
