@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -31,6 +32,15 @@ class Product extends Model
             'stock_quantity' => 'decimal:2',
             'price_per_unit' => 'decimal:2',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Product $product): void {
+            if (empty($product->id)) {
+                $product->id = (string) Str::uuid();
+            }
+        });
     }
 
     /**

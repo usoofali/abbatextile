@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Shop extends Model
 {
@@ -19,6 +19,15 @@ class Shop extends Model
         'description',
         'manager_id',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Shop $shop): void {
+            if (empty($shop->id)) {
+                $shop->id = (string) Str::uuid();
+            }
+        });
+    }
 
     /**
      * Get the manager of this shop

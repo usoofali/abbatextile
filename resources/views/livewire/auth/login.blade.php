@@ -49,7 +49,23 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // Redirect to role-specific dashboard
+        $this->redirectToRoleDashboard($user);
+    }
+
+    /**
+     * Redirect user to their role-specific dashboard
+     */
+    protected function redirectToRoleDashboard(User $user): void
+    {
+        $route = match ($user->role) {
+            User::ROLE_ADMIN => 'admin.dashboard',
+            User::ROLE_MANAGER => 'manager.dashboard',
+            User::ROLE_SALESPERSON => 'salesperson.dashboard',
+            default => 'dashboard',
+        };
+
+        $this->redirect(route($route), navigate: true);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +34,15 @@ class Sale extends Model
             'cost_price' => 'decimal:2',
             'profit' => 'decimal:2',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Sale $sale): void {
+            if (empty($sale->id)) {
+                $sale->id = (string) Str::uuid();
+            }
+        });
     }
 
     /**

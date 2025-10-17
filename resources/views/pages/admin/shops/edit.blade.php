@@ -13,6 +13,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Shop'])] class extends 
     public $location = '';
     public $description = '';
     public $manager_id = '';
+    public $availableManagers = [];
 
     public function mount(Shop $shop): void
     {
@@ -21,6 +22,14 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Shop'])] class extends 
         $this->location = $shop->location;
         $this->description = $shop->description;
         $this->manager_id = $shop->manager_id;
+        $this->availableManagers = User::where('role', User::ROLE_MANAGER)
+            ->where(function ($q) use ($shop) {
+                $q->whereDoesntHave('managedShops')
+                  ->orWhereHas('managedShops', function ($qq) use ($shop) {
+                      $qq->where('shops.id', $shop->id);
+                  });
+            })
+            ->get();
     }
 
     public function rules(): array
@@ -37,11 +46,6 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Shop'])] class extends 
     {
         $validated = $this->validate();
 
-        // If changing manager, clear the old manager's shop_id
-        if ($this->shop->manager_id && $this->shop->manager_id != $this->manager_id) {
-            User::find($this->shop->manager_id)->update(['shop_id' => null]);
-        }
-
         $this->shop->update([
             'name' => $this->name,
             'location' => $this->location,
@@ -49,9 +53,11 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Shop'])] class extends 
             'manager_id' => $this->manager_id ?: null,
         ]);
 
-        // Update new manager's shop_id
+        // Ensure selected manager manages only this shop
         if ($this->manager_id) {
-            User::find($this->manager_id)->update(['shop_id' => $this->shop->id]);
+            Shop::where('manager_id', $this->manager_id)
+                ->where('id', '!=', $this->shop->id)
+                ->update(['manager_id' => null]);
         }
 
         session()->flash('success', 'Shop updated successfully.');
@@ -118,9 +124,6 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Shop'])] class extends 
                             @foreach($this->availableManagers as $manager)
                                 <option value="{{ $manager->id }}">
                                     {{ $manager->name }} ({{ $manager->email }})
-                                    @if($manager->shop_id == $shop->id)
-                                        - Current
-                                    @endif
                                 </option>
                             @endforeach
                         </flux:select>

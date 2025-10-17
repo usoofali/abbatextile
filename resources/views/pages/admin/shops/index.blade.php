@@ -9,6 +9,8 @@ use Livewire\Volt\Component;
 new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class extends Component {
     public $shops;
     public $search = '';
+    public $showDeleteModal = false;
+    public $deleteShopId = null;
 
     public function mount(): void
     {
@@ -34,8 +36,10 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
         $this->loadShops();
     }
 
-    public function deleteShop(Shop $shop): void
+    public function deleteShop(string $id): void
     {
+        $shop = Shop::findOrFail($id);
+        
         // Check if shop has sales
         if ($shop->sales()->count() > 0) {
             session()->flash('error', 'Cannot delete shop with existing sales records.');
@@ -51,6 +55,27 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
         $shop->delete();
         $this->loadShops();
         session()->flash('success', 'Shop deleted successfully.');
+    }
+
+    public function promptDelete(string $id): void
+    {
+        $this->deleteShopId = $id;
+        $this->showDeleteModal = true;
+    }
+
+    public function confirmDelete(): void
+    {
+        if ($this->deleteShopId) {
+            $this->deleteShop($this->deleteShopId);
+        }
+        $this->showDeleteModal = false;
+        $this->deleteShopId = null;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+        $this->deleteShopId = null;
     }
 }; ?>
     <div class="flex h-full w-full flex-1 flex-col gap-6">
@@ -127,18 +152,20 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
                                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                                            <flux:button variant="ghost" size="sm" :href="route('admin.shops.edit', $shop)" wire:navigate class="w-full sm:w-auto">
-                                                <flux:icon name="pencil" />
+                                            <flux:button 
+                                            variant="ghost" 
+                                            icon="pencil"
+                                            size="sm" :href="route('admin.shops.edit', $shop)" wire:navigate class="w-full sm:w-auto">
+                                                
                                                 Edit
                                             </flux:button>
                                             <flux:button 
                                                 variant="ghost" 
+                                                icon="trash"
                                                 size="sm" 
-                                                wire:click="deleteShop({{ $shop->id }})"
-                                                wire:confirm="Are you sure you want to delete this shop? This action cannot be undone."
+                                                wire:click="promptDelete('{{ $shop->id }}')"
                                                 class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 w-full sm:w-auto"
                                             >
-                                                <flux:icon name="trash" />
                                                 Delete
                                             </flux:button>
                                         </div>
@@ -170,4 +197,18 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                 </div>
             @endif
         </div>
+
+        <!-- Delete Confirmation Modal -->
+        <flux:modal wire:model="showDeleteModal">
+            <div class="p-6">
+                <flux:heading size="lg">Delete shop?</flux:heading>
+                <flux:text class="mt-2 text-neutral-600 dark:text-neutral-300">
+                    Are you sure you want to delete this shop? This action cannot be undone.
+                </flux:text>
+                <div class="mt-6 flex justify-end gap-3">
+                    <flux:button variant="outline" wire:click="cancelDelete">Cancel</flux:button>
+                    <flux:button variant="primary" class="bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-400" wire:click="confirmDelete">Delete</flux:button>
+                </div>
+            </div>
+        </flux:modal>
     </div>

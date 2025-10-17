@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Models;
-
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -28,6 +28,7 @@ class User extends Authenticatable
         'password',
         'role',
         'shop_id',
+        'is_active',
     ];
 
     /**
@@ -52,12 +53,22 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
     /**
      * Get the user's initials
      */
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user): void {
+            if (empty($user->id)) {
+                $user->id = (string) Str::uuid();
+            }
+        });
+    }
     public function initials(): string
     {
         return Str::of($this->name)
@@ -115,13 +126,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the shop that the user manages
+     * Get the shops managed by this user
      */
-    public function managedShop()
+    public function managedShops(): HasMany
     {
-        return $this->hasOne(Shop::class, 'manager_id');
+        return $this->hasMany(Shop::class, 'manager_id');
     }
 
+    public function managedShop(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+    return $this->hasOne(Shop::class, 'manager_id');
+    }
     /**
      * Get sales made by this user
      */

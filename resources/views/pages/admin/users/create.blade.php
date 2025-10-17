@@ -15,6 +15,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create User'])] class extend
     public $password_confirmation = '';
     public $role = '';
     public $shop_id = '';
+    public $is_active = true;
 
     public function rules(): array
     {
@@ -24,6 +25,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create User'])] class extend
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:manager,salesperson',
             'shop_id' => ['required', Rule::exists('shops', 'id')],
+            'is_active' => 'boolean',
         ];
     }
 
@@ -37,10 +39,12 @@ new #[Layout('components.layouts.app', ['title' => 'Create User'])] class extend
             'password' => Hash::make($this->password),
             'role' => $this->role,
             'shop_id' => $this->shop_id,
+            'is_active' => (bool) $this->is_active,
         ]);
 
-        // If creating a manager, assign them to the shop
+        // If creating a manager, ensure they manage only this shop
         if ($this->role === User::ROLE_MANAGER) {
+            Shop::where('manager_id', $user->id)->update(['manager_id' => null]);
             Shop::find($this->shop_id)->update(['manager_id' => $user->id]);
         }
 
@@ -116,6 +120,14 @@ new #[Layout('components.layouts.app', ['title' => 'Create User'])] class extend
                             <option value="manager">Manager</option>
                             <option value="salesperson">Salesperson</option>
                         </flux:select>
+                    </div>
+
+                    <!-- Active Toggle -->
+                    <div>
+                        <flux:switch wire:model="is_active" label="Active" />
+                        <flux:text class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
+                            Toggle to deactivate the account to prevent login.
+                        </flux:text>
                     </div>
 
                     <!-- Shop Assignment -->

@@ -10,6 +10,8 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     public $products;
     public $search = '';
     public $shop;
+    public $showDeleteModal = false;
+    public $productToDelete = null;
 
     public function mount(): void
     {
@@ -42,17 +44,29 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
         $this->loadProducts();
     }
 
-    public function deleteProduct(Product $product): void
+    public function confirmDelete(): void
     {
-        // Check if product has sales
-        if ($product->sales()->count() > 0) {
-            session()->flash('error', 'Cannot delete product with existing sales records.');
+        if (!$this->productToDelete) {
             return;
         }
 
-        $product->delete();
+        // Check if product has sales
+        if ($this->productToDelete->sales()->count() == 0) {
+            session()->flash('error', 'Cannot delete product with existing sales records.');
+            $this->showDeleteModal = false;
+            return;
+        }
+
+        $this->productToDelete->delete();
         $this->loadProducts();
+        $this->showDeleteModal = false;
         session()->flash('success', 'Product deleted successfully.');
+    }
+
+    public function promptDelete(Product $product): void
+    {
+        $this->productToDelete = $product;
+        $this->showDeleteModal = true;
     }
 }; ?>
 
@@ -152,18 +166,21 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                         </td>
                                         <td class="px-3 sm:px-6 py-3">
                                             <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                                                <flux:button variant="ghost" size="sm" :href="route('manager.products.edit', $product)" wire:navigate class="w-full sm:w-auto">
-                                                    <flux:icon name="pencil" />
+                                                <flux:button 
+                                                variant="ghost"
+                                                icon="pencil"
+                                                size="sm" :href="route('manager.products.edit', $product)" wire:navigate class="w-full sm:w-auto">
+                                                    
                                                     Edit
                                                 </flux:button>
                                                 <flux:button 
                                                     variant="ghost" 
+                                                    icon="trash"
                                                     size="sm" 
-                                                    wire:click="deleteProduct('{{ $product->id }}')"
-                                                    wire:confirm="Are you sure you want to delete this product? This action cannot be undone."
+                                                    wire:click="promptDelete('{{ $product->id }}')"
                                                     class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 w-full sm:w-auto"
                                                 >
-                                                    <flux:icon name="trash" />
+                                                    
                                                     Delete
                                                 </flux:button>
                                             </div>
@@ -206,4 +223,17 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                 </flux:text>
             </div>
         @endif
+        <!-- Delete Confirmation Modal -->
+        <flux:modal wire:model="showDeleteModal">
+            <div class="p-6">
+                <flux:heading size="lg">Delete product?</flux:heading>
+                <flux:text class="mt-2 text-neutral-600 dark:text-neutral-300">
+                    Are you sure you want to delete this product? This action cannot be undone.
+                </flux:text>
+                <div class="mt-6 flex justify-end gap-3">
+                    <flux:button variant="outline" wire:click="cancelDelete">Cancel</flux:button>
+                    <flux:button variant="primary" class="bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-400" wire:click="confirmDelete">Delete</flux:button>
+                </div>
+            </div>
+        </flux:modal>
     </div>

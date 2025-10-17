@@ -59,15 +59,14 @@ new #[Layout('components.layouts.app', ['title' => 'Edit User'])] class extends 
 
         $this->user->update($updateData);
 
-        // Handle manager assignment
+        // Handle manager assignment (one shop per manager)
         if ($this->role === User::ROLE_MANAGER) {
-            // Remove previous manager assignment if exists
-            $previousManager = Shop::where('manager_id', $this->user->id)->first();
-            if ($previousManager && $previousManager->id != $this->shop_id) {
-                $previousManager->update(['manager_id' => null]);
-            }
-            
-            // Assign new manager
+            // Remove this user from managing any other shop first
+            Shop::where('manager_id', $this->user->id)
+                ->where('id', '!=', $this->shop_id)
+                ->update(['manager_id' => null]);
+
+            // Assign as manager for the selected shop
             Shop::find($this->shop_id)->update(['manager_id' => $this->user->id]);
         } else {
             // Remove manager assignment if user is no longer a manager

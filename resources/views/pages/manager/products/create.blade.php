@@ -141,7 +141,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
                         />
 
                         <!-- Category select -->
-                        <flux:select wire:model="category_id" label="Category">
+                        <flux:select wire:model.live="category_id" label="Category">
                             <option value="">Select category</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>

@@ -24,6 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'id' => (string) Str::uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -32,6 +33,7 @@ class UserFactory extends Factory
             'two_factor_secret' => Str::random(10),
             'two_factor_recovery_codes' => Str::random(10),
             'two_factor_confirmed_at' => now(),
+            'is_active' => true,
         ];
     }
 
