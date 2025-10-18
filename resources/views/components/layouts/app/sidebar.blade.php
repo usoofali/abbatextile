@@ -6,8 +6,21 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
+            @php
+                $user = auth()->user();
+                $dashboardRoute = 'dashboard';
+                
+                if ($user) {
+                    $dashboardRoute = match ($user->role) {
+                        \App\Models\User::ROLE_ADMIN => 'admin.dashboard',
+                        \App\Models\User::ROLE_MANAGER => 'manager.dashboard',
+                        \App\Models\User::ROLE_SALESPERSON => 'salesperson.dashboard',
+                        default => 'dashboard',
+                    };
+                }
+            @endphp
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            <a href="{{ route($dashboardRoute) }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
 
@@ -25,16 +38,17 @@
                     @elseif(auth()->user()->isManager())
                         <flux:navlist.group :heading="__('Management')" class="grid">
                             <flux:navlist.item icon="chart-bar" :href="route('manager.dashboard')" :current="request()->routeIs('manager.dashboard')" wire:navigate>{{ __('Manager Dashboard') }}</flux:navlist.item>
+                            <flux:navlist.item icon="chart-pie" :href="route('manager.sales.index')" :current="request()->routeIs('manager.sales.*')" wire:navigate>{{ __('Sales Report') }}</flux:navlist.item>
+                            <flux:navlist.item icon="archive-box" :href="route('manager.stock.index')" :current="request()->routeIs('manager.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
                             <flux:navlist.item icon="cube" :href="route('manager.products.index')" :current="request()->routeIs('manager.products.*')" wire:navigate>{{ __('Manage Products') }}</flux:navlist.item>
                             <flux:navlist.item icon="tag" :href="route('manager.categories.index')" :current="request()->routeIs('manager.categories.*')" wire:navigate>{{ __('Manage Categories') }}</flux:navlist.item>
-                            <flux:navlist.item icon="archive-box" :href="route('manager.stock.index')" :current="request()->routeIs('manager.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
-                            <flux:navlist.item icon="chart-pie" :href="route('manager.sales.index')" :current="request()->routeIs('manager.sales.*')" wire:navigate>{{ __('Sales Report') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @elseif(auth()->user()->isSalesperson())
                         <flux:navlist.group :heading="__('Sales')" class="grid">
                             <flux:navlist.item icon="chart-bar" :href="route('salesperson.dashboard')" :current="request()->routeIs('salesperson.dashboard')" wire:navigate>{{ __('Sales Dashboard') }}</flux:navlist.item>
                             <flux:navlist.item icon="shopping-cart" :href="route('salesperson.pos')" :current="request()->routeIs('salesperson.pos')" wire:navigate>{{ __('Point of Sale') }}</flux:navlist.item>
                             <flux:navlist.item icon="chart-pie" :href="route('salesperson.sales.index')" :current="request()->routeIs('salesperson.sales.*')" wire:navigate>{{ __('My Sales') }}</flux:navlist.item>
+                            <flux:navlist.item icon="credit-card" :href="route('salesperson.payments.index')" :current="request()->routeIs('salesperson.payments.*')" wire:navigate>{{ __('Payments') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @endif
                 @endauth
@@ -42,15 +56,7 @@
 
             <flux:spacer />
 
-            <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
-                </flux:navlist.item>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
-                </flux:navlist.item>
-            </flux:navlist>
+            
 
             <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">

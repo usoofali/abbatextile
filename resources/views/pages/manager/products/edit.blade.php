@@ -92,7 +92,6 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Product'])] class exten
             'barcode' => $this->barcode ?: null,
             'price_per_unit' => $this->price_per_unit,
             'stock_quantity' => $this->stock_quantity,
-            'unit_type' => $this->current_unit,
         ]);
 
         session()->flash('success', 'Product updated successfully.');
@@ -269,15 +268,15 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Product'])] class exten
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="text-center">
                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sold</flux:text>
-                            <flux:text class="text-lg font-semibold">{{ number_format($product->sales()->sum('quantity') ?? 0, 2) }} {{ $product->unit_type }}</flux:text>
+                            <flux:text class="text-lg font-semibold">{{ number_format($product->total_sold, 2) }} {{ $product->unit_type }}</flux:text>
                         </div>
                         <div class="text-center">
                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
-                            <flux:text class="text-lg font-semibold text-green-600 dark:text-green-400">${{ number_format($product->sales()->sum('total_price') ?? 0, 2) }}</flux:text>
+                            <flux:text class="text-lg font-semibold text-green-600 dark:text-green-400">₦{{ number_format($product->total_revenue, 2) }}</flux:text>
                         </div>
                         <div class="text-center">
                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Sales Count</flux:text>
-                            <flux:text class="text-lg font-semibold text-blue-600 dark:text-blue-400">{{ $product->sales()->count() }}</flux:text>
+                            <flux:text class="text-lg font-semibold text-blue-600 dark:text-blue-400">{{ $product->saleItems()->count() }}</flux:text>
                         </div>
                     </div>
                 </div>

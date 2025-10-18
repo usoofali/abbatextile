@@ -15,7 +15,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create Category'])] class ex
         return [
             'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:1000',
-            'default_unit_type' => 'required|in:yard,meter',
+            'default_unit_type' => 'required',
         ];
     }
 
@@ -65,10 +65,12 @@ new #[Layout('components.layouts.app', ['title' => 'Create Category'])] class ex
                     />
 
                     <!-- Default Unit Type -->
-                    <flux:select wire:model="default_unit_type" label="Default Unit Type" required>
-                        <option value="yard">Yard</option>
-                        <option value="meter">Meter</option>
-                    </flux:select>
+                    <flux:input
+                        wire:model="default_unit_type"
+                        label="Default Unit Type"
+                        placeholder="Enter Unit Type e.g meter"
+                        required
+                    />
 
                     <!-- Form Actions -->
                     <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6">

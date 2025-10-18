@@ -83,7 +83,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                                     <flux:icon name="tag" class="size-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
-                                    <flux:heading size="md" class="font-semibold">{{ $category->name }}</flux:heading>
+                                    <flux:heading size="md" class="font-semibold">{{ $category->name }} | {{ $category->default_unit_type }}</flux:heading>
                                     <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
                                         {{ $category->products()->count() }} products
                                     </flux:text>
@@ -164,5 +164,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
             <flux:text class="mt-2 text-red-700 dark:text-red-300">
                 You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
             </flux:text>
+        </div>
     @endif
     </div>

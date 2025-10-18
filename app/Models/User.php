@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Models;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -60,7 +62,6 @@ class User extends Authenticatable
     /**
      * Get the user's initials
      */
-
     protected static function booted(): void
     {
         static::creating(function (User $user): void {
@@ -69,6 +70,7 @@ class User extends Authenticatable
             }
         });
     }
+
     public function initials(): string
     {
         return Str::of($this->name)
@@ -82,7 +84,9 @@ class User extends Authenticatable
      * Role constants
      */
     public const ROLE_ADMIN = 'admin';
+
     public const ROLE_MANAGER = 'manager';
+
     public const ROLE_SALESPERSON = 'salesperson';
 
     /**
@@ -135,13 +139,30 @@ class User extends Authenticatable
 
     public function managedShop(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-    return $this->hasOne(Shop::class, 'manager_id');
+        return $this->hasOne(Shop::class, 'manager_id');
     }
+
     /**
-     * Get sales made by this user
+     * Get sales made by this user (legacy - individual product sales)
      */
     public function sales()
     {
         return $this->hasMany(Sale::class, 'salesperson_id');
+    }
+
+    /**
+     * Get sales transactions made by this user
+     */
+    public function salesTransactions()
+    {
+        return $this->hasMany(Sale::class, 'salesperson_id');
+    }
+
+    /**
+     * Get payments received by this user
+     */
+    public function receivedPayments()
+    {
+        return $this->hasMany(Payment::class, 'received_by');
     }
 }

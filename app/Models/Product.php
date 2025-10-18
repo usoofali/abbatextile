@@ -26,6 +26,8 @@ class Product extends Model
         'stock_quantity',
     ];
 
+    protected $appends = ['current_value', 'total_sold', 'total_revenue'];
+
     protected function casts(): array
     {
         return [
@@ -34,11 +36,17 @@ class Product extends Model
         ];
     }
 
-    protected static function booted(): void
+    protected static function boot(): void
     {
+        parent::boot();
+
         static::creating(function (Product $product): void {
             if (empty($product->id)) {
                 $product->id = (string) Str::uuid();
+            }
+            
+            if (empty($product->barcode)) {
+                $product->barcode = self::generateBarcode();
             }
         });
     }
@@ -52,13 +60,12 @@ class Product extends Model
     }
 
     /**
-     * Get all sales of this product
+     * Get all sale items for this product
      */
-    public function sales(): HasMany
+    public function saleItems(): HasMany
     {
-        return $this->hasMany(Sale::class);
+        return $this->hasMany(SaleItem::class);
     }
-
 
     /**
      * Get the category for this product
@@ -87,7 +94,7 @@ class Product extends Model
      */
     public function getTotalSoldAttribute(): float
     {
-        return $this->sales()->sum('quantity');
+        return $this->saleItems()->sum('quantity');
     }
 
     /**
@@ -95,15 +102,15 @@ class Product extends Model
      */
     public function getTotalRevenueAttribute(): float
     {
-        return $this->sales()->sum('total_price');
+        return $this->saleItems()->sum('subtotal');
     }
 
     /**
-     * Get total profit from this product
+     * Get current inventory value
      */
-    public function getTotalProfitAttribute(): float
+    public function getCurrentValueAttribute(): float
     {
-        return $this->sales()->sum('profit');
+        return $this->stock_quantity * $this->price_per_unit;
     }
 
     /**
@@ -116,19 +123,5 @@ class Product extends Model
         } while (self::where('barcode', $candidate)->exists());
 
         return $candidate;
-    }
-
-    /**
-     * Boot method to auto-generate barcode
-     */
-    protected static function boot(): void
-    {
-        parent::boot();
-        
-        static::creating(function ($product) {
-            if (empty($product->barcode)) {
-                $product->barcode = self::generateBarcode();
-            }
-        });
     }
 }

@@ -11,7 +11,7 @@ new #[Layout('components.layouts.app', ['title' => 'Stock Management'])] class e
     public $products;
     public $search = '';
     public $stockFilter = '';
-    public $lowStockThreshold = 5;
+    public $lowStockThreshold = 20;
     
     // Modal properties
     public $showAdjustModal = false;
@@ -179,20 +179,21 @@ new #[Layout('components.layouts.app', ['title' => 'Stock Management'])] class e
                                             $low = (int) $lowStockThreshold;
                                         @endphp
                                         @if($qty <= 0)
-                                            <flux:badge variant="red">Out of stock</flux:badge>
+                                            <flux:badge color="red">Out of stock</flux:badge>
                                         @elseif($qty <= $low)
-                                            <flux:badge variant="amber">Low stock</flux:badge>
+                                            <flux:badge color="amber">Low stock</flux:badge>
                                         @else
-                                            <flux:badge variant="green">In stock</flux:badge>
+                                            <flux:badge color="green">In stock</flux:badge>
                                         @endif
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
                                         <flux:button 
+                                            icon="plus"
                                             size="sm" 
                                             variant="outline" 
                                             wire:click="openAdjustModal('{{ $product->id }}')"
                                         >
-                                            <flux:icon name="adjustments-horizontal" class="size-4" />
+                                            
                                             Adjust Stock
                                         </flux:button>
                                     </td>
@@ -267,31 +268,30 @@ new #[Layout('components.layouts.app', ['title' => 'Stock Management'])] class e
                             ? $selectedProduct->stock_quantity + (float) $adjustmentQuantity
                             : max(0, $selectedProduct->stock_quantity - (float) $adjustmentQuantity);
                     @endphp
-                    <div class="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800">
-                        <flux:text class="text-sm font-medium">
-                            New stock will be: 
-                            <span class="{{ $newQuantity < 0 ? 'text-red-600' : 'text-green-600' }}">
-                                {{ number_format($newQuantity, 2) }} {{ $selectedProduct->unit_type }}
-                            </span>
-                        </flux:text>
-                        @if($newQuantity < 0)
+                    
+                    @if($newQuantity < 0)
+                        <div class="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800">
                             <flux:text class="text-xs text-red-600 mt-1">
                                 Warning: Stock cannot be negative. It will be set to 0.
                             </flux:text>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
+                    
                 @endif
 
                 <!-- Modal Actions -->
                 <div class="flex gap-3">
                     <flux:spacer />
-                    <flux:button variant="outline" wire:click="closeAdjustModal">Cancel</flux:button>
+                    <flux:button variant="outline" 
+                    
+                    wire:click="closeAdjustModal">Cancel</flux:button>
                     <flux:button 
+                        icon="check"
                         variant="primary" 
                         wire:click="adjustStock"
                         wire:loading.attr="disabled"
                     >
-                        <flux:icon name="check" class="size-4" />
+                        
                         Confirm Adjustment
                     </flux:button>
                 </div>

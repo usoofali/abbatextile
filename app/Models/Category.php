@@ -1,13 +1,19 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Support\Str;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
+    use HasFactory;
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     protected $fillable = ['name', 'description', 'default_unit_type'];
 
     protected static function booted(): void
@@ -18,6 +24,7 @@ class Category extends Model
             }
         });
     }
+
     /**
      * Get the products of this category
      */

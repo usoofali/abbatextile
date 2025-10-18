@@ -1,6 +1,16 @@
-<div class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
-    <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
-</div>
-<div class="ms-1 grid flex-1 text-start text-sm">
-    <span class="mb-0.5 truncate leading-tight font-semibold">Laravel Starter Kit</span>
+@php
+    use App\Models\CompanySetting;
+    use Illuminate\Support\Facades\Storage;
+    
+    $companySettings = CompanySetting::first();
+    $companyName = $companySettings->company_name ?? 'Laravel Starter Kit';
+    $logoPath = $companySettings->logo_path ?? null;
+@endphp
+
+<div class="flex items-center justify-center rounded-xl bg-accent-content overflow-hidden">
+    <img 
+        src="{{ Storage::url($logoPath) }}" 
+        alt="{{ $companyName }}"
+        class="size-full object-cover"
+    >
 </div>

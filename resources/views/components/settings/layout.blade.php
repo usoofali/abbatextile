@@ -7,6 +7,11 @@
                 <flux:navlist.item :href="route('two-factor.show')" wire:navigate>{{ __('Two-Factor Auth') }}</flux:navlist.item>
             @endif
             <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
+            @auth
+                @if(auth()->user()->isAdmin())
+                    <flux:navlist.item :href="route('settings.company')" wire:navigate>{{ __('Company Settings') }}</flux:navlist.item>
+                @endif
+            @endauth
         </flux:navlist>
     </div>
 

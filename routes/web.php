@@ -9,7 +9,7 @@ use Livewire\Volt\Volt;
 // })->name('login');
 
 Volt::route('/', 'auth.login')
-        ->name('home');
+    ->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
         Volt::route('admin/users/create', 'admin.users.create')->name('admin.users.create');
         Volt::route('admin/users/{user}/edit', 'admin.users.edit')->name('admin.users.edit');
         Volt::route('admin/analytics', 'admin.analytics')->name('admin.analytics');
+        Volt::route('settings/company', 'settings.company')->name('settings.company');
     });
 
     // Manager routes
@@ -63,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         Volt::route('salesperson/dashboard', 'salesperson.dashboard')->name('salesperson.dashboard');
         Volt::route('salesperson/pos', 'salesperson.pos')->name('salesperson.pos');
         Volt::route('salesperson/sales', 'salesperson.sales.index')->name('salesperson.sales.index');
+        Volt::route('salesperson/payments', 'salesperson.payments.index')->name('salesperson.payments.index');
     });
 
     // Admin stock route

@@ -21,8 +21,8 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
     {
         $this->shops = Shop::with(['manager', 'sales'])
             ->withCount('sales')
-            ->withSum('sales', 'total_price')
-            ->withSum('sales', 'profit')
+            ->withSum('sales', 'total_amount')
+            ->withSum('sales', 'total_profit')
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('location', 'like', '%' . $this->search . '%');
@@ -146,8 +146,8 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
                                         <div>
-                                            <flux:text class="font-medium text-green-600 dark:text-green-400">${{ number_format($shop->sales_sum_total_price ?? 0, 2) }}</flux:text>
-                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Profit: ${{ number_format($shop->sales_sum_profit ?? 0, 2) }}</flux:text>
+                                            <flux:text class="font-medium text-green-600 dark:text-green-400">${{ number_format($shop->sales_sum_total_amount ?? 0, 2) }}</flux:text>
+                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Profit: ${{ number_format($shop->sales_sum_total_profit ?? 0, 2) }}</flux:text>
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">

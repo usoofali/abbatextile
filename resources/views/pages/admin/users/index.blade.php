@@ -171,7 +171,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
                                         <div>
                                             <flux:text class="font-medium">{{ $user->sales()->count() }} sales</flux:text>
                                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                ${{ number_format($user->sales()->sum('total_price'), 2) }} revenue
+                                                ₦{{ number_format($user->sales()->sum('total_amount'), 2) }} revenue
                                             </flux:text>
                                         </div>
                                     @else

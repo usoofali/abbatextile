@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,9 @@ use Illuminate\Support\Str;
 class Shop extends Model
 {
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     use HasFactory;
 
     protected $fillable = [
@@ -46,9 +49,17 @@ class Shop extends Model
     }
 
     /**
-     * Get all sales from this shop
+     * Get all sales from this shop (legacy - individual product sales)
      */
     public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    /**
+     * Get all sales transactions from this shop
+     */
+    public function salesTransactions(): HasMany
     {
         return $this->hasMany(Sale::class);
     }

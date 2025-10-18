@@ -24,7 +24,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
         return [
             'name' => 'required|string|max:255|unique:categories,name,' . $this->category->id,
             'description' => 'nullable|string|max:1000',
-            'default_unit_type' => 'required|in:yard,meter',
+            'default_unit_type' => 'required',
         ];
     }
 
@@ -74,10 +74,12 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
                     />
 
                     <!-- Default Unit Type -->
-                    <flux:select wire:model="default_unit_type" label="Default Unit Type" required>
-                        <option value="yard">Yard</option>
-                        <option value="meter">Meter</option>
-                    </flux:select>
+                    <flux:input
+                        wire:model="default_unit_type"
+                        label="Default Unit Type"
+                        placeholder="Enter Unit Type e.g meter"
+                        required
+                    />
 
                     <!-- Category Stats -->
                     <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">

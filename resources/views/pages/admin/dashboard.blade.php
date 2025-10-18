@@ -33,7 +33,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         $this->totalShops = Shop::count();
         $this->totalUsers = User::where('role', '!=', User::ROLE_ADMIN)->count();
         $this->totalSales = Sale::count();
-        $this->totalRevenue = Sale::sum('total_price');
+        $this->totalRevenue = Sale::sum('total_amount');
         
         // Calculate average sale value
         $this->averageSaleValue = $this->totalSales > 0 ? $this->totalRevenue / $this->totalSales : 0;
@@ -45,21 +45,27 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
             ->count();
         $this->outOfStockProducts = Product::where('stock_quantity', '<=', 0)->count();
 
-        $this->recentSales = Sale::with(['shop', 'salesperson', 'product'])
+        // Recent sales with items relationship
+        $this->recentSales = Sale::with(['shop', 'salesperson', 'items.product'])
             ->latest()
             ->limit(10)
             ->get();
 
-        $this->topShops = Shop::with('sales')
-            ->withCount('sales')
-            ->withSum('sales', 'total_price')
-            ->orderByDesc('sales_sum_total_price')
+        // Top shops with sales transactions relationship
+        $this->topShops = Shop::withCount('salesTransactions')
+            ->withSum('salesTransactions', 'total_amount')
+            ->orderByDesc('sales_transactions_sum_total_amount')
             ->limit(5)
             ->get();
 
-        // Top selling products
-        $this->topProducts = Sale::select('products.name', DB::raw('SUM(sales.quantity) as total_quantity'), DB::raw('SUM(sales.total_price) as total_revenue'))
-            ->join('products', 'sales.product_id', '=', 'products.id')
+        // Top selling products using sale items
+        $this->topProducts = DB::table('sale_items')
+            ->select(
+                'products.name',
+                DB::raw('SUM(sale_items.quantity) as total_quantity'),
+                DB::raw('SUM(sale_items.subtotal) as total_revenue')
+            )
+            ->join('products', 'sale_items.product_id', '=', 'products.id')
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_revenue')
             ->limit(5)
@@ -69,7 +75,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         $this->salesTrend = Sale::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as sales_count'),
-                DB::raw('SUM(total_price) as daily_revenue')
+                DB::raw('SUM(total_amount) as daily_revenue')
             )
             ->where('created_at', '>=', now()->subDays(7))
             ->groupBy(DB::raw('DATE(created_at)'))
@@ -132,7 +138,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                 </div>
                 <div class="min-w-0 flex-1">
                     <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
-                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">${{ number_format($totalRevenue, 2) }}</flux:heading>
+                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalRevenue, 2) }}</flux:heading>
                 </div>
             </div>
         </div>
@@ -145,7 +151,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                 </div>
                 <div class="min-w-0 flex-1">
                     <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Avg. Sale Value</flux:text>
-                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">${{ number_format($averageSaleValue, 2) }}</flux:heading>
+                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($averageSaleValue, 2) }}</flux:heading>
                 </div>
             </div>
         </div>
@@ -200,13 +206,21 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                     @foreach($recentSales as $sale)
                         <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
                             <div class="min-w-0 flex-1 pr-3">
-                                <flux:text class="font-medium text-sm sm:text-base truncate">{{ $sale->product->name }}</flux:text>
+                                <flux:text class="font-medium text-sm sm:text-base truncate">
+                                    Sale #{{ substr($sale->id, -8) }}
+                                </flux:text>
                                 <flux:text class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 truncate">
                                     {{ $sale->shop->name }} • {{ $sale->salesperson->name }}
                                 </flux:text>
+                                <flux:text class="text-xs text-neutral-500 dark:text-neutral-400">
+                                    {{ $sale->items->count() }} items
+                                </flux:text>
                             </div>
                             <div class="text-right shrink-0">
-                                <flux:text class="font-medium text-sm sm:text-base">${{ number_format($sale->total_price, 2) }}</flux:text>
+                                <flux:text class="font-medium text-sm sm:text-base">₦{{ number_format($sale->total_amount, 2) }}</flux:text>
+                                <flux:text class="text-xs text-neutral-600 dark:text-neutral-400 block capitalize">
+                                    {{ $sale->status }}
+                                </flux:text>
                                 <flux:text class="text-xs text-neutral-600 dark:text-neutral-400 block">
                                     {{ $sale->created_at->diffForHumans() }}
                                 </flux:text>
@@ -236,11 +250,11 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             <div class="min-w-0 flex-1 pr-3">
                                 <flux:text class="font-medium text-sm sm:text-base truncate">{{ $product->name }}</flux:text>
                                 <flux:text class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
-                                    {{ $product->total_quantity }} units sold
+                                    {{ number_format($product->total_quantity) }} units sold
                                 </flux:text>
                             </div>
                             <div class="text-right shrink-0">
-                                <flux:text class="font-medium text-sm sm:text-base">${{ number_format($product->total_revenue, 2) }}</flux:text>
+                                <flux:text class="font-medium text-sm sm:text-base">₦{{ number_format($product->total_revenue, 2) }}</flux:text>
                                 <flux:text class="text-xs text-neutral-600 dark:text-neutral-400 block">
                                     Revenue
                                 </flux:text>
@@ -277,9 +291,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                                 </flux:text>
                             </div>
                             <div class="text-right shrink-0">
-                                <flux:text class="font-medium text-sm sm:text-base">${{ number_format($shop->sales_sum_total_price ?? 0, 2) }}</flux:text>
+                                <flux:text class="font-medium text-sm sm:text-base">₦{{ number_format($shop->sales_transactions_sum_total_amount ?? 0, 2) }}</flux:text>
                                 <flux:text class="text-xs text-neutral-600 dark:text-neutral-400 block">
-                                    {{ $shop->sales_count }} sales
+                                    {{ $shop->sales_transactions_count }} sales
                                 </flux:text>
                             </div>
                         </div>
@@ -313,7 +327,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                                 </flux:text>
                             </div>
                             <div class="text-right shrink-0">
-                                <flux:text class="font-medium text-sm sm:text-base">${{ number_format($day->daily_revenue, 2) }}</flux:text>
+                                <flux:text class="font-medium text-sm sm:text-base">₦{{ number_format($day->daily_revenue, 2) }}</flux:text>
                                 <flux:text class="text-xs text-neutral-600 dark:text-neutral-400 block">
                                     Daily Revenue
                                 </flux:text>
