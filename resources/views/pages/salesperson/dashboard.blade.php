@@ -20,6 +20,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
     public $topProducts;
     public $salesTrend;
     public $lowStockProducts;
+    public bool $isOnline = false;
 
     public function mount(): void
     {
@@ -97,6 +98,28 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
             ->limit(5)
             ->get();
     }
+    public function checkConnectivity(): void
+    {
+        $hosts = [
+            'www.google.com',
+            'www.cloudflare.com',
+            'www.amazon.com',
+        ];
+
+        $this->isOnline = false;
+        foreach ($hosts as $host) {
+            try {
+                $conn = @fsockopen($host, 80, $errno, $errstr, 1);
+                if ($conn) {
+                    fclose($conn);
+                    $this->isOnline = true;
+                    break;
+                }
+            } catch (\Throwable $e) {
+                // ignore and try next
+            }
+        }
+    }
 }; ?>
 
 <div class="flex flex-col gap-4">
@@ -163,18 +186,22 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
                 </div>
             </div>
 
-            <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
-                <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-indigo-100 p-2 sm:p-3 dark:bg-indigo-900/20">
-                        <flux:icon name="chart-bar" class="size-5 sm:size-6 text-indigo-600 dark:text-indigo-400" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Avg. Sale Value</flux:text>
-                        <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">₦{{ number_format($averageSaleValue, 2) }}</div>
+                @if(Auth::user()->isSalesperson() && config('app.mode') === 'slave')
+                <div wire:poll.15s="checkConnectivity" class="rounded-xl border {{ $isOnline ? 'border-green-200' : 'border-red-200' }} bg-white p-6 dark:bg-gray-800 {{ $isOnline ? 'dark:border-green-700' : 'dark:border-red-700' }}">
+                    <div class="flex items-center gap-3">
+                        <div class="rounded-lg bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
+                            <flux:icon name="wifi" class="size-5 sm:size-6 {{ $isOnline ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400' }}" />
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Internet Connection</p>
+                            <p class="text-2xl font-bold {{ $isOnline ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400' }}">{{ $isOnline ? 'Online' : 'Offline' }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+                @endif
+            <!-- </div> -->
         </div>
+        
 
         <!-- Additional Stats Cards -->
         <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
@@ -372,5 +399,20 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
                 You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
             </flux:text>
         </div>
+    @endif
+    <!-- Flash Message -->
+    @if (session()->has('error'))
+        <div class="fixed bottom-4 right-4 z-50">
+        <x-ui.alert variant="error" :timeout="5000">
+            {{ session('error') }}
+        </x-ui.alert>
+    </div>
+    @endif
+    @if (session()->has('success'))
+        <div class="fixed bottom-4 right-4 z-50">
+        <x-ui.alert variant="success" :timeout="5000">
+            {{ session('success') }}
+        </x-ui.alert>
+    </div>
     @endif
 </div>

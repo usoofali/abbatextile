@@ -83,6 +83,7 @@ return [
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+    'mode' => env('APP_MODE', 'master'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,5 +123,8 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    'sync_logging_enabled' => env('SYNC_LOGGING_ENABLED', true),
+    'sync_timeout' => env('SYNC_TIMEOUT', 25),
+    'sync_retry_attempts' => env('SYNC_RETRY_ATTEMPTS', 3),
 
 ];

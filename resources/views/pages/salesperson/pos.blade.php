@@ -94,6 +94,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
 
     public function updateQuantity($index, $quantity): void
     {
+        $quantity = is_numeric($quantity) ? (float) $quantity : 0;
         if ($quantity <= 0) {
             $this->removeFromCart($index);
             return;
@@ -136,6 +137,29 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             return;
         }
 
+        // Check stock availability before processing the transaction
+        $stockIssues = [];
+        foreach ($this->cart as $index => $item) {
+            $product = Product::find($item['product_id']);
+            
+            if (!$product) {
+                $stockIssues[] = "Product '{$item['name']}' no longer exists.";
+                continue;
+            }
+
+            if ($product->stock_quantity < $item['quantity']) {
+                $stockIssues[] = "Insufficient stock for {$product->name}. Available: {$product->stock_quantity} {$product->unit_type}, Requested: {$item['quantity']}";
+            }
+        }
+
+        // If there are stock issues, show them to the user and stop the process
+        if (!empty($stockIssues)) {
+            $errorMessage = "Stock issues detected:\n" . implode("\n", $stockIssues);
+            session()->flash('error', $errorMessage);
+            $this->closePaymentModal();
+            return;
+        }
+
         DB::transaction(function () {
             $user = Auth::user();
             
@@ -151,11 +175,6 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             foreach ($this->cart as $item) {
                 $product = Product::find($item['product_id']);
                 
-                // Check stock availability
-                if ($product->stock_quantity < $item['quantity']) {
-                    throw new \Exception("Insufficient stock for {$product->name}. Available: {$product->stock_quantity} {$product->unit_type}");
-                }
-
                 // Create sale item
                 SaleItem::create([
                     'sale_id' => $sale->id,
@@ -177,6 +196,10 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 'reference' => $this->paymentReference,
                 'received_by' => $user->id,
             ]);
+
+            // Update sale status based on payment
+            $sale->updateStatus();
+            $this->loadProducts();
 
             // Clear cart and reset
             $this->cart = [];
@@ -268,15 +291,15 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                         
                                         <!-- Stock Status -->
                                         @if($product->stock_quantity <= 0)
-                                            <flux:badge variant="danger" size="sm" class="mt-1">
+                                            <flux:badge color="red" size="sm" class="mt-1">
                                                 Out of Stock
                                             </flux:badge>
                                         @elseif($product->stock_quantity <= 20)
-                                            <flux:badge variant="warning" size="sm" class="mt-1">
+                                            <flux:badge color="amber" size="sm" class="mt-1">
                                                 Low Stock
                                             </flux:badge>
                                         @else
-                                            <flux:badge variant="success" size="sm" class="mt-1">
+                                            <flux:badge color="green" size="sm" class="mt-1">
                                                 In Stock
                                             </flux:badge>
                                         @endif
@@ -371,6 +394,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                             </flux:button>
                                             <flux:input 
                                                 wire:model.live.debounce.300ms="cart.{{ $index }}.quantity"
+                                                wire:change="updateQuantity({{ $index }}, $event.target.value)"
                                                 type="number"
                                                 min="0.01"
                                                 step="0.01"
@@ -506,5 +530,20 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
             </flux:text>
         </div>
+    @endif
+    <!-- Flash Message -->
+    @if (session()->has('error'))
+        <div class="fixed bottom-4 right-4 z-50">
+        <x-ui.alert variant="error" :timeout="5000">
+            {{ session('error') }}
+        </x-ui.alert>
+    </div>
+    @endif
+    @if (session()->has('success'))
+        <div class="fixed bottom-4 right-4 z-50">
+        <x-ui.alert variant="success" :timeout="5000">
+            {{ session('success') }}
+        </x-ui.alert>
+    </div>
     @endif
 </div>

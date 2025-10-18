@@ -47,8 +47,8 @@
                         <flux:navlist.group :heading="__('Sales')" class="grid">
                             <flux:navlist.item icon="chart-bar" :href="route('salesperson.dashboard')" :current="request()->routeIs('salesperson.dashboard')" wire:navigate>{{ __('Sales Dashboard') }}</flux:navlist.item>
                             <flux:navlist.item icon="shopping-cart" :href="route('salesperson.pos')" :current="request()->routeIs('salesperson.pos')" wire:navigate>{{ __('Point of Sale') }}</flux:navlist.item>
-                            <flux:navlist.item icon="chart-pie" :href="route('salesperson.sales.index')" :current="request()->routeIs('salesperson.sales.*')" wire:navigate>{{ __('My Sales') }}</flux:navlist.item>
                             <flux:navlist.item icon="credit-card" :href="route('salesperson.payments.index')" :current="request()->routeIs('salesperson.payments.*')" wire:navigate>{{ __('Payments') }}</flux:navlist.item>
+                            <flux:navlist.item icon="chart-pie" :href="route('salesperson.sales.index')" :current="request()->routeIs('salesperson.sales.*')" wire:navigate>{{ __('My Sales') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @endif
                 @endauth
