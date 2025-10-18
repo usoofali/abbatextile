@@ -92,7 +92,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
         // Low stock products in the shop
         $this->lowStockProducts = $this->shop->products()
             ->where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', 10) // Changed to <= for consistency
+            ->where('stock_quantity', '<=', 20) // Changed to <= for consistency
             ->orderBy('stock_quantity')
             ->limit(5)
             ->get();

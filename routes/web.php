@@ -42,8 +42,8 @@ Route::middleware(['auth'])->group(function () {
         Volt::route('admin/users', 'admin.users.index')->name('admin.users.index');
         Volt::route('admin/users/create', 'admin.users.create')->name('admin.users.create');
         Volt::route('admin/users/{user}/edit', 'admin.users.edit')->name('admin.users.edit');
-        Volt::route('admin/analytics', 'admin.analytics')->name('admin.analytics');
         Volt::route('settings/company', 'settings.company')->name('settings.company');
+        Volt::route('admin/sales', 'admin.sales.index')->name('admin.sales.index');
     });
 
     // Manager routes

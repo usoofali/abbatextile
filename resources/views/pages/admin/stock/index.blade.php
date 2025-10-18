@@ -12,7 +12,7 @@ new #[Layout('components.layouts.app', ['title' => 'Global Stock Management'])] 
     public $products;
     public $search = '';
     public $stockFilter = '';
-    public $lowStockThreshold = 50;
+    public $lowStockThreshold = 20;
     
     // Modal properties
     public $showAdjustModal = false;

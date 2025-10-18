@@ -137,7 +137,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                                 @endif
                                                 <div class="flex items-center gap-2 mt-1">
                                                     <flux:badge variant="outline" size="sm">{{ ucfirst($product->unit_type) }}</flux:badge>
-                                                    @if($product->stock_quantity < 10)
+                                                    @if($product->stock_quantity < 20)
                                                         <flux:badge variant="amber" size="sm">Low Stock</flux:badge>
                                                     @endif
                                                     <div class="flex items-center gap-1 mt-1">

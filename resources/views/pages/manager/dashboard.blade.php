@@ -55,7 +55,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
         // Stock alerts
         $this->lowStockProducts = $this->shop->products()
             ->where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', 10)
+            ->where('stock_quantity', '<=', 20)
             ->count();
             
         $this->outOfStockProducts = $this->shop->products()

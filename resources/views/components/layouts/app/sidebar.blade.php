@@ -30,10 +30,10 @@
                     @if(auth()->user()->isAdmin())
                         <flux:navlist.group :heading="__('Administration')" class="grid">
                             <flux:navlist.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.*')" wire:navigate>{{ __('Admin Dashboard') }}</flux:navlist.item>
+                            <flux:navlist.item icon="chart-pie" :href="route('admin.sales.index')" :current="request()->routeIs('admin.sales.*')" wire:navigate>{{ __('Sales Report') }}</flux:navlist.item>
+                            <flux:navlist.item icon="archive-box" :href="route('admin.stock.index')" :current="request()->routeIs('admin.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
                             <flux:navlist.item icon="building-storefront" :href="route('admin.shops.index')" :current="request()->routeIs('admin.shops.*')" wire:navigate>{{ __('Manage Shops') }}</flux:navlist.item>
                             <flux:navlist.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('Manage Users') }}</flux:navlist.item>
-                            <flux:navlist.item icon="archive-box" :href="route('admin.stock.index')" :current="request()->routeIs('admin.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
-                            <flux:navlist.item icon="chart-pie" :href="route('admin.analytics')" :current="request()->routeIs('admin.analytics')" wire:navigate>{{ __('Analytics') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @elseif(auth()->user()->isManager())
                         <flux:navlist.group :heading="__('Management')" class="grid">

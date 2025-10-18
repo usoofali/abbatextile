@@ -32,33 +32,44 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
     {
         $this->totalShops = Shop::count();
         $this->totalUsers = User::where('role', '!=', User::ROLE_ADMIN)->count();
-        $this->totalSales = Sale::count();
-        $this->totalRevenue = Sale::sum('total_amount');
         
-        // Calculate average sale value
+        // Only count non-cancelled sales
+        $this->totalSales = Sale::where('status', '!=', 'cancelled')->count();
+        $this->totalRevenue = Sale::where('status', '!=', 'cancelled')->sum('total_amount');
+        
+        // Calculate average sale value from non-cancelled sales
         $this->averageSaleValue = $this->totalSales > 0 ? $this->totalRevenue / $this->totalSales : 0;
         
         // Product statistics
         $this->totalProducts = Product::count();
         $this->lowStockProducts = Product::where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', 10) // Low stock threshold
+            ->where('stock_quantity', '<=', 20) // Low stock threshold
             ->count();
         $this->outOfStockProducts = Product::where('stock_quantity', '<=', 0)->count();
 
-        // Recent sales with items relationship
+        // Recent sales with items relationship - exclude cancelled
         $this->recentSales = Sale::with(['shop', 'salesperson', 'items.product'])
+            ->where('status', '!=', 'cancelled')
             ->latest()
             ->limit(10)
             ->get();
 
-        // Top shops with sales transactions relationship
-        $this->topShops = Shop::withCount('salesTransactions')
-            ->withSum('salesTransactions', 'total_amount')
-            ->orderByDesc('sales_transactions_sum_total_amount')
-            ->limit(5)
-            ->get();
+        // Top shops with sales transactions relationship - exclude cancelled
+        $this->topShops = Shop::withCount([
+            'salesTransactions' => function($query) {
+                $query->where('status', '!=', 'cancelled');
+            }
+        ])
+        ->withSum([
+            'salesTransactions' => function($query) {
+                $query->where('status', '!=', 'cancelled');
+            }
+        ], 'total_amount')
+        ->orderByDesc('sales_transactions_sum_total_amount')
+        ->limit(5)
+        ->get();
 
-        // Top selling products using sale items
+        // Top selling products using sale items - exclude cancelled sales
         $this->topProducts = DB::table('sale_items')
             ->select(
                 'products.name',
@@ -66,18 +77,21 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                 DB::raw('SUM(sale_items.subtotal) as total_revenue')
             )
             ->join('products', 'sale_items.product_id', '=', 'products.id')
+            ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
+            ->where('sales.status', '!=', 'cancelled')
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_revenue')
             ->limit(5)
             ->get();
 
-        // Sales trend (last 7 days)
+        // Sales trend (last 7 days) - exclude cancelled
         $this->salesTrend = Sale::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as sales_count'),
                 DB::raw('SUM(total_amount) as daily_revenue')
             )
             ->where('created_at', '>=', now()->subDays(7))
+            ->where('status', '!=', 'cancelled')
             ->groupBy(DB::raw('DATE(created_at)'))
             ->orderBy('date')
             ->get();
@@ -125,7 +139,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                     <flux:icon name="shopping-cart" class="size-5 sm:size-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Active Sales</flux:text>
                     <flux:heading size="lg" class="font-bold text-base sm:text-lg">{{ number_format($totalSales) }}</flux:heading>
                 </div>
             </div>
@@ -138,7 +152,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                 </div>
                 <div class="min-w-0 flex-1">
                     <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
-                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalRevenue, 2) }}</flux:heading>
+                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalRevenue, 2) }}</flux:text>
                 </div>
             </div>
         </div>
@@ -198,7 +212,6 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="mb-4 flex items-center justify-between">
                 <flux:heading size="lg">Recent Sales</flux:heading>
-                <flux:link :href="route('admin.analytics')" wire:navigate>View All</flux:link>
             </div>
             
             @if($recentSales->count() > 0)
@@ -240,7 +253,6 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="mb-4 flex items-center justify-between">
                 <flux:heading size="lg">Top Selling Products</flux:heading>
-                <flux:link :href="route('admin.analytics')" wire:navigate>View All</flux:link>
             </div>
             
             @if($topProducts->count() > 0)
@@ -311,7 +323,6 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="mb-4 flex items-center justify-between">
                 <flux:heading size="lg">Sales Trend (Last 7 Days)</flux:heading>
-                <flux:link :href="route('admin.analytics')" wire:navigate>View Details</flux:link>
             </div>
             
             @if($salesTrend->count() > 0)

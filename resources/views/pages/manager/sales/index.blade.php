@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class extends Component {
     public $sales;
@@ -17,6 +18,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     public $salespersonFilter = '';
     public $salespersons = [];
     public $saleToCancel = null;
+    public $exportFormat = '';
 
     public function mount(): void
     {
@@ -112,6 +114,147 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         $this->saleToCancel = null;
     }
 
+    public function exportSales($format = 'csv'): StreamedResponse
+    {
+        $fileName = $this->generateFileName($format);
+        
+        return response()->streamDownload(function () use ($format) {
+            $this->generateExportData($format);
+        }, $fileName);
+    }
+
+    private function generateFileName($format): string
+    {
+        $shopName = Str::slug($this->shop->name);
+        $dateRange = $this->getDateRangeForFileName();
+        
+        return "sales-report-{$shopName}-{$dateRange}.{$format}";
+    }
+
+    private function getDateRangeForFileName(): string
+    {
+        return match ($this->dateFilter) {
+            'today' => 'today',
+            'week' => 'this-week',
+            'month' => 'this-month',
+            'year' => 'this-year',
+            'custom' => \Carbon\Carbon::parse($this->startDate)->format('Y-m-d') . '-to-' . \Carbon\Carbon::parse($this->endDate)->format('Y-m-d'),
+            'all' => 'all-time',
+            default => 'custom-range'
+        };
+    }
+
+    private function generateExportData($format): void
+    {
+        $activeSales = $this->sales->where('status', '!=', 'cancelled');
+        
+        if ($format === 'csv') {
+            $this->generateCSV($activeSales);
+        } else {
+            $this->generateExcel($activeSales);
+        }
+    }
+
+    private function generateCSV($sales): void
+    {
+        $handle = fopen('php://output', 'w');
+        
+        // Add BOM for UTF-8
+        fwrite($handle, "\xEF\xBB\xBF");
+        
+        // Headers
+        fputcsv($handle, [
+            'Sale ID',
+            'Salesperson',
+            'Items Count',
+            'Products',
+            'Total Amount',
+            'Amount Paid',
+            'Balance',
+            'Status',
+            'Date',
+            'Time'
+        ]);
+
+        // Data rows
+        foreach ($sales as $sale) {
+            $products = $sale->items->map(function ($item) {
+                return $item->product->name . ' (' . number_format($item->quantity, 2) . ' units)';
+            })->implode('; ');
+
+            fputcsv($handle, [
+                '#' . substr($sale->id, -8),
+                $sale->salesperson->name,
+                $sale->items->count(),
+                $products,
+                number_format($sale->total_amount, 2),
+                number_format($sale->total_paid, 2),
+                number_format($sale->balance, 2),
+                ucfirst($sale->status),
+                $sale->created_at->format('Y-m-d'),
+                $sale->created_at->format('H:i:s')
+            ]);
+        }
+
+        fclose($handle);
+    }
+
+    private function generateExcel($sales): void
+    {
+        $handle = fopen('php://output', 'w');
+        
+        // Add headers for Excel
+        fwrite($handle, "Sales Report - {$this->shop->name}\n");
+        fwrite($handle, "Generated on: " . now()->format('Y-m-d H:i:s') . "\n");
+        fwrite($handle, "Date Range: " . $this->getDateRangeDisplay() . "\n\n");
+        
+        // Headers
+        fwrite($handle, "Sale ID\tSalesperson\tItems Count\tProducts\tTotal Amount\tAmount Paid\tBalance\tStatus\tDate\tTime\n");
+
+        // Data rows
+        foreach ($sales as $sale) {
+            $products = $sale->items->map(function ($item) {
+                return $item->product->name . ' (' . number_format($item->quantity, 2) . ' units)';
+            })->implode('; ');
+
+            fwrite($handle, 
+                '#' . substr($sale->id, -8) . "\t" .
+                $sale->salesperson->name . "\t" .
+                $sale->items->count() . "\t" .
+                $products . "\t" .
+                number_format($sale->total_amount, 2) . "\t" .
+                number_format($sale->total_paid, 2) . "\t" .
+                number_format($sale->balance, 2) . "\t" .
+                ucfirst($sale->status) . "\t" .
+                $sale->created_at->format('Y-m-d') . "\t" .
+                $sale->created_at->format('H:i:s') . "\n"
+            );
+        }
+
+        // Summary
+        fwrite($handle, "\n\nSummary:\n");
+        fwrite($handle, "Total Active Sales: " . $sales->count() . "\n");
+        fwrite($handle, "Total Revenue: ₦" . number_format($sales->sum('total_amount'), 2) . "\n");
+        fwrite($handle, "Total Paid: ₦" . number_format($sales->sum('total_paid'), 2) . "\n");
+        fwrite($handle, "Total Balance: ₦" . number_format($sales->sum('balance'), 2) . "\n");
+        fwrite($handle, "Average Sale: ₦" . number_format($sales->avg('total_amount') ?? 0, 2) . "\n");
+
+        fclose($handle);
+    }
+
+    private function getDateRangeDisplay(): string
+    {
+        return match ($this->dateFilter) {
+            'today' => 'Today (' . now()->format('M j, Y') . ')',
+            'week' => 'This Week (' . now()->startOfWeek()->format('M j') . ' - ' . now()->endOfWeek()->format('M j, Y') . ')',
+            'month' => 'This Month (' . now()->format('F Y') . ')',
+            'year' => 'This Year (' . now()->format('Y') . ')',
+            'custom' => \Carbon\Carbon::parse($this->startDate)->format('M j, Y') . ' to ' . \Carbon\Carbon::parse($this->endDate)->format('M j, Y'),
+            'all' => 'All Time',
+            default => 'Custom Range'
+        };
+    }
+
     public function resetFilters(): void
     {
         $this->search = '';
@@ -163,10 +306,25 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
             <flux:heading size="xl" level="1">Sales Report</flux:heading>
             <flux:subheading size="lg">{{ $shop?->name ?? 'No shop assigned' }}</flux:subheading>
         </div>
-        <flux:button variant="outline" :href="route('manager.dashboard')" wire:navigate>
-            <flux:icon name="arrow-left" />
-            Back to Dashboard
-        </flux:button>
+        <div class="flex items-center gap-3">
+            <!-- Export Buttons -->
+            @if($shop && $sales->count() > 0)
+                <div class="flex items-center gap-2">
+                    <flux:button 
+                        variant="outline" 
+                        icon="document-text"
+                        wire:click="exportSales('csv')"
+                        class="shrink-0"
+                    >
+                        Export CSV
+                    </flux:button>
+                </div>
+            @endif
+            <flux:button variant="outline" :href="route('manager.dashboard')" wire:navigate>
+                <flux:icon name="arrow-left" />
+                Back to Dashboard
+            </flux:button>
+        </div>
     </div>
 
     @if($shop)
@@ -285,6 +443,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
                             <tr>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sale ID</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Salesperson</th>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Items</th>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Amount</th>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Status</th>
@@ -301,6 +460,17 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                             <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">
                                                 {{ $sale->items->count() }} items
                                             </flux:text>
+                                        </div>
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium dark:bg-neutral-700">
+                                                {{ $sale->salesperson->initials() }}
+                                            </div>
+                                            <div>
+                                                <flux:text class="font-medium">{{ $sale->salesperson->name }}</flux:text>
+                                                <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ $sale->salesperson->email }}</flux:text>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">

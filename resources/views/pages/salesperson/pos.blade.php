@@ -271,7 +271,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                             <flux:badge variant="danger" size="sm" class="mt-1">
                                                 Out of Stock
                                             </flux:badge>
-                                        @elseif($product->stock_quantity <= 10)
+                                        @elseif($product->stock_quantity <= 20)
                                             <flux:badge variant="warning" size="sm" class="mt-1">
                                                 Low Stock
                                             </flux:badge>
@@ -293,7 +293,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Stock:</flux:text>
-                                        <flux:text class="font-medium @if($product->stock_quantity <= 10) text-amber-600 dark:text-amber-400 @else text-neutral-700 dark:text-neutral-300 @endif">
+                                        <flux:text class="font-medium @if($product->stock_quantity <= 20) text-amber-600 dark:text-amber-400 @else text-neutral-700 dark:text-neutral-300 @endif">
                                             {{ number_format($product->stock_quantity, 2) }} {{ $product->unit_type }}
                                         </flux:text>
                                     </div>
