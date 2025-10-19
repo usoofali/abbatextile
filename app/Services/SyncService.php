@@ -305,10 +305,12 @@ class SyncService
 
         foreach ($models as $tableName => $modelInfo) {
             try {
-
+                
+            
                 if (in_array($modelInfo['class'], [
                     'App\Models\Payment',
                     'App\Models\Sale',
+                    'App\Models\Shop',
                     'App\Models\SaleItem'
                 ])) {
                     $result = $this->pushModelToMaster($tableName, $modelInfo);
@@ -345,6 +347,7 @@ class SyncService
         $changes = $this->getLocalChangesForModel($tableName, $modelInfo);
         
         if (empty($changes)) {
+            
             return [
                 'success' => true,
                 'message' => "No changes to push for {$tableName}",
@@ -398,11 +401,11 @@ class SyncService
             
             // For other models, use the original timestamp-based approach
             $lastSync = $this->getLastSyncTime($tableName);
-
+            
             // Get records updated or created after last sync
             $changes = $modelClass::where(function ($query) use ($lastSync) {
-                $query->where('updated_at', '=>', $lastSync)
-                      ->orWhere('created_at', '=>', $lastSync);
+                $query->where('updated_at', '>=', $lastSync)
+                      ->orWhere('created_at', '>=', $lastSync);
             })
             ->get()
             ->map(function ($item) {
@@ -434,17 +437,20 @@ class SyncService
     public function safeUpsertModel(string $modelClass, array $row, string $lastSync): bool
     {
         try {
+
             // Validate required fields
             if (empty($row['id'])) {
                 throw new \Exception("Missing ID for model {$modelClass}");
             }
 
-            // Check if record is newer than last sync
-            $recordDate = $this->validateDate($row['updated_at'] ?? $row['created_at'] ?? null);
-            if ($recordDate && $recordDate <= $lastSync) {
-                $this->log('debug', "Skipping record {$row['id']} - not newer than last sync");
-                return false;
-            }
+            if (config('app.mode') !== 'slave') {
+                // Check if record is newer than last sync
+                $recordDate = $this->validateDate($row['updated_at'] ?? $row['created_at'] ?? null);
+                if ($recordDate && $recordDate <= $lastSync) {
+                    $this->log('debug', "Skipping record {$row['id']} - not newer than last sync");
+                    return false;
+                }
+            }            
 
             // Process dates
             foreach ($this->dateFields as $field) {
@@ -456,11 +462,18 @@ class SyncService
                 }
             }
 
-            // Use Eloquent updateOrCreate
-            $modelClass::updateOrCreate(
-                ['id' => $row['id']],
-                $row
-            );
+            $existing = $modelClass::find($row['id']);
+        
+            if ($existing) {
+                $existing->update($row);
+                $this->log('Info', "Testing row data Update: " . json_encode($row));
+            } else {
+                $this->log('Info', "Testing row data Create: " . json_encode($row));
+                // Create manually without events that might interfere
+                $model = new $modelClass($row);
+                $model->id = $row['id']; // Explicitly set ID
+                $model->save();
+            }
 
             return true;
 
