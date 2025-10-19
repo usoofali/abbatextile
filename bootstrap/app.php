@@ -73,6 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserRole::class,
+            'setup.not.completed' => \App\Http\Middleware\EnsureSetupNotCompleted::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
