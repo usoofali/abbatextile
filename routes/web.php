@@ -18,7 +18,7 @@ Route::get('/setup', function () {
 Route::get('/', function () {
     try {
         if (Schema::hasTable('users') && \App\Models\User::count() > 0) {
-            return redirect()->route('login');
+            return Volt('auth.login');
         }
     } catch (\Exception $e) {
         // Database connection failed, redirect to setup
