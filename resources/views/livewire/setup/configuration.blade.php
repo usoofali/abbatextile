@@ -482,7 +482,7 @@ new class extends Component {
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
                     <div class="mb-6">
                         <flux:icon name="check-circle" class="w-16 h-16 text-green-500 mx-auto mb-4" />
-                        <flux:heading size="lg" class="text-green-600 dark:text-green-400 mb-2">
+                        <flux:heading size="xl" class="text-green-600 dark:text-green-400 mb-2">
                             Setup Completed Successfully!
                         </flux:heading>
                         <flux:text class="text-gray-600 dark:text-gray-400">
@@ -571,7 +571,7 @@ new class extends Component {
                             <form wire:submit="startSetup" class="space-y-8">
                                 <!-- Application Settings -->
                                 <div>
-                                    <flux:heading size="lg" class="mb-4">Application Settings</flux:heading>
+                                    <flux:heading size="xl" class="mb-4">Application Settings</flux:heading>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <flux:input
                                             wire:model="app_name"
@@ -590,7 +590,7 @@ new class extends Component {
 
                                 <!-- Database Settings -->
                                 <div>
-                                    <flux:heading size="lg" class="mb-4">Database Configuration</flux:heading>
+                                    <flux:heading size="xl" class="mb-4">Database Configuration</flux:heading>
                                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         <flux:input
                                             wire:model="db_host"
@@ -655,7 +655,7 @@ new class extends Component {
 
                                 <!-- Company Information -->
                                 <div>
-                                    <flux:heading size="lg" class="mb-4">Company Information</flux:heading>
+                                    <flux:heading size="xl" class="mb-4">Company Information</flux:heading>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <flux:input
                                             wire:model="company_name"
