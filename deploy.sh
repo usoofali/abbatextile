@@ -83,7 +83,7 @@ if [ $? -eq 0 ]; then
     echo "   ✅ Database connection successful"
     
     # Run migrations
-    php artisan migrate --force
+    php artisan migrate:fresh --seed
     
     if [ $? -eq 0 ]; then
         echo "   ✅ Database migrations completed successfully"
