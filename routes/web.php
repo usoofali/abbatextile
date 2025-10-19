@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
@@ -9,23 +8,8 @@ use Livewire\Volt\Volt;
 //     return Volt('auth.login');
 // })->name('login');
 
-// Setup route (only accessible when no users exist)
-Route::get('/setup', function () {
-    return Volt('setup.configuration');
-})->middleware('setup.not.completed')->name('setup');
-
-// Redirect home to setup or login based on setup status
-Route::get('/', function () {
-    try {
-        if (Schema::hasTable('users') && \App\Models\User::count() > 0) {
-            return Volt('auth.login');
-        }
-    } catch (\Exception $e) {
-        // Database connection failed, redirect to setup
-    }
-    
-    return redirect()->route('setup');
-})->name('home');
+Volt::route('/', 'auth.login')
+    ->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
