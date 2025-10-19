@@ -14,6 +14,8 @@ Volt::route('/', 'auth.login')
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+    
+Volt::route('setup','setup.configuration')->name('setup');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
