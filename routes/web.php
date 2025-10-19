@@ -4,16 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
+// Route::get('/', function () {
+//     return Volt('auth.login');
+// })->name('login');
+
 Volt::route('/', 'auth.login')
     ->name('home');
-
-// Setup routes - only accessible if setup is not completed
-if (!config('app.setup_completed', false)) {
-    Route::get('/setup', [SetupController::class, 'index'])->name('setup.index');
-    Route::get('/setup/requirements', [SetupController::class, 'checkRequirements'])->name('setup.requirements');
-    Route::post('/setup/database-check', [SetupController::class, 'checkDatabase'])->name('setup.database-check');
-    Route::post('/setup/run', [SetupController::class, 'runSetup'])->name('setup.run');
-}
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
