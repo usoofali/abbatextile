@@ -35,29 +35,48 @@
     {{-- Show fallback SVG if no logo was displayed --}}
     @if (!$logoDisplayed)
         <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 300 100" 
-            class="size-full"
-            preserveAspectRatio="xMidYMid meet"
-        >
-            <!-- Background -->
-            <rect width="300" height="100" fill="#f5f5f5"/>
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 300 100" 
+        class="size-full"
+        preserveAspectRatio="xMidYMid meet"
+    >
+        <!-- Background with subtle gradient -->
+        <rect width="300" height="100" fill="url(#gradient)"/>
+        
+        <!-- Gradient definition -->
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f8f9fa"/>
+                <stop offset="100%" stop-color="#e9ecef"/>
+            </linearGradient>
+        </defs>
 
-            <!-- Abstract fabric weave pattern -->
-            <g fill="none" stroke="#999" stroke-width="2" opacity="0.3">
-                <path d="M0 20 Q150 80 300 20" />
-                <path d="M0 40 Q150 100 300 40" />
-                <path d="M0 60 Q150 120 300 60" />
-            </g>
+        <!-- Modern geometric textile pattern -->
+        <g fill="none" stroke="#4a6572" stroke-width="1.5" opacity="0.2">
+            <rect x="10" y="15" width="20" height="20" rx="3"/>
+            <rect x="40" y="15" width="20" height="20" rx="3"/>
+            <rect x="70" y="15" width="20" height="20" rx="3"/>
+            <rect x="25" y="40" width="20" height="20" rx="3"/>
+            <rect x="55" y="40" width="20" height="20" rx="3"/>
+            <rect x="85" y="40" width="20" height="20" rx="3"/>
+        </g>
 
-            <!-- Main Logo Circle -->
-            <circle cx="50" cy="50" r="30" fill="#1e3a8a"/>
-            <text x="50" y="57" font-size="24" text-anchor="middle" fill="white" font-weight="bold">A</text>
+        <!-- Modern logo mark - abstract textile formation -->
+        <g fill="#2d4e8a">
+            <path d="M45,35 L55,25 L65,35 L55,45 Z"/>
+            <circle cx="55" cy="35" r="8" fill="#e74c3c"/>
+        </g>
 
-            <!-- Company Name -->
-            <text x="100" y="58" font-size="28" fill="#1e3a8a" font-weight="600" font-family="Arial, sans-serif">
-                AbbaTextiles
-            </text>
-        </svg>
+        <!-- Company Name with modern typography -->
+        <text x="95" y="42" font-size="20" fill="#2c3e50" font-weight="700" font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" letter-spacing="1">
+            ABBA
+        </text>
+        <text x="95" y="62" font-size="14" fill="#7f8c8d" font-weight="500" font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" letter-spacing="2">
+            TEXTILES
+        </text>
+
+        <!-- Subtle accent line -->
+        <line x1="95" y1="65" x2="180" y2="65" stroke="#e74c3c" stroke-width="2"/>
+    </svg>
     @endif
 </div>

@@ -1,0 +1,1 @@
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\dashboard.blade.php ENDPATH**/ ?>
