@@ -14,7 +14,7 @@ use ReflectionException;
 class SyncService
 {
     // Internal configuration
-    protected $syncUrl = 'https://abbatextiles.yumitsolutions.com/api/sync';
+    protected $syncUrl;
     protected $syncTimeout = 25;
     protected $networkTestUrl = 'https://www.google.com';
     protected $networkTestTimeout = 3;
@@ -36,6 +36,7 @@ class SyncService
         $this->syncDataPath = storage_path('app/sync_data');
         
         // Use configuration values if available
+        $this->syncUrl = config('app.sync_url', 'https://abbatextiles.yumitsolutions.com/api/sync');
         $this->syncTimeout = config('app.sync_timeout', $this->syncTimeout);
         
         $this->ensureSyncDirectoryExists();
