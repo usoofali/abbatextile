@@ -14,23 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule) {
-        // Sync every 5 minutes only if this is a slave instance
-        $schedule->call(function () {
-            // Check the mode at runtime
-            if (config('app.mode') !== 'slave') {
-                Log::info('Scheduled sync skipped - not a slave instance');
-                return;
-            }
-            
-            $syncService = app(\App\Services\SyncService::class);
-            $result = $syncService->sync();
-            
-            // Log results
-            Log::info('Scheduled sync completed', [
-                'pull_success' => $result['pull']['success'],
-                'push_success' => $result['push']['success']
-            ]);
-        })->everyMinute();
+        
 
         // Clean up old log files daily at 2:00 AM
         $schedule->call(function () {
