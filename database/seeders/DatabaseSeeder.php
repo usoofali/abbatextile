@@ -12,9 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // $this->call([
+        //     AdminUserSeeder::class,
+        //     ShopSeeder::class,
+        // ]);
         $this->call([
-            AdminUserSeeder::class,
-            ShopSeeder::class,
+            AdminUserSeeder::class
         ]);
 
         // Create default company settings
