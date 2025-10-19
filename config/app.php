@@ -123,6 +123,7 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    'setup_completed' => env('SETUP_COMPLETED', false),
     'sync_logging_enabled' => env('SYNC_LOGGING_ENABLED', true),
     'sync_timeout' => env('SYNC_TIMEOUT', 25),
     'sync_retry_attempts' => env('SYNC_RETRY_ATTEMPTS', 3),
