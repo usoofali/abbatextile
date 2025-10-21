@@ -153,7 +153,15 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Product'])] class exten
                 <!-- Photo Upload (camera or file)-->
                 <div>
                     <flux:field label="Product Photo">
-                        <input type="file" wire:model="new_photo" accept="image/*" capture="environment" class="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-neutral-100 file:px-3 file:py-2 file:text-neutral-800 dark:file:bg-neutral-700 dark:file:text-neutral-100" />
+                        <input 
+                            type="file" 
+                            id="new-photo-input"
+                            wire:model="new_photo" 
+                            accept="image/*" 
+                            capture="environment" 
+                            class="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-neutral-100 file:px-3 file:py-2 file:text-neutral-800 dark:file:bg-neutral-700 dark:file:text-neutral-100" 
+                            onchange="resizeImage(this, 50)"
+                        />
                         <div class="mt-2" wire:loading.delay wire:target="new_photo">
                             <flux:text>Uploading...</flux:text>
                         </div>
@@ -309,3 +317,83 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Product'])] class exten
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+function resizeImage(input, maxSizeKB) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const maxSizeBytes = maxSizeKB * 1024;
+        
+        // Check if file is already small enough
+        if (file.size <= maxSizeBytes) {
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                // Calculate new dimensions while maintaining aspect ratio
+                let { width, height } = img;
+                const aspectRatio = width / height;
+                
+                // Start with a reasonable size and reduce until under target
+                let quality = 0.8;
+                let newWidth = Math.min(width, 800);
+                let newHeight = newWidth / aspectRatio;
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Function to compress image
+                const compressImage = () => {
+                    canvas.width = newWidth;
+                    canvas.height = newHeight;
+                    
+                    ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                    
+                    const dataURL = canvas.toDataURL('image/jpeg', quality);
+                    const sizeKB = (dataURL.length * 0.75) / 1024; // Approximate size
+                    
+                    if (sizeKB > maxSizeKB && quality > 0.1) {
+                        quality -= 0.1;
+                        compressImage();
+                    } else if (sizeKB > maxSizeKB && newWidth > 200) {
+                        newWidth = Math.floor(newWidth * 0.8);
+                        newHeight = newWidth / aspectRatio;
+                        quality = 0.8;
+                        compressImage();
+                    } else {
+                        // Convert dataURL back to file
+                        const byteString = atob(dataURL.split(',')[1]);
+                        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+                        const ab = new ArrayBuffer(byteString.length);
+                        const ia = new Uint8Array(ab);
+                        for (let i = 0; i < byteString.length; i++) {
+                            ia[i] = byteString.charCodeAt(i);
+                        }
+                        const blob = new Blob([ab], { type: mimeString });
+                        const resizedFile = new File([blob], file.name, { type: mimeString });
+                        
+                        // Create a new FileList with the resized file
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(resizedFile);
+                        input.files = dataTransfer.files;
+                        
+                        // Trigger Livewire update
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                        
+                        console.log(`Image resized: ${(file.size / 1024).toFixed(1)}KB → ${(resizedFile.size / 1024).toFixed(1)}KB`);
+                    }
+                };
+                
+                compressImage();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+@endpush

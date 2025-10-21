@@ -611,7 +611,12 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     </div>
                     <template x-if="lastCode">
                         <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
-                            Detected: <span class="font-mono" x-text="lastCode"></span>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium">Detected:</span> <span class="font-mono" x-text="lastCode"></span>
+                                </div>
+                                <div class="text-xs bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full" x-text="'Scan #' + (scanCounts[lastCode] || 0)"></div>
+                            </div>
                         </div>
                     </template>
                     <div class="flex gap-2 mt-2">
@@ -665,6 +670,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         throttleMs: 1200,
         beepAudio: null,
         zxingReader: null,
+        scanCounts: {},
         initBeep() {
             // Create a simple beep sound using Web Audio API
             try {
@@ -749,9 +755,13 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 try {
                     const formats = ['ean_13','ean_8','code_128','code_39','upc_a','upc_e','qr_code'];
                     this.detector = new window.BarcodeDetector({ formats });
+                    console.log('Using native BarcodeDetector API');
                 } catch (e) {
+                    console.log('BarcodeDetector failed:', e);
                     this.detector = null;
                 }
+            } else {
+                console.log('BarcodeDetector not supported, will use ZXing fallback');
             }
         },
         async enumerateCameras() {
@@ -797,28 +807,58 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         },
         async startZxingFallback(videoEl) {
             try {
+                console.log('Using ZXing fallback for barcode detection');
                 if (!window.ZXing) {
                     await this.loadZxing();
                 }
                 const codeReader = new ZXing.BrowserMultiFormatReader();
                 this.zxingReader = codeReader;
-                const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
+                
+                // Use the correct ZXing API
+                const devices = await codeReader.listVideoInputDevices();
                 const deviceId = devices?.[this.currentDeviceIndex]?.deviceId;
+                
                 await codeReader.decodeFromVideoDevice(deviceId ?? null, videoEl, (result, err) => {
                     if (!this.running) { return; }
                     if (result?.text) {
                         const now = Date.now();
                         const value = result.text;
+                        console.log('ZXing: Detected barcode:', value);
                         if (value && (now - this.lastScanAt > this.throttleMs)) {
                             this.lastCode = value;
                             this.lastScanAt = now;
+                            this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                            console.log('ZXing: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
                             this.playBeep();
                             $wire.addByBarcode(value);
                         }
                     }
                 });
             } catch (e) {
-                // ignore
+                console.log('ZXing fallback error:', e);
+                // Try alternative approach without device selection
+                try {
+                    const codeReader = new ZXing.BrowserMultiFormatReader();
+                    this.zxingReader = codeReader;
+                    await codeReader.decodeFromVideoDevice(null, videoEl, (result, err) => {
+                        if (!this.running) { return; }
+                        if (result?.text) {
+                            const now = Date.now();
+                            const value = result.text;
+                            console.log('ZXing (fallback): Detected barcode:', value);
+                            if (value && (now - this.lastScanAt > this.throttleMs)) {
+                                this.lastCode = value;
+                                this.lastScanAt = now;
+                                this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                                console.log('ZXing (fallback): Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                                this.playBeep();
+                                $wire.addByBarcode(value);
+                            }
+                        }
+                    });
+                } catch (e2) {
+                    console.log('ZXing fallback also failed:', e2);
+                }
             }
         },
         async loadZxing() {
@@ -843,6 +883,9 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 try { this.zxingReader.reset(); } catch (e) {}
                 this.zxingReader = null;
             }
+            // Reset scan counts when scanner is closed
+            this.scanCounts = {};
+            this.lastCode = '';
         },
         toggleTorch() {
             if (!this.track || !this.supportsTorch) { return; }
@@ -866,15 +909,18 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     if (barcodes && barcodes.length > 0) {
                         const now = Date.now();
                         const value = barcodes[0].rawValue || '';
+                        console.log('Desktop: Detected barcode:', value);
                         if (value && (now - this.lastScanAt > this.throttleMs)) {
                             this.lastCode = value;
                             this.lastScanAt = now;
+                            this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                            console.log('Desktop: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
                             this.playBeep();
                             $wire.addByBarcode(value);
                         }
                     }
                 } catch (e) {
-                    // ignore per-frame errors
+                    console.log('Desktop: Barcode detection error:', e);
                 }
             }
             requestAnimationFrame(() => this.loop());
