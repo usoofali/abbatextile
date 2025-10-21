@@ -67,10 +67,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
             ->get();
     }
 
-    public function updatedSelectedProducts(): void
-    {
-        // This will be called when selectedProducts changes
-    }
 
     public function toggleProductSelection($productId): void
     {
@@ -346,10 +342,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     <flux:modal wire:model="showBarcodeModal" max-width="4xl">
         <div class="p-6">
             <flux:heading size="xl">Generate Product Barcodes</flux:heading>
-            <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
-                Select products to generate printable barcode labels
-            </flux:text>
-
             <!-- Search Products -->
             <div class="mt-6">
                 <flux:field>
