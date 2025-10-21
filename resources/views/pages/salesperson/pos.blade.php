@@ -20,6 +20,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
     public $paymentAmount = 0;
     public $paymentMode = 'cash';
     public $paymentReference = '';
+    public $showScanner = false;
 
     public function mount(): void
     {
@@ -53,6 +54,57 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
     public function updatedSearch(): void
     {
         $this->loadProducts();
+    }
+
+
+    public function addByBarcode(string $barcode): void
+    {
+        if (!$this->shop) {
+            return;
+        }
+
+        $trimmed = trim($barcode);
+        if ($trimmed === '') {
+            return;
+        }
+
+        $product = $this->shop->products()
+            ->with('category')
+            ->where('barcode', $trimmed)
+            ->first();
+
+        if (!$product) {
+            session()->flash('error', "No product found for barcode: {$trimmed}");
+            return;
+        }
+
+        if ($product->stock_quantity <= 0) {
+            session()->flash('error', "{$product->name} is out of stock.");
+            return;
+        }
+
+        $existingIndex = null;
+        foreach ($this->cart as $index => $item) {
+            if ((int) ($item['product_id'] ?? 0) === (int) $product->id) {
+                $existingIndex = $index;
+                break;
+            }
+        }
+
+        if ($existingIndex !== null) {
+            $this->cart[$existingIndex]['quantity'] += 1;
+        } else {
+            $this->cart[] = [
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'unit_type' => $product->unit_type,
+                'quantity' => 1,
+                'price' => $product->price_per_unit,
+            ];
+        }
+
+        $this->calculateTotals();
+        session()->flash('success', "Added {$product->name} to cart");
     }
 
 
@@ -252,6 +304,14 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         placeholder="Search products by name, description, or barcode..."
                         icon="magnifying-glass"
                     />
+                    <div class="flex items-center gap-3">
+                        <flux:button variant="ghost" size="sm" icon="qr-code" wire:click="$set('showScanner', true)">
+                            Scan Barcode
+                        </flux:button>
+                        <flux:text class="text-sm text-neutral-500 dark:text-neutral-400">
+                            Use your device camera to scan and add items.
+                        </flux:text>
+                    </div>
                 </div>
 
                 <!-- Products Grid -->
@@ -520,6 +580,46 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 </div>
             </flux:modal>
         @endif
+        
+        <!-- Scanner Modal -->
+        @if($showScanner)
+            <flux:modal wire:model="showScanner" class="md:w-[28rem]">
+                <flux:heading size="xl">Scan Barcode</flux:heading>
+                <div
+                    x-data="barcodeScanner($wire)"
+                    x-init="start()"
+                    x-on:keydown.escape.window="stop()"
+                    class="space-y-3"
+                >
+                    <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
+                        <video x-ref="video" class="w-full h-56 object-cover bg-black"></video>
+                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                            <div class="w-2/3 h-28 border-2 border-green-400/70 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block size-2 rounded-full" x-bind:class="running ? 'bg-green-500' : 'bg-neutral-400'"></span>
+                            <span x-text="running ? 'Scanning…' : 'Idle'"></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:button size="xs" variant="ghost" x-on:click="toggleTorch()" x-show="supportsTorch">Toggle Torch</flux:button>
+                            <flux:button size="xs" variant="ghost" x-on:click="switchCamera()" x-show="candidates.length > 1">Switch Camera</flux:button>
+                        </div>
+                    </div>
+                    <template x-if="lastCode">
+                        <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
+                            Detected: <span class="font-mono" x-text="lastCode"></span>
+                        </div>
+                    </template>
+                    <div class="flex gap-2 mt-2">
+                        <flux:button class="flex-1" variant="primary" x-on:click="start()" x-bind:disabled="running">Start</flux:button>
+                        <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)">Close</flux:button>
+                    </div>
+                </div>
+
+            </flux:modal>
+        @endif
     @else
         <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
             <div class="flex items-center gap-2">
@@ -547,3 +647,113 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('barcodeScanner', ($wire) => ({
+        stream: null,
+        track: null,
+        running: false,
+        detector: null,
+        candidates: [],
+        currentDeviceIndex: 0,
+        supportsTorch: false,
+        lastCode: '',
+        lastScanAt: 0,
+        throttleMs: 1200,
+        async initDetector() {
+            if ('BarcodeDetector' in window) {
+                try {
+                    const formats = ['ean_13','ean_8','code_128','code_39','upc_a','upc_e','qr_code'];
+                    this.detector = new window.BarcodeDetector({ formats });
+                } catch (e) {
+                    this.detector = null;
+                }
+            }
+        },
+        async enumerateCameras() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                this.candidates = devices.filter(d => d.kind === 'videoinput');
+                if (this.candidates.length === 0) {
+                    this.candidates = [{ deviceId: undefined }];
+                }
+            } catch (e) {
+                this.candidates = [{ deviceId: undefined }];
+            }
+        },
+        async start() {
+            await this.initDetector();
+            await this.enumerateCameras();
+            const constraints = {
+                video: {
+                    deviceId: this.candidates[this.currentDeviceIndex]?.deviceId || undefined,
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            };
+            try {
+                this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = this.$refs.video;
+                video.srcObject = this.stream;
+                await video.play();
+                this.track = this.stream.getVideoTracks()[0] || null;
+                this.supportsTorch = !!(this.track && this.track.getCapabilities && this.track.getCapabilities().torch);
+                this.running = true;
+                this.loop();
+            } catch (e) {
+                this.running = false;
+            }
+        },
+        stop() {
+            this.running = false;
+            if (this.track) {
+                this.track.stop();
+                this.track = null;
+            }
+            if (this.stream) {
+                this.stream.getTracks().forEach(t => t.stop());
+                this.stream = null;
+            }
+        },
+        toggleTorch() {
+            if (!this.track || !this.supportsTorch) { return; }
+            const caps = this.track.getCapabilities();
+            const settings = this.track.getSettings();
+            const torchOn = !settings.torch;
+            this.track.applyConstraints({ advanced: [{ torch: torchOn }] });
+        },
+        async switchCamera() {
+            if (this.candidates.length <= 1) { return; }
+            this.stop();
+            this.currentDeviceIndex = (this.currentDeviceIndex + 1) % this.candidates.length;
+            await this.start();
+        },
+        async loop() {
+            if (!this.running) { return; }
+            const video = this.$refs.video;
+            if (this.detector && video.readyState >= 2) {
+                try {
+                    const barcodes = await this.detector.detect(video);
+                    if (barcodes && barcodes.length > 0) {
+                        const now = Date.now();
+                        const value = barcodes[0].rawValue || '';
+                        if (value && (now - this.lastScanAt > this.throttleMs)) {
+                            this.lastCode = value;
+                            this.lastScanAt = now;
+                            $wire.addByBarcode(value);
+                        }
+                    }
+                } catch (e) {
+                    // ignore per-frame errors
+                }
+            }
+            requestAnimationFrame(() => this.loop());
+        },
+    }));
+});
+</script>
+@endpush
