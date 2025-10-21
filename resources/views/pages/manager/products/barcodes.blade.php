@@ -161,7 +161,7 @@ new #[Layout('components.layouts.app', ['title' => 'Print Barcodes'])] class ext
             <flux:heading size="xl" level="1">Print Product Barcodes</flux:heading>
             <flux:subheading size="lg">{{ $shop?->name ?? 'No shop assigned' }}</flux:subheading>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2 max-md:w-full">
             <flux:button icon="arrow-left" variant="outline" wire:click="goBack">
                 Back to Products
             </flux:button>
@@ -178,7 +178,7 @@ new #[Layout('components.layouts.app', ['title' => 'Print Barcodes'])] class ext
                 <flux:icon name="information-circle" class="size-5 text-blue-600 dark:text-blue-400" />
                 <div>
                     <flux:text class="font-medium text-blue-800 dark:text-blue-200">
-                        Ready to print {{ count($products) }} product(s) - {{ count($products) * 8 }} total labels
+                        Ready to print {{ count($products) }} product(s) - {{ count($products) * 10 }} total labels
                     </flux:text>
                 </div>
             </div>
