@@ -589,6 +589,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     x-data="barcodeScanner($wire)"
                     x-init="$nextTick(() => $data.start())"
                     x-on:keydown.escape.window="stop()"
+                    x-on:click="$data.activateAudio()"
                     class="space-y-3 max-h-[70vh] overflow-hidden"
                 >
                     <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
@@ -605,6 +606,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         <div class="flex items-center gap-2">
                             <flux:button size="xs" variant="ghost" x-on:click="toggleTorch()" x-show="supportsTorch">Toggle Torch</flux:button>
                             <flux:button size="xs" variant="ghost" x-on:click="switchCamera()" x-show="candidates.length > 1">Switch Camera</flux:button>
+                            <flux:button size="xs" variant="ghost" x-on:click="playBeep()">Test Beep</flux:button>
                         </div>
                     </div>
                     <template x-if="lastCode">
@@ -672,27 +674,50 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.beepAudio = null;
             }
         },
+        activateAudio() {
+            // Activate audio context on user interaction
+            if (this.beepAudio && this.beepAudio.state === 'suspended') {
+                this.beepAudio.resume();
+            }
+        },
         playBeep() {
-            if (!this.beepAudio) return;
-            try {
-                const oscillator = this.beepAudio.createOscillator();
-                const gainNode = this.beepAudio.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.beepAudio.destination);
-                
-                oscillator.frequency.setValueAtTime(800, this.beepAudio.currentTime);
-                gainNode.gain.setValueAtTime(0.3, this.beepAudio.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.1);
-                
-                oscillator.start(this.beepAudio.currentTime);
-                oscillator.stop(this.beepAudio.currentTime + 0.1);
-            } catch (e) {
-                // Fallback: try to play a simple beep using a data URL
+            // Try Web Audio API first
+            if (this.beepAudio) {
                 try {
-                    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
-                    audio.play().catch(() => {});
-                } catch (e) {}
+                    // Resume audio context if suspended
+                    if (this.beepAudio.state === 'suspended') {
+                        this.beepAudio.resume();
+                    }
+                    
+                    const oscillator = this.beepAudio.createOscillator();
+                    const gainNode = this.beepAudio.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.beepAudio.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800, this.beepAudio.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, this.beepAudio.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.1);
+                    
+                    oscillator.start(this.beepAudio.currentTime);
+                    oscillator.stop(this.beepAudio.currentTime + 0.1);
+                    return;
+                } catch (e) {
+                    console.log('Web Audio API beep failed:', e);
+                }
+            }
+            
+            // Fallback: use HTML5 Audio with a simple beep
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                audio.volume = 0.5;
+                audio.play().catch(() => {
+                    // If that fails, try a simpler approach
+                    const simpleBeep = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                    simpleBeep.play().catch(() => {});
+                });
+            } catch (e) {
+                console.log('Audio beep failed:', e);
             }
         },
         async initDetector() {
