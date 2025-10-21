@@ -587,7 +587,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 <flux:heading size="xl">Scan Barcode</flux:heading>
                 <div
                     x-data="barcodeScanner($wire)"
-                    x-init="start()"
+                    x-init="$nextTick(() => $data.start())"
                     x-on:keydown.escape.window="stop()"
                     class="space-y-3"
                 >
@@ -613,7 +613,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         </div>
                     </template>
                     <div class="flex gap-2 mt-2">
-                        <flux:button class="flex-1" variant="primary" x-on:click="start()" x-bind:disabled="running">Start</flux:button>
+                        <flux:button class="flex-1" variant="primary" x-on:click="$data.start()" x-bind:disabled="running">Start</flux:button>
                         <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)">Close</flux:button>
                     </div>
                 </div>
@@ -650,8 +650,8 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
 
 @push('scripts')
 <script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('barcodeScanner', ($wire) => ({
+(function registerBarcodeScanner(){
+    const define = () => Alpine.data('barcodeScanner', ($wire) => ({
         stream: null,
         track: null,
         running: false,
@@ -754,6 +754,14 @@ document.addEventListener('alpine:init', () => {
             requestAnimationFrame(() => this.loop());
         },
     }));
-});
+
+    if (window.Alpine && typeof window.Alpine.data === 'function') {
+        // Alpine already initialized
+        define();
+    } else {
+        // Register on Alpine init
+        document.addEventListener('alpine:init', define, { once: true });
+    }
+})();
 </script>
 @endpush
