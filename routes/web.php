@@ -14,8 +14,6 @@ Volt::route('/', 'auth.login')
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-    
-Volt::route('setup','setup.configuration')->name('setup');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
@@ -54,11 +52,13 @@ Route::middleware(['auth'])->group(function () {
         Volt::route('manager/products', 'manager.products.index')->name('manager.products.index');
         Volt::route('manager/products/create', 'manager.products.create')->name('manager.products.create');
         Volt::route('manager/products/{product}/edit', 'manager.products.edit')->name('manager.products.edit');
+        Volt::route('/manager/products/barcodes/print', 'manager.products.barcodes')->name('manager.products.barcodes');
         Volt::route('manager/categories', 'manager.categories.index')->name('manager.categories.index');
         Volt::route('manager/categories/create', 'manager.categories.create')->name('manager.categories.create');
         Volt::route('manager/categories/{category}/edit', 'manager.categories.edit')->name('manager.categories.edit');
         Volt::route('manager/sales', 'manager.sales.index')->name('manager.sales.index');
         Volt::route('manager/stock', 'manager.stock.index')->name('manager.stock.index');
+        Volt::route('manager/payments', 'manager.payments.index')->name('manager.payments.index');
     });
 
     // Salesperson routes

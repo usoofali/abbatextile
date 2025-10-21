@@ -636,7 +636,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 </div>
             </template>
             <div class="flex gap-2 mt-2">
-                <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
+                <flux:button variant="filled" icon="x-mark" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
             </div>
         </div>
     </flux:modal>

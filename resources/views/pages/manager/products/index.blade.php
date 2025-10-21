@@ -12,6 +12,10 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     public $shop;
     public $showDeleteModal = false;
     public $productToDelete = null;
+    public $showBarcodeModal = false;
+    public $barcodeSearch = '';
+    public $selectedProducts = [];
+    public $barcodeProducts = [];
 
     public function mount(): void
     {
@@ -31,7 +35,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
         if (!$this->shop) return;
         
         $this->products = $this->shop->products()
-            ->with(['category', 'saleItems']) // Load relationships for efficiency
+            ->with(['category', 'saleItems'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('description', 'like', '%' . $this->search . '%');
@@ -45,13 +49,102 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
         $this->loadProducts();
     }
 
+    public function updatedBarcodeSearch(): void
+    {
+        $this->searchBarcodeProducts();
+    }
+
+    public function searchBarcodeProducts(): void
+    {
+        if (!$this->shop) return;
+
+        $this->barcodeProducts = $this->shop->products()
+            ->where(function($query) {
+                $query->where('name', 'like', '%' . $this->barcodeSearch . '%')
+                      ->orWhere('barcode', 'like', '%' . $this->barcodeSearch . '%');
+            })
+            ->limit(10)
+            ->get();
+    }
+
+    public function updatedSelectedProducts(): void
+    {
+        // This will be called when selectedProducts changes
+    }
+
+    public function toggleProductSelection($productId): void
+    {
+        $productId = (string) $productId;
+        
+        if (in_array($productId, $this->selectedProducts)) {
+            $this->selectedProducts = array_values(array_diff($this->selectedProducts, [$productId]));
+        } else {
+            $this->selectedProducts = array_values([...$this->selectedProducts, $productId]);
+        }
+        
+        // Force reactivity
+        $this->dispatch('selected-products-updated');
+    }
+
+
+    public function generateBarcodes(): void
+    {
+        if (empty($this->selectedProducts)) {
+            session()->flash('error', 'Please select at least one product to generate barcodes.');
+            return;
+        }
+
+        // Verify all selected products belong to the manager's shop
+        $validProductIds = $this->shop->products()
+            ->whereIn('id', $this->selectedProducts)
+            ->pluck('id')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
+
+        if (count($validProductIds) !== count($this->selectedProducts)) {
+            session()->flash('error', 'Some selected products are not available in your shop.');
+            return;
+        }
+
+        // Close the modal first
+        $this->closeBarcodeModal();
+
+        // Store the selected products in session and redirect
+        session(['barcode_products' => $validProductIds]);
+        
+        // Redirect to the barcode printable Volt component
+        $this->redirectRoute('manager.products.barcodes');
+    }
+
+    public function openBarcodeModal(): void
+    {
+        $this->showBarcodeModal = true;
+        $this->barcodeSearch = '';
+        $this->selectedProducts = [];
+        $this->barcodeProducts = [];
+    }
+
+    public function closeBarcodeModal(): void
+    {
+        $this->showBarcodeModal = false;
+        $this->barcodeSearch = '';
+        $this->selectedProducts = [];
+        $this->barcodeProducts = [];
+    }
+
     public function confirmDelete(): void
     {
         if (!$this->productToDelete) {
             return;
         }
 
-        // Check if product has sale items (sales)
+        // Verify the product belongs to the manager's shop
+        if ($this->productToDelete->shop_id !== $this->shop->id) {
+            session()->flash('error', 'You can only delete products from your shop.');
+            $this->showDeleteModal = false;
+            return;
+        }
+
         if ($this->productToDelete->saleItems()->count() > 0) {
             session()->flash('error', 'Cannot delete product with existing sales records.');
             $this->showDeleteModal = false;
@@ -64,8 +157,16 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
         session()->flash('success', 'Product deleted successfully.');
     }
 
-    public function promptDelete(Product $product): void
+    public function promptDelete($productId): void
     {
+        $product = Product::find($productId);
+        
+        // Verify the product belongs to the manager's shop
+        if (!$product || $product->shop_id !== $this->shop->id) {
+            session()->flash('error', 'Product not found in your shop.');
+            return;
+        }
+
         $this->productToDelete = $product;
         $this->showDeleteModal = true;
     }
@@ -78,19 +179,24 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 }; ?>
 
 <div class="flex h-full w-full flex-1 flex-col gap-6">
-      <!-- Header -->
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-                <flux:heading size="xl" level="1">Manage Products</flux:heading>
-                <flux:subheading size="lg">{{ $shop?->name ?? 'No shop assigned' }}</flux:subheading>
-            </div>
-            @if($shop)
+    <!-- Header -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <flux:heading size="xl" level="1">Manage Products</flux:heading>
+            <flux:subheading size="lg">{{ $shop?->name ?? 'No shop assigned' }}</flux:subheading>
+        </div>
+        @if($shop)
+            <div class="flex flex-col sm:flex-row gap-2 max-md:w-full">
+                <flux:button icon="qr-code" variant="outline" wire:click="openBarcodeModal" class="max-md:w-full">
+                    Generate Barcodes
+                </flux:button>
                 <flux:button variant="primary" :href="route('manager.products.create')" wire:navigate class="max-md:w-full">
                     <flux:icon name="plus" />
                     Add Product
                 </flux:button>
-            @endif
-        </div>
+            </div>
+        @endif
+    </div>
 
     @if($shop)
         <!-- Search -->
@@ -236,6 +342,96 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
         </div>
     @endif
 
+    <!-- Barcode Generation Modal -->
+    <flux:modal wire:model="showBarcodeModal" max-width="4xl">
+        <div class="p-6">
+            <flux:heading size="xl">Generate Product Barcodes</flux:heading>
+            <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
+                Select products to generate printable barcode labels
+            </flux:text>
+
+            <!-- Search Products -->
+            <div class="mt-6">
+                <flux:field>
+                    <flux:label>Search Products</flux:label>
+                    <flux:input
+                        wire:model.live.debounce.300ms="barcodeSearch"
+                        placeholder="Search by product name or barcode..."
+                        icon="magnifying-glass"
+                    />
+                </flux:field>
+            </div>
+
+            <!-- Selected Products Count -->
+            @if(count($selectedProducts) > 0)
+                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <flux:text class="text-blue-800 dark:text-blue-200 font-medium">
+                        {{ count($selectedProducts) }} product(s) selected for barcode generation
+                    </flux:text>
+                </div>
+            @endif
+
+            <!-- Products List -->
+            <div class="mt-6 max-h-96 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-lg">
+                @if(count($barcodeProducts) > 0)
+                    <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
+                        @foreach($barcodeProducts as $product)
+                            <div class="p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input 
+                                        type="checkbox" 
+                                        wire:click="toggleProductSelection('{{ $product->id }}')"
+                                        {{ in_array((string) $product->id, $selectedProducts) ? 'checked' : '' }}
+                                        class="rounded border-neutral-300 text-blue-600 focus:ring-blue-500 dark:border-neutral-600 dark:bg-neutral-800"
+                                    >
+                                    <div class="flex-1">
+                                        <flux:text class="font-medium">{{ $product->name }}</flux:text>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            @if($product->barcode)
+                                                <flux:badge variant="outline" size="sm">Barcode: {{ $product->barcode }}</flux:badge>
+                                            @else
+                                                <flux:badge variant="red" size="sm">No Barcode</flux:badge>
+                                            @endif
+                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
+                                                ₦{{ number_format($product->price_per_unit, 2) }} / {{ $product->unit_type }}
+                                            </flux:text>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <flux:icon name="magnifying-glass" class="mx-auto size-8 text-neutral-400" />
+                        <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
+                            @if($barcodeSearch)
+                                No products found matching "{{ $barcodeSearch }}"
+                            @else
+                                Start typing to search for products
+                            @endif
+                        </flux:text>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex justify-end gap-3">
+                <flux:button variant="outline" wire:click="closeBarcodeModal">
+                    Cancel
+                </flux:button>
+                <flux:button 
+                    variant="primary" 
+                    wire:click="generateBarcodes"
+                    :disabled="count($selectedProducts) === 0"
+                    icon="qr-code"
+                >
+                    Generate Barcodes ({{ count($selectedProducts) }})
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
     <!-- Delete Confirmation Modal -->
     <flux:modal wire:model="showDeleteModal">
         <div class="p-6">
@@ -249,19 +445,20 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
             </div>
         </div>
     </flux:modal>
+
     <!-- Flash Message -->
     @if (session()->has('error'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="error" :timeout="5000">
-            {{ session('error') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="error" :timeout="5000">
+                {{ session('error') }}
+            </x-ui.alert>
+        </div>
     @endif
     @if (session()->has('success'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="success" :timeout="5000">
-            {{ session('success') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="success" :timeout="5000">
+                {{ session('success') }}
+            </x-ui.alert>
+        </div>
     @endif
 </div>
