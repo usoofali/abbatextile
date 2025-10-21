@@ -83,17 +83,19 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             return;
         }
 
-        $existingIndex = null;
-        foreach ($this->cart as $index => $item) {
-            if ((int) ($item['product_id'] ?? 0) === (int) $product->id) {
-                $existingIndex = $index;
-                break;
-            }
-        }
-
-        if ($existingIndex !== null) {
-            $this->cart[$existingIndex]['quantity'] += 1;
+        // FIX: Use the same approach as addToCart with collection
+        $existingItem = collect($this->cart)->firstWhere('product_id', $product->id);
+        
+        if ($existingItem) {
+            // Update existing item - use the same collection map approach
+            $this->cart = collect($this->cart)->map(function ($item) use ($product) {
+                if ($item['product_id'] == $product->id) {
+                    $item['quantity'] += 1;
+                }
+                return $item;
+            })->toArray();
         } else {
+            // Add new item
             $this->cart[] = [
                 'product_id' => $product->id,
                 'name' => $product->name,
@@ -106,7 +108,6 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         $this->calculateTotals();
         session()->flash('success', "Added {$product->name} to cart");
     }
-
 
     public function addToCart($productId): void
     {
@@ -277,6 +278,13 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         $this->paymentAmount = 0;
         $this->paymentMode = 'cash';
         $this->paymentReference = '';
+    }
+    public function updatedShowScanner($value)
+    {
+        if (!$value) {
+            // Modal was closed - you could dispatch a browser event here if needed
+            $this->dispatch('scanner-closed');
+        }
     }
 }; ?>
 
@@ -582,50 +590,58 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         @endif
         
         <!-- Scanner Modal -->
-        @if($showScanner)
-            <flux:modal wire:model="showScanner" class="w-full max-w-xs sm:max-w-sm mx-auto">
-                <flux:heading size="xl">Scan Barcode</flux:heading>
-                <div
-                    x-data="barcodeScanner($wire)"
-                    x-init="$nextTick(() => $data.start())"
-                    x-on:keydown.escape.window="stop()"
-                    x-on:click="$data.activateAudio()"
-                    class="space-y-3 max-h-[70vh] overflow-hidden"
-                >
-                    <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
-                        <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
-                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                            <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>
+        <!-- Scanner Modal -->
+    @if($showScanner)
+    <flux:modal wire:model="showScanner" :dismissible="false" :closable="false" class="w-full max-w-xs sm:max-w-sm mx-auto">
+        <flux:heading size="xl">Scan Barcode</flux:heading>
+        <div
+            x-data="barcodeScanner($wire)"
+            x-init="
+                $nextTick(() => start());
+                $wire.on('scanner-closed', () => stop());
+                // Watch for modal close via LiveWire
+                $watch('$wire.showScanner', (value) => {
+                    if (!value) stop();
+                });
+            "
+            x-on:keydown.escape.window="stop(); $wire.set('showScanner', false)"
+            x-on:click="activateAudio()"
+            class="space-y-3 max-h-[70vh] overflow-hidden"
+        >
+            <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
+                <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
+                <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                    <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block size-2 rounded-full" x-bind:class="running ? 'bg-green-500' : 'bg-neutral-400'"></span>
+                    <span x-text="running ? 'Scanning…' : 'Idle'"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <flux:button size="xs" variant="ghost" x-on:click="toggleTorch()" x-show="supportsTorch">Toggle Torch</flux:button>
+                    <flux:button size="xs" variant="ghost" x-on:click="switchCamera()" x-show="candidates.length > 1">Switch Camera</flux:button>
+                    <!-- <flux:button size="xs" variant="ghost" x-on:click="playBeep()">Test Beep</flux:button> -->
+                </div>
+            </div>
+            <template x-if="lastCode">
+                <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium">Detected:</span> <span class="font-mono" x-text="lastCode"></span>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="inline-block size-2 rounded-full" x-bind:class="running ? 'bg-green-500' : 'bg-neutral-400'"></span>
-                            <span x-text="running ? 'Scanning…' : 'Idle'"></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <flux:button size="xs" variant="ghost" x-on:click="toggleTorch()" x-show="supportsTorch">Toggle Torch</flux:button>
-                            <flux:button size="xs" variant="ghost" x-on:click="switchCamera()" x-show="candidates.length > 1">Switch Camera</flux:button>
-                            <flux:button size="xs" variant="ghost" x-on:click="playBeep()">Test Beep</flux:button>
-                        </div>
-                    </div>
-                    <template x-if="lastCode">
-                        <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="font-medium">Detected:</span> <span class="font-mono" x-text="lastCode"></span>
-                                </div>
-                                <div class="text-xs bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full" x-text="'Scan #' + (scanCounts[lastCode] || 0)"></div>
-                            </div>
-                        </div>
-                    </template>
-                    <div class="flex gap-2 mt-2">
-                        <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
+                        <div class="text-xs bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full" x-text="'Scan #' + (scanCounts[lastCode] || 0)"></div>
                     </div>
                 </div>
+            </template>
+            <div class="flex gap-2 mt-2">
+                <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+    @endif
 
-            </flux:modal>
-        @endif
     @else
         <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
             <div class="flex items-center gap-2">
@@ -663,7 +679,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         running: false,
         detector: null,
         candidates: [],
-        currentDeviceIndex: 0,
+        currentDeviceIndex: 1,
         supportsTorch: false,
         lastCode: '',
         lastScanAt: 0,
@@ -671,8 +687,10 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         beepAudio: null,
         zxingReader: null,
         scanCounts: {},
+        // Add a flag to track if we should be running
+        shouldRun: false,
+        
         initBeep() {
-            // Create a simple beep sound using Web Audio API
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 this.beepAudio = audioContext;
@@ -680,23 +698,20 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.beepAudio = null;
             }
         },
+        
         activateAudio() {
-            // Activate audio context on user interaction
             if (this.beepAudio && this.beepAudio.state === 'suspended') {
                 this.beepAudio.resume();
             }
         },
+        
         playBeep() {
-            console.log('Playing beep sound...');
-            
-            // Simple approach: create a short beep using Web Audio API
+            //console.log('Playing beep sound...');
             try {
                 if (!this.beepAudio) {
                     this.initBeep();
                 }
-                
                 if (this.beepAudio) {
-                    // Resume if suspended
                     if (this.beepAudio.state === 'suspended') {
                         this.beepAudio.resume().then(() => {
                             this.createBeepSound();
@@ -705,14 +720,14 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         this.createBeepSound();
                     }
                 } else {
-                    // Fallback to system beep
                     this.systemBeep();
                 }
             } catch (e) {
-                console.log('Beep failed:', e);
+                //console.log('Beep failed:', e);
                 this.systemBeep();
             }
         },
+        
         createBeepSound() {
             try {
                 const oscillator = this.beepAudio.createOscillator();
@@ -728,42 +743,42 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 oscillator.start(this.beepAudio.currentTime);
                 oscillator.stop(this.beepAudio.currentTime + 0.2);
             } catch (e) {
-                console.log('Oscillator beep failed:', e);
+                //console.log('Oscillator beep failed:', e);
                 this.systemBeep();
             }
         },
+        
         systemBeep() {
-            // Fallback: try to play a system sound
             try {
-                // Create a simple beep using a data URL
                 const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
                 audio.volume = 0.7;
                 audio.play().catch(() => {
-                    // Last resort: try a different beep sound
                     const beep2 = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
                     beep2.volume = 0.5;
                     beep2.play().catch(() => {
-                        console.log('All beep methods failed');
+                        //console.log('All beep methods failed');
                     });
                 });
             } catch (e) {
-                console.log('System beep failed:', e);
+                //console.log('System beep failed:', e);
             }
         },
+        
         async initDetector() {
             if ('BarcodeDetector' in window) {
                 try {
                     const formats = ['ean_13','ean_8','code_128','code_39','upc_a','upc_e','qr_code'];
                     this.detector = new window.BarcodeDetector({ formats });
-                    console.log('Using native BarcodeDetector API');
+                    //console.log('Using native BarcodeDetector API');
                 } catch (e) {
-                    console.log('BarcodeDetector failed:', e);
+                    //console.log('BarcodeDetector failed:', e);
                     this.detector = null;
                 }
             } else {
-                console.log('BarcodeDetector not supported, will use ZXing fallback');
+                //console.log('BarcodeDetector not supported, will use ZXing fallback');
             }
         },
+        
         async enumerateCameras() {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
@@ -775,10 +790,14 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.candidates = [{ deviceId: undefined }];
             }
         },
+        
         async start() {
+            // Set flag to indicate we should be running
+            this.shouldRun = true;
             this.initBeep();
             await this.initDetector();
             await this.enumerateCameras();
+            
             const constraints = {
                 video: {
                     deviceId: this.candidates[this.currentDeviceIndex]?.deviceId || undefined,
@@ -788,6 +807,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 },
                 audio: false
             };
+            
             try {
                 this.stream = await navigator.mediaDevices.getUserMedia(constraints);
                 const video = this.$refs.video;
@@ -796,71 +816,92 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.track = this.stream.getVideoTracks()[0] || null;
                 this.supportsTorch = !!(this.track && this.track.getCapabilities && this.track.getCapabilities().torch);
                 this.running = true;
+                
                 if (this.detector) {
                     this.loop();
                 } else {
                     await this.startZxingFallback(video);
                 }
             } catch (e) {
+                //console.log('Failed to start camera:', e);
                 this.running = false;
+                this.shouldRun = false;
             }
         },
+        
         async startZxingFallback(videoEl) {
             try {
-                console.log('Using ZXing fallback for barcode detection');
+                //console.log('Using ZXing fallback for barcode detection');
                 if (!window.ZXing) {
                     await this.loadZxing();
                 }
                 const codeReader = new ZXing.BrowserMultiFormatReader();
                 this.zxingReader = codeReader;
                 
-                // Use the correct ZXing API
                 const devices = await codeReader.listVideoInputDevices();
                 const deviceId = devices?.[this.currentDeviceIndex]?.deviceId;
                 
                 await codeReader.decodeFromVideoDevice(deviceId ?? null, videoEl, (result, err) => {
-                    if (!this.running) { return; }
+                    // Check if we should still be running
+                    if (!this.shouldRun || !this.running) { 
+                        return; 
+                    }
                     if (result?.text) {
                         const now = Date.now();
-                        const value = result.text;
-                        console.log('ZXing: Detected barcode:', value);
-                        if (value && (now - this.lastScanAt > this.throttleMs)) {
+                        const value = result.text.trim();
+                        //console.log('ZXing: Detected barcode:', value);
+                        
+                        const isNewBarcode = value !== this.lastCode;
+                        const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                        
+                        if (value && (isNewBarcode || isThrottleExpired)) {
                             this.lastCode = value;
                             this.lastScanAt = now;
                             this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
-                            console.log('ZXing: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                            //console.log('ZXing: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
                             this.playBeep();
                             $wire.addByBarcode(value);
+                        } else {
+                            //console.log('ZXing: Ignoring duplicate scan (throttled):', value);
                         }
                     }
                 });
             } catch (e) {
-                console.log('ZXing fallback error:', e);
-                // Try alternative approach without device selection
+                //console.log('ZXing fallback error:', e);
                 try {
                     const codeReader = new ZXing.BrowserMultiFormatReader();
                     this.zxingReader = codeReader;
                     await codeReader.decodeFromVideoDevice(null, videoEl, (result, err) => {
-                        if (!this.running) { return; }
+                        // Check if we should still be running
+                        if (!this.shouldRun || !this.running) { 
+                            return; 
+                        }
                         if (result?.text) {
                             const now = Date.now();
-                            const value = result.text;
-                            console.log('ZXing (fallback): Detected barcode:', value);
-                            if (value && (now - this.lastScanAt > this.throttleMs)) {
+                            const value = result.text.trim();
+                            //console.log('ZXing (fallback): Detected barcode:', value);
+                            
+                            const isNewBarcode = value !== this.lastCode;
+                            const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                            
+                            if (value && (isNewBarcode || isThrottleExpired)) {
                                 this.lastCode = value;
                                 this.lastScanAt = now;
                                 this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
-                                console.log('ZXing (fallback): Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                                //console.log('ZXing (fallback): Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
                                 this.playBeep();
                                 $wire.addByBarcode(value);
+                            } else {
+                                //console.log('ZXing (fallback): Ignoring duplicate scan (throttled):', value);
                             }
                         }
                     });
                 } catch (e2) {
-                    console.log('ZXing fallback also failed:', e2);
+                    //console.log('ZXing fallback also failed:', e2);
                 }
             }
         },
+        
         async loadZxing() {
             return new Promise((resolve) => {
                 const script = document.createElement('script');
@@ -869,8 +910,13 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 document.head.appendChild(script);
             });
         },
+        
         stop() {
+            //console.log('Stopping scanner...');
+            // Set flag to stop all operations
+            this.shouldRun = false;
             this.running = false;
+            
             if (this.track) {
                 this.track.stop();
                 this.track = null;
@@ -880,13 +926,24 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.stream = null;
             }
             if (this.zxingReader) {
-                try { this.zxingReader.reset(); } catch (e) {}
-                this.zxingReader = null;
+                try { 
+                    this.zxingReader.reset(); 
+                    this.zxingReader = null;
+                } catch (e) {
+                    //console.log('Error resetting ZXing:', e);
+                }
             }
-            // Reset scan counts when scanner is closed
+            // Clear video element
+            const video = this.$refs.video;
+            if (video) {
+                video.srcObject = null;
+            }
+            // Reset scan counts
             this.scanCounts = {};
             this.lastCode = '';
+            //console.log('Scanner stopped');
         },
+        
         toggleTorch() {
             if (!this.track || !this.supportsTorch) { return; }
             const caps = this.track.getCapabilities();
@@ -894,44 +951,56 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             const torchOn = !settings.torch;
             this.track.applyConstraints({ advanced: [{ torch: torchOn }] });
         },
+        
         async switchCamera() {
             if (this.candidates.length <= 1) { return; }
             this.stop();
             this.currentDeviceIndex = (this.currentDeviceIndex + 1) % this.candidates.length;
             await this.start();
         },
+        
         async loop() {
-            if (!this.running) { return; }
+            // Check if we should still be running
+            if (!this.shouldRun || !this.running) { 
+                return; 
+            }
             const video = this.$refs.video;
             if (this.detector && video.readyState >= 2) {
                 try {
                     const barcodes = await this.detector.detect(video);
                     if (barcodes && barcodes.length > 0) {
                         const now = Date.now();
-                        const value = barcodes[0].rawValue || '';
-                        console.log('Desktop: Detected barcode:', value);
-                        if (value && (now - this.lastScanAt > this.throttleMs)) {
+                        const value = (barcodes[0].rawValue || '').trim();
+                        //console.log('Desktop: Detected barcode:', value);
+                        
+                        const isNewBarcode = value !== this.lastCode;
+                        const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                        
+                        if (value && (isNewBarcode || isThrottleExpired)) {
                             this.lastCode = value;
                             this.lastScanAt = now;
                             this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
-                            console.log('Desktop: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                            //console.log('Desktop: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
                             this.playBeep();
                             $wire.addByBarcode(value);
+                        } else {
+                            //console.log('Desktop: Ignoring duplicate scan (throttled):', value);
                         }
                     }
                 } catch (e) {
-                    console.log('Desktop: Barcode detection error:', e);
+                    //console.log('Desktop: Barcode detection error:', e);
                 }
             }
-            requestAnimationFrame(() => this.loop());
+            // Only continue if we should still be running
+            if (this.shouldRun && this.running) {
+                requestAnimationFrame(() => this.loop());
+            }
         },
     }));
 
     if (window.Alpine && typeof window.Alpine.data === 'function') {
-        // Alpine already initialized
         define();
     } else {
-        // Register on Alpine init
         document.addEventListener('alpine:init', define, { once: true });
     }
 })();
