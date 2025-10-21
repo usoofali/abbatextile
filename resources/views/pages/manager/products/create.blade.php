@@ -126,7 +126,6 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
                                     id="photo-input"
                                     wire:model="photo" 
                                     accept="image/*" 
-                                    capture="environment" 
                                     class="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-neutral-100 file:px-3 file:py-2 file:text-neutral-800 dark:file:bg-neutral-700 dark:file:text-neutral-100" 
                                     onchange="resizeImage(this, 50)"
                                 />
