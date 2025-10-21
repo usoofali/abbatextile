@@ -583,18 +583,18 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         
         <!-- Scanner Modal -->
         @if($showScanner)
-            <flux:modal wire:model="showScanner" class="w-full max-w-sm mx-auto">
+            <flux:modal wire:model="showScanner" class="w-full max-w-xs sm:max-w-sm mx-auto">
                 <flux:heading size="xl">Scan Barcode</flux:heading>
                 <div
                     x-data="barcodeScanner($wire)"
                     x-init="$nextTick(() => $data.start())"
                     x-on:keydown.escape.window="stop()"
-                    class="space-y-3"
+                    class="space-y-3 max-h-[70vh] overflow-hidden"
                 >
                     <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
-                        <video x-ref="video" class="w-full h-48 sm:h-56 object-cover bg-black"></video>
+                        <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
                         <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                            <div class="w-2/3 h-20 sm:h-28 border-2 border-green-400/70 rounded"></div>
+                            <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between text-sm">
@@ -662,6 +662,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         lastScanAt: 0,
         throttleMs: 1200,
         beepAudio: null,
+        zxingReader: null,
         initBeep() {
             // Create a simple beep sound using Web Audio API
             try {
@@ -736,10 +737,48 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 this.track = this.stream.getVideoTracks()[0] || null;
                 this.supportsTorch = !!(this.track && this.track.getCapabilities && this.track.getCapabilities().torch);
                 this.running = true;
-                this.loop();
+                if (this.detector) {
+                    this.loop();
+                } else {
+                    await this.startZxingFallback(video);
+                }
             } catch (e) {
                 this.running = false;
             }
+        },
+        async startZxingFallback(videoEl) {
+            try {
+                if (!window.ZXing) {
+                    await this.loadZxing();
+                }
+                const codeReader = new ZXing.BrowserMultiFormatReader();
+                this.zxingReader = codeReader;
+                const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
+                const deviceId = devices?.[this.currentDeviceIndex]?.deviceId;
+                await codeReader.decodeFromVideoDevice(deviceId ?? null, videoEl, (result, err) => {
+                    if (!this.running) { return; }
+                    if (result?.text) {
+                        const now = Date.now();
+                        const value = result.text;
+                        if (value && (now - this.lastScanAt > this.throttleMs)) {
+                            this.lastCode = value;
+                            this.lastScanAt = now;
+                            this.playBeep();
+                            $wire.addByBarcode(value);
+                        }
+                    }
+                });
+            } catch (e) {
+                // ignore
+            }
+        },
+        async loadZxing() {
+            return new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js';
+                script.onload = resolve;
+                document.head.appendChild(script);
+            });
         },
         stop() {
             this.running = false;
@@ -750,6 +789,10 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             if (this.stream) {
                 this.stream.getTracks().forEach(t => t.stop());
                 this.stream = null;
+            }
+            if (this.zxingReader) {
+                try { this.zxingReader.reset(); } catch (e) {}
+                this.zxingReader = null;
             }
         },
         toggleTorch() {
