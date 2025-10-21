@@ -20,6 +20,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
     public $paymentAmount = 0;
     public $paymentMode = 'cash';
     public $paymentReference = '';
+    public $showScanner = false;
 
     public function mount(): void
     {
@@ -297,22 +298,19 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             <!-- Products Selection -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Search and Barcode -->
-                <div class="space-y-4" x-data="barcodeScanner($wire)" x-init="$nextTick(() => {})">
+                <div class="space-y-4">
                     <flux:input
                         wire:model.live.debounce.300ms="search"
                         placeholder="Search products by name, description, or barcode..."
                         icon="magnifying-glass"
                     />
                     <div class="flex items-center gap-3">
-                        <flux:button variant="ghost" size="sm" icon="qr-code" x-on:click="$data.toggleScan()">
-                            <span x-show="!running">Start Scan</span>
-                            <span x-show="running">Stop Scan</span>
+                        <flux:button variant="ghost" size="sm" icon="qr-code" wire:click="$set('showScanner', true)">
+                            Scan Barcode
                         </flux:button>
-                        <div class="flex items-center gap-2" x-show="running">
-                            <span class="inline-block size-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-300">Scanning… point camera at barcode</flux:text>
-                        </div>
-                        <video x-ref="video" playsinline class="hidden"></video>
+                        <flux:text class="text-sm text-neutral-500 dark:text-neutral-400">
+                            Use your device camera to scan and add items.
+                        </flux:text>
                     </div>
                 </div>
 
@@ -583,7 +581,46 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             </flux:modal>
         @endif
         
-        <!-- Background scanner: modal removed -->
+        <!-- Scanner Modal -->
+        @if($showScanner)
+            <flux:modal wire:model="showScanner" class="w-full max-w-xs sm:max-w-sm mx-auto">
+                <flux:heading size="xl">Scan Barcode</flux:heading>
+                <div
+                    x-data="barcodeScanner($wire)"
+                    x-init="$nextTick(() => $data.start())"
+                    x-on:keydown.escape.window="stop()"
+                    x-on:click="$data.activateAudio()"
+                    class="space-y-3 max-h-[70vh] overflow-hidden"
+                >
+                    <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
+                        <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
+                        <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                            <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block size-2 rounded-full" x-bind:class="running ? 'bg-green-500' : 'bg-neutral-400'"></span>
+                            <span x-text="running ? 'Scanning…' : 'Idle'"></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:button size="xs" variant="ghost" x-on:click="toggleTorch()" x-show="supportsTorch">Toggle Torch</flux:button>
+                            <flux:button size="xs" variant="ghost" x-on:click="switchCamera()" x-show="candidates.length > 1">Switch Camera</flux:button>
+                            <flux:button size="xs" variant="ghost" x-on:click="playBeep()">Test Beep</flux:button>
+                        </div>
+                    </div>
+                    <template x-if="lastCode">
+                        <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
+                            Detected: <span class="font-mono" x-text="lastCode"></span>
+                        </div>
+                    </template>
+                    <div class="flex gap-2 mt-2">
+                        <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
+                    </div>
+                </div>
+
+            </flux:modal>
+        @endif
     @else
         <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
             <div class="flex items-center gap-2">
@@ -644,43 +681,67 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             }
         },
         playBeep() {
-            // Try Web Audio API first
-            if (this.beepAudio) {
-                try {
-                    // Resume audio context if suspended
-                    if (this.beepAudio.state === 'suspended') {
-                        this.beepAudio.resume();
-                    }
-                    
-                    const oscillator = this.beepAudio.createOscillator();
-                    const gainNode = this.beepAudio.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(this.beepAudio.destination);
-                    
-                    oscillator.frequency.setValueAtTime(800, this.beepAudio.currentTime);
-                    gainNode.gain.setValueAtTime(0.3, this.beepAudio.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.1);
-                    
-                    oscillator.start(this.beepAudio.currentTime);
-                    oscillator.stop(this.beepAudio.currentTime + 0.1);
-                    return;
-                } catch (e) {
-                    console.log('Web Audio API beep failed:', e);
-                }
-            }
+            console.log('Playing beep sound...');
             
-            // Fallback: use HTML5 Audio with a simple beep
+            // Simple approach: create a short beep using Web Audio API
             try {
+                if (!this.beepAudio) {
+                    this.initBeep();
+                }
+                
+                if (this.beepAudio) {
+                    // Resume if suspended
+                    if (this.beepAudio.state === 'suspended') {
+                        this.beepAudio.resume().then(() => {
+                            this.createBeepSound();
+                        });
+                    } else {
+                        this.createBeepSound();
+                    }
+                } else {
+                    // Fallback to system beep
+                    this.systemBeep();
+                }
+            } catch (e) {
+                console.log('Beep failed:', e);
+                this.systemBeep();
+            }
+        },
+        createBeepSound() {
+            try {
+                const oscillator = this.beepAudio.createOscillator();
+                const gainNode = this.beepAudio.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.beepAudio.destination);
+                
+                oscillator.frequency.setValueAtTime(1000, this.beepAudio.currentTime);
+                gainNode.gain.setValueAtTime(0.1, this.beepAudio.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.2);
+                
+                oscillator.start(this.beepAudio.currentTime);
+                oscillator.stop(this.beepAudio.currentTime + 0.2);
+            } catch (e) {
+                console.log('Oscillator beep failed:', e);
+                this.systemBeep();
+            }
+        },
+        systemBeep() {
+            // Fallback: try to play a system sound
+            try {
+                // Create a simple beep using a data URL
                 const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
-                audio.volume = 0.5;
+                audio.volume = 0.7;
                 audio.play().catch(() => {
-                    // If that fails, try a simpler approach
-                    const simpleBeep = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
-                    simpleBeep.play().catch(() => {});
+                    // Last resort: try a different beep sound
+                    const beep2 = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                    beep2.volume = 0.5;
+                    beep2.play().catch(() => {
+                        console.log('All beep methods failed');
+                    });
                 });
             } catch (e) {
-                console.log('Audio beep failed:', e);
+                console.log('System beep failed:', e);
             }
         },
         async initDetector() {
