@@ -583,7 +583,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         
         <!-- Scanner Modal -->
         @if($showScanner)
-            <flux:modal wire:model="showScanner" class="md:w-[28rem]">
+            <flux:modal wire:model="showScanner" class="w-full max-w-sm mx-auto">
                 <flux:heading size="xl">Scan Barcode</flux:heading>
                 <div
                     x-data="barcodeScanner($wire)"
@@ -592,9 +592,9 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     class="space-y-3"
                 >
                     <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
-                        <video x-ref="video" class="w-full h-56 object-cover bg-black"></video>
+                        <video x-ref="video" class="w-full h-48 sm:h-56 object-cover bg-black"></video>
                         <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                            <div class="w-2/3 h-28 border-2 border-green-400/70 rounded"></div>
+                            <div class="w-2/3 h-20 sm:h-28 border-2 border-green-400/70 rounded"></div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between text-sm">
@@ -613,8 +613,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         </div>
                     </template>
                     <div class="flex gap-2 mt-2">
-                        <flux:button class="flex-1" variant="primary" x-on:click="$data.start()" x-bind:disabled="running">Start</flux:button>
-                        <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)">Close</flux:button>
+                        <flux:button variant="ghost" x-on:click="stop(); $wire.set('showScanner', false)" class="flex-1">Close Scanner</flux:button>
                     </div>
                 </div>
 
@@ -662,6 +661,39 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         lastCode: '',
         lastScanAt: 0,
         throttleMs: 1200,
+        beepAudio: null,
+        initBeep() {
+            // Create a simple beep sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.beepAudio = audioContext;
+            } catch (e) {
+                this.beepAudio = null;
+            }
+        },
+        playBeep() {
+            if (!this.beepAudio) return;
+            try {
+                const oscillator = this.beepAudio.createOscillator();
+                const gainNode = this.beepAudio.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.beepAudio.destination);
+                
+                oscillator.frequency.setValueAtTime(800, this.beepAudio.currentTime);
+                gainNode.gain.setValueAtTime(0.3, this.beepAudio.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.1);
+                
+                oscillator.start(this.beepAudio.currentTime);
+                oscillator.stop(this.beepAudio.currentTime + 0.1);
+            } catch (e) {
+                // Fallback: try to play a simple beep using a data URL
+                try {
+                    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                    audio.play().catch(() => {});
+                } catch (e) {}
+            }
+        },
         async initDetector() {
             if ('BarcodeDetector' in window) {
                 try {
@@ -684,6 +716,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             }
         },
         async start() {
+            this.initBeep();
             await this.initDetector();
             await this.enumerateCameras();
             const constraints = {
@@ -744,6 +777,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                         if (value && (now - this.lastScanAt > this.throttleMs)) {
                             this.lastCode = value;
                             this.lastScanAt = now;
+                            this.playBeep();
                             $wire.addByBarcode(value);
                         }
                     }
