@@ -34,6 +34,7 @@
                             <flux:navlist.item icon="archive-box" :href="route('admin.stock.index')" :current="request()->routeIs('admin.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
                             <flux:navlist.item icon="building-storefront" :href="route('admin.shops.index')" :current="request()->routeIs('admin.shops.*')" wire:navigate>{{ __('Manage Shops') }}</flux:navlist.item>
                             <flux:navlist.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('Manage Users') }}</flux:navlist.item>
+                            <flux:navlist.item icon="tag" :href="route('admin.categories.index')" :current="request()->routeIs('admin.categories.*')" wire:navigate>{{ __('Manage Categories') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @elseif(auth()->user()->isManager())
                         <flux:navlist.group :heading="__('Management')" class="grid">
@@ -42,7 +43,6 @@
                             <flux:navlist.item icon="credit-card" :href="route('manager.payments.index')" :current="request()->routeIs('manager.payments.*')" wire:navigate>{{ __('Payments') }}</flux:navlist.item>
                             <flux:navlist.item icon="archive-box" :href="route('manager.stock.index')" :current="request()->routeIs('manager.stock.index')" wire:navigate>{{ __('Stock Management') }}</flux:navlist.item>
                             <flux:navlist.item icon="cube" :href="route('manager.products.index')" :current="request()->routeIs('manager.products.*')" wire:navigate>{{ __('Manage Products') }}</flux:navlist.item>
-                            <flux:navlist.item icon="tag" :href="route('manager.categories.index')" :current="request()->routeIs('manager.categories.*')" wire:navigate>{{ __('Manage Categories') }}</flux:navlist.item>
                         </flux:navlist.group>
                     @elseif(auth()->user()->isSalesperson())
                         <flux:navlist.group :heading="__('Sales')" class="grid">
