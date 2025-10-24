@@ -8,13 +8,11 @@ use Livewire\Volt\Component;
 new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class extends Component {
     public $categories;
     public $search = '';
-    public $shop;
 
     public function mount(): void
     {
         $this->loadCategories();
         $user = Auth::user();
-        $this->shop = $user->managedShop;
     }
 
     public function loadCategories(): void
@@ -53,12 +51,10 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                 <flux:heading size="xl" level="1">Manage Categories</flux:heading>
                 <flux:subheading size="lg">Organize your product categories</flux:subheading>
             </div>
-            @if($shop)
             <flux:button variant="primary" :href="route('manager.categories.create')" wire:navigate class="max-md:w-full">
                 <flux:icon name="plus" />
                 Add Category
             </flux:button>
-            @endif
         </div>
     
     <!-- Search -->
