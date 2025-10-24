@@ -35,7 +35,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
         $this->category->update($validated);
 
         session()->flash('success', 'Category updated successfully.');
-        $this->redirect(route('manager.categories.index'), navigate: true);
+        $this->redirect(route('admin.categories.index'), navigate: true);
     }
 }; ?>
 
@@ -46,7 +46,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
                 <flux:heading size="xl" level="1">Edit Category</flux:heading>
                 <flux:subheading size="lg">{{ $category->name }}</flux:subheading>
             </div>
-            <flux:button variant="outline" :href="route('manager.categories.index')" wire:navigate class="max-md:w-full">
+            <flux:button variant="outline" :href="route('admin.categories.index')" wire:navigate class="max-md:w-full">
                 <flux:icon name="arrow-left" />
                 Back to Categories
             </flux:button>
@@ -98,7 +98,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
 
                     <!-- Form Actions -->
                     <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6">
-                        <flux:button variant="outline" type="button" :href="route('manager.categories.index')" wire:navigate class="w-full sm:w-auto">
+                        <flux:button variant="outline" type="button" :href="route('admin.categories.index')" wire:navigate class="w-full sm:w-auto">
                             Cancel
                         </flux:button>
                         <flux:button variant="primary" type="submit" class="w-full sm:w-auto">

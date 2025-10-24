@@ -116,16 +116,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                         <flux:text class="text-xs text-neutral-500 dark:text-neutral-400">
                             Created {{ $category->created_at->diffForHumans() }}
                         </flux:text>
-                        @if($category->products()->count() > 0)
-                            <flux:button 
-                                variant="ghost" 
-                                size="sm" 
-                                :href="route('manager.products.index', ['category' => $category->id])" 
-                                wire:navigate
-                            >
-                                View Products
-                            </flux:button>
-                        @endif
                     </div>
                 </div>
             @endforeach
