@@ -89,7 +89,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                             <flux:button 
                                 variant="ghost" 
                                 size="sm" 
-                                :href="route('manager.categories.edit', $category)" 
+                                :href="route('admin.categories.edit', $category)" 
                                 wire:navigate
                             >
                                 <flux:icon name="pencil" />
