@@ -51,7 +51,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                 <flux:heading size="xl" level="1">Manage Categories</flux:heading>
                 <flux:subheading size="lg">Organize your product categories</flux:subheading>
             </div>
-            <flux:button variant="primary" :href="route('manager.categories.create')" wire:navigate class="max-md:w-full">
+            <flux:button variant="primary" :href="route('admin.categories.create')" wire:navigate class="max-md:w-full">
                 <flux:icon name="plus" />
                 Add Category
             </flux:button>
@@ -142,7 +142,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                 </flux:text>
                 @if(!$search)
                     <div class="mt-6">
-                        <flux:button variant="primary" :href="route('manager.categories.create')" wire:navigate>
+                        <flux:button variant="primary" :href="route('admin.categories.create')" wire:navigate>
                             <flux:icon name="plus" />
                             Add First Category
                         </flux:button>
