@@ -156,7 +156,6 @@ new #[Layout('components.layouts.app', ['title' => 'Global Stock Management'])] 
                     <thead class="border-b border-neutral-200 dark:border-neutral-700">
                         <tr>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Product</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Shop</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Stock</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Status</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Actions</th>
@@ -175,18 +174,16 @@ new #[Layout('components.layouts.app', ['title' => 'Global Stock Management'])] 
                                             </div>
                                         @endif
                                         <div>
-                                            <flux:text class="font-medium">{{ $product->name }}</flux:text>
+                                            <flux:text class="font-medium">{{ $product->name }} | {{ ucfirst($product->category->name) }}</flux:text>
                                             <div class="flex items-center gap-2 mt-1">
                                                 <flux:badge variant="outline" size="sm">{{ ucfirst($product->unit_type) }}</flux:badge>
                                                 @if($product->barcode)
                                                     <flux:badge variant="outline" size="xs" class="text-xs">#{{ $product->barcode }}</flux:badge>
                                                 @endif
                                             </div>
+                                            <flux:text class="font-medium">{{ $product->shop?->name }}</flux:text>
                                         </div>
                                     </div>
-                                </td>
-                                <td class="px-3 sm:px-6 py-3">
-                                    <flux:text class="font-medium">{{ $product->shop?->name }}</flux:text>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     <div class="flex items-center gap-2">
