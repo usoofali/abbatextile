@@ -8,13 +8,11 @@ use Livewire\Volt\Component;
 new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class extends Component {
     public $categories;
     public $search = '';
-    public $shop;
 
     public function mount(): void
     {
         $this->loadCategories();
         $user = Auth::user();
-        $this->shop = $user->managedShop;
     }
 
     public function loadCategories(): void
@@ -60,7 +58,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
             </flux:button>
             @endif
         </div>
-    @if($shop)
         <!-- Search -->
         <div class="flex items-center gap-4 max-md:flex-col">
             <div class="flex-1 w-full">
@@ -155,17 +152,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                 </div>
             @endif
         </div>
-    @else
-        <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
-            <div class="flex items-center gap-2">
-                <flux:icon name="exclamation-triangle" class="size-5 text-red-600 dark:text-red-400" />
-                <flux:heading size="lg" class="text-red-800 dark:text-red-200">No Shop Assigned</flux:heading>
-            </div>
-            <flux:text class="mt-2 text-red-700 dark:text-red-300">
-                You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
-            </flux:text>
-        </div>
-    @endif
+    
     <!-- Flash Message -->
     @if (session()->has('error'))
         <div class="fixed bottom-4 right-4 z-50">
