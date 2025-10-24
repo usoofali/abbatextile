@@ -233,7 +233,7 @@ $label = $alt ?? $name;
 <?php endif; ?>
 <?php $component->withAttributes(['attributes' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($attributes->class($classes)->merge($circle ? ['data-circle' => 'true'] : [])),'as' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($as),'href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($href),'data-flux-avatar' => true,'data-slot' => 'avatar','data-size' => ''.e($size).'']); ?>
         <?php if ($src): ?>
-            <img src="<?php echo e($src); ?>" alt="<?php echo e($alt ?? $name); ?>" class="rounded-[var(--avatar-radius)]">
+            <img src="<?php echo e($src); ?>" alt="<?php echo e($alt ?? $name); ?>" class="rounded-[var(--avatar-radius)] size-full object-cover">
         <?php elseif ($icon): ?>
             <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>

@@ -124,6 +124,50 @@ use Livewire\Volt\Component;
 <?php $component = $__componentOriginal26c546557cdc09040c8dd00b2090afd0; ?>
 <?php unset($__componentOriginal26c546557cdc09040c8dd00b2090afd0); ?>
 <?php endif; ?>
+                    <div class="flex items-center gap-3">
+                        <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['variant' => 'ghost','size' => 'sm','icon' => 'qr-code','wire:click' => '$set(\'showScanner\', true)']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['variant' => 'ghost','size' => 'sm','icon' => 'qr-code','wire:click' => '$set(\'showScanner\', true)']); ?>
+                            Scan Barcode
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $attributes = $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $component = $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::text','data' => ['class' => 'text-sm text-neutral-500 dark:text-neutral-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'text-sm text-neutral-500 dark:text-neutral-400']); ?>
+                            Use your device camera to scan and add items.
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0638ebfbd490c7a414275d493e14cb4e)): ?>
+<?php $attributes = $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e; ?>
+<?php unset($__attributesOriginal0638ebfbd490c7a414275d493e14cb4e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0638ebfbd490c7a414275d493e14cb4e)): ?>
+<?php $component = $__componentOriginal0638ebfbd490c7a414275d493e14cb4e; ?>
+<?php unset($__componentOriginal0638ebfbd490c7a414275d493e14cb4e); ?>
+<?php endif; ?>
+                    </div>
                 </div>
 
                 <!-- Products Grid -->
@@ -1200,6 +1244,168 @@ use Livewire\Volt\Component;
 <?php unset($__componentOriginal8cc9d3143946b992b324617832699c5f); ?>
 <?php endif; ?>
         <?php endif; ?>
+        
+        <!-- Scanner Modal -->
+        <!-- Scanner Modal -->
+    <?php if($showScanner): ?>
+    <?php if (isset($component)) { $__componentOriginal8cc9d3143946b992b324617832699c5f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal8cc9d3143946b992b324617832699c5f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::modal.index','data' => ['wire:model' => 'showScanner','dismissible' => false,'closable' => false,'class' => 'w-full max-w-xs sm:max-w-sm mx-auto']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['wire:model' => 'showScanner','dismissible' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(false),'closable' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(false),'class' => 'w-full max-w-xs sm:max-w-sm mx-auto']); ?>
+        <?php if (isset($component)) { $__componentOriginale0fd5b6a0986beffac17a0a103dfd7b9 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale0fd5b6a0986beffac17a0a103dfd7b9 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::heading','data' => ['size' => 'xl']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::heading'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['size' => 'xl']); ?>Scan Barcode <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale0fd5b6a0986beffac17a0a103dfd7b9)): ?>
+<?php $attributes = $__attributesOriginale0fd5b6a0986beffac17a0a103dfd7b9; ?>
+<?php unset($__attributesOriginale0fd5b6a0986beffac17a0a103dfd7b9); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale0fd5b6a0986beffac17a0a103dfd7b9)): ?>
+<?php $component = $__componentOriginale0fd5b6a0986beffac17a0a103dfd7b9; ?>
+<?php unset($__componentOriginale0fd5b6a0986beffac17a0a103dfd7b9); ?>
+<?php endif; ?>
+        <div
+            x-data="barcodeScanner($wire)"
+            x-init="
+                $nextTick(() => start());
+                $wire.on('scanner-closed', () => stop());
+                // Watch for modal close via LiveWire
+                $watch('$wire.showScanner', (value) => {
+                    if (!value) stop();
+                });
+            "
+            x-on:keydown.escape.window="stop(); $wire.set('showScanner', false)"
+            x-on:click="activateAudio()"
+            class="space-y-3 max-h-[70vh] overflow-hidden"
+        >
+            <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
+                <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
+                <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                    <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block size-2 rounded-full" x-bind:class="running ? 'bg-green-500' : 'bg-neutral-400'"></span>
+                    <span x-text="running ? 'Scanning…' : 'Idle'"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['size' => 'xs','variant' => 'ghost','xOn:click' => 'toggleTorch()','xShow' => 'supportsTorch']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['size' => 'xs','variant' => 'ghost','x-on:click' => 'toggleTorch()','x-show' => 'supportsTorch']); ?>Toggle Torch <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $attributes = $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $component = $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+                    <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['size' => 'xs','variant' => 'ghost','xOn:click' => 'switchCamera()','xShow' => 'candidates.length > 1']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['size' => 'xs','variant' => 'ghost','x-on:click' => 'switchCamera()','x-show' => 'candidates.length > 1']); ?>Switch Camera <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $attributes = $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $component = $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+                    <!-- <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['size' => 'xs','variant' => 'ghost','xOn:click' => 'playBeep()']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['size' => 'xs','variant' => 'ghost','x-on:click' => 'playBeep()']); ?>Test Beep <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $attributes = $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $component = $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?> -->
+                </div>
+            </div>
+            <template x-if="lastCode">
+                <div class="p-2 rounded bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-medium">Detected:</span> <span class="font-mono" x-text="lastCode"></span>
+                        </div>
+                        <div class="text-xs bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full" x-text="'Scan #' + (scanCounts[lastCode] || 0)"></div>
+                    </div>
+                </div>
+            </template>
+            <div class="flex gap-2 mt-2">
+                <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['variant' => 'filled','icon' => 'x-mark','xOn:click' => 'stop(); $wire.set(\'showScanner\', false)','class' => 'flex-1']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['variant' => 'filled','icon' => 'x-mark','x-on:click' => 'stop(); $wire.set(\'showScanner\', false)','class' => 'flex-1']); ?>Close Scanner <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $attributes = $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580)): ?>
+<?php $component = $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580; ?>
+<?php unset($__componentOriginalc04b147acd0e65cc1a77f86fb0e81580); ?>
+<?php endif; ?>
+            </div>
+        </div>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal8cc9d3143946b992b324617832699c5f)): ?>
+<?php $attributes = $__attributesOriginal8cc9d3143946b992b324617832699c5f; ?>
+<?php unset($__attributesOriginal8cc9d3143946b992b324617832699c5f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal8cc9d3143946b992b324617832699c5f)): ?>
+<?php $component = $__componentOriginal8cc9d3143946b992b324617832699c5f; ?>
+<?php unset($__componentOriginal8cc9d3143946b992b324617832699c5f); ?>
+<?php endif; ?>
+    <?php endif; ?>
+
     <?php else: ?>
         <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
             <div class="flex items-center gap-2">
@@ -1319,4 +1525,341 @@ use Livewire\Volt\Component;
 <?php endif; ?>
     </div>
     <?php endif; ?>
-</div><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages\salesperson\pos.blade.php ENDPATH**/ ?>
+</div>
+
+<?php $__env->startPush('scripts'); ?>
+<script>
+(function registerBarcodeScanner(){
+    const define = () => Alpine.data('barcodeScanner', ($wire) => ({
+        stream: null,
+        track: null,
+        running: false,
+        detector: null,
+        candidates: [],
+        currentDeviceIndex: 1,
+        supportsTorch: false,
+        lastCode: '',
+        lastScanAt: 0,
+        throttleMs: 1200,
+        beepAudio: null,
+        zxingReader: null,
+        scanCounts: {},
+        // Add a flag to track if we should be running
+        shouldRun: false,
+        
+        initBeep() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.beepAudio = audioContext;
+            } catch (e) {
+                this.beepAudio = null;
+            }
+        },
+        
+        activateAudio() {
+            if (this.beepAudio && this.beepAudio.state === 'suspended') {
+                this.beepAudio.resume();
+            }
+        },
+        
+        playBeep() {
+            //console.log('Playing beep sound...');
+            try {
+                if (!this.beepAudio) {
+                    this.initBeep();
+                }
+                if (this.beepAudio) {
+                    if (this.beepAudio.state === 'suspended') {
+                        this.beepAudio.resume().then(() => {
+                            this.createBeepSound();
+                        });
+                    } else {
+                        this.createBeepSound();
+                    }
+                } else {
+                    this.systemBeep();
+                }
+            } catch (e) {
+                //console.log('Beep failed:', e);
+                this.systemBeep();
+            }
+        },
+        
+        createBeepSound() {
+            try {
+                const oscillator = this.beepAudio.createOscillator();
+                const gainNode = this.beepAudio.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.beepAudio.destination);
+                
+                oscillator.frequency.setValueAtTime(1000, this.beepAudio.currentTime);
+                gainNode.gain.setValueAtTime(0.1, this.beepAudio.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.beepAudio.currentTime + 0.2);
+                
+                oscillator.start(this.beepAudio.currentTime);
+                oscillator.stop(this.beepAudio.currentTime + 0.2);
+            } catch (e) {
+                //console.log('Oscillator beep failed:', e);
+                this.systemBeep();
+            }
+        },
+        
+        systemBeep() {
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                audio.volume = 0.7;
+                audio.play().catch(() => {
+                    const beep2 = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBS13yO/eizEIHWq+8+OWT');
+                    beep2.volume = 0.5;
+                    beep2.play().catch(() => {
+                        //console.log('All beep methods failed');
+                    });
+                });
+            } catch (e) {
+                //console.log('System beep failed:', e);
+            }
+        },
+        
+        async initDetector() {
+            if ('BarcodeDetector' in window) {
+                try {
+                    const formats = ['ean_13','ean_8','code_128','code_39','upc_a','upc_e','qr_code'];
+                    this.detector = new window.BarcodeDetector({ formats });
+                    //console.log('Using native BarcodeDetector API');
+                } catch (e) {
+                    //console.log('BarcodeDetector failed:', e);
+                    this.detector = null;
+                }
+            } else {
+                //console.log('BarcodeDetector not supported, will use ZXing fallback');
+            }
+        },
+        
+        async enumerateCameras() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                this.candidates = devices.filter(d => d.kind === 'videoinput');
+                if (this.candidates.length === 0) {
+                    this.candidates = [{ deviceId: undefined }];
+                }
+            } catch (e) {
+                this.candidates = [{ deviceId: undefined }];
+            }
+        },
+        
+        async start() {
+            // Set flag to indicate we should be running
+            this.shouldRun = true;
+            this.initBeep();
+            await this.initDetector();
+            await this.enumerateCameras();
+            
+            const constraints = {
+                video: {
+                    deviceId: this.candidates[this.currentDeviceIndex]?.deviceId || undefined,
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            };
+            
+            try {
+                this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = this.$refs.video;
+                video.srcObject = this.stream;
+                await video.play();
+                this.track = this.stream.getVideoTracks()[0] || null;
+                this.supportsTorch = !!(this.track && this.track.getCapabilities && this.track.getCapabilities().torch);
+                this.running = true;
+                
+                if (this.detector) {
+                    this.loop();
+                } else {
+                    await this.startZxingFallback(video);
+                }
+            } catch (e) {
+                //console.log('Failed to start camera:', e);
+                this.running = false;
+                this.shouldRun = false;
+            }
+        },
+        
+        async startZxingFallback(videoEl) {
+            try {
+                //console.log('Using ZXing fallback for barcode detection');
+                if (!window.ZXing) {
+                    await this.loadZxing();
+                }
+                const codeReader = new ZXing.BrowserMultiFormatReader();
+                this.zxingReader = codeReader;
+                
+                const devices = await codeReader.listVideoInputDevices();
+                const deviceId = devices?.[this.currentDeviceIndex]?.deviceId;
+                
+                await codeReader.decodeFromVideoDevice(deviceId ?? null, videoEl, (result, err) => {
+                    // Check if we should still be running
+                    if (!this.shouldRun || !this.running) { 
+                        return; 
+                    }
+                    if (result?.text) {
+                        const now = Date.now();
+                        const value = result.text.trim();
+                        //console.log('ZXing: Detected barcode:', value);
+                        
+                        const isNewBarcode = value !== this.lastCode;
+                        const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                        
+                        if (value && (isNewBarcode || isThrottleExpired)) {
+                            this.lastCode = value;
+                            this.lastScanAt = now;
+                            this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                            //console.log('ZXing: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                            this.playBeep();
+                            $wire.addByBarcode(value);
+                        } else {
+                            //console.log('ZXing: Ignoring duplicate scan (throttled):', value);
+                        }
+                    }
+                });
+            } catch (e) {
+                //console.log('ZXing fallback error:', e);
+                try {
+                    const codeReader = new ZXing.BrowserMultiFormatReader();
+                    this.zxingReader = codeReader;
+                    await codeReader.decodeFromVideoDevice(null, videoEl, (result, err) => {
+                        // Check if we should still be running
+                        if (!this.shouldRun || !this.running) { 
+                            return; 
+                        }
+                        if (result?.text) {
+                            const now = Date.now();
+                            const value = result.text.trim();
+                            //console.log('ZXing (fallback): Detected barcode:', value);
+                            
+                            const isNewBarcode = value !== this.lastCode;
+                            const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                            
+                            if (value && (isNewBarcode || isThrottleExpired)) {
+                                this.lastCode = value;
+                                this.lastScanAt = now;
+                                this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                                //console.log('ZXing (fallback): Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                                this.playBeep();
+                                $wire.addByBarcode(value);
+                            } else {
+                                //console.log('ZXing (fallback): Ignoring duplicate scan (throttled):', value);
+                            }
+                        }
+                    });
+                } catch (e2) {
+                    //console.log('ZXing fallback also failed:', e2);
+                }
+            }
+        },
+        
+        async loadZxing() {
+            return new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js';
+                script.onload = resolve;
+                document.head.appendChild(script);
+            });
+        },
+        
+        stop() {
+            //console.log('Stopping scanner...');
+            // Set flag to stop all operations
+            this.shouldRun = false;
+            this.running = false;
+            
+            if (this.track) {
+                this.track.stop();
+                this.track = null;
+            }
+            if (this.stream) {
+                this.stream.getTracks().forEach(t => t.stop());
+                this.stream = null;
+            }
+            if (this.zxingReader) {
+                try { 
+                    this.zxingReader.reset(); 
+                    this.zxingReader = null;
+                } catch (e) {
+                    //console.log('Error resetting ZXing:', e);
+                }
+            }
+            // Clear video element
+            const video = this.$refs.video;
+            if (video) {
+                video.srcObject = null;
+            }
+            // Reset scan counts
+            this.scanCounts = {};
+            this.lastCode = '';
+            //console.log('Scanner stopped');
+        },
+        
+        toggleTorch() {
+            if (!this.track || !this.supportsTorch) { return; }
+            const caps = this.track.getCapabilities();
+            const settings = this.track.getSettings();
+            const torchOn = !settings.torch;
+            this.track.applyConstraints({ advanced: [{ torch: torchOn }] });
+        },
+        
+        async switchCamera() {
+            if (this.candidates.length <= 1) { return; }
+            this.stop();
+            this.currentDeviceIndex = (this.currentDeviceIndex + 1) % this.candidates.length;
+            await this.start();
+        },
+        
+        async loop() {
+            // Check if we should still be running
+            if (!this.shouldRun || !this.running) { 
+                return; 
+            }
+            const video = this.$refs.video;
+            if (this.detector && video.readyState >= 2) {
+                try {
+                    const barcodes = await this.detector.detect(video);
+                    if (barcodes && barcodes.length > 0) {
+                        const now = Date.now();
+                        const value = (barcodes[0].rawValue || '').trim();
+                        //console.log('Desktop: Detected barcode:', value);
+                        
+                        const isNewBarcode = value !== this.lastCode;
+                        const isThrottleExpired = (now - this.lastScanAt) > this.throttleMs;
+                        
+                        if (value && (isNewBarcode || isThrottleExpired)) {
+                            this.lastCode = value;
+                            this.lastScanAt = now;
+                            this.scanCounts[value] = (this.scanCounts[value] || 0) + 1;
+                            //console.log('Desktop: Adding barcode to cart:', value, `(Scan #${this.scanCounts[value]})`);
+                            this.playBeep();
+                            $wire.addByBarcode(value);
+                        } else {
+                            //console.log('Desktop: Ignoring duplicate scan (throttled):', value);
+                        }
+                    }
+                } catch (e) {
+                    //console.log('Desktop: Barcode detection error:', e);
+                }
+            }
+            // Only continue if we should still be running
+            if (this.shouldRun && this.running) {
+                requestAnimationFrame(() => this.loop());
+            }
+        },
+    }));
+
+    if (window.Alpine && typeof window.Alpine.data === 'function') {
+        define();
+    } else {
+        document.addEventListener('alpine:init', define, { once: true });
+    }
+})();
+</script>
+<?php $__env->stopPush(); ?><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages\salesperson\pos.blade.php ENDPATH**/ ?>
