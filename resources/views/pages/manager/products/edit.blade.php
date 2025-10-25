@@ -279,7 +279,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Product'])] class exten
                             <flux:text class="text-lg font-semibold">{{ number_format($product->total_sold, 2) }} {{ $product->unit_type }}</flux:text>
                         </div>
                         <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
+                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
                             <flux:text class="text-lg font-semibold text-green-600 dark:text-green-400">₦{{ number_format($product->total_revenue, 2) }}</flux:text>
                         </div>
                         <div class="text-center">

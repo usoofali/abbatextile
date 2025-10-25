@@ -265,7 +265,6 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                             <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Amount</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Mode</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Reference</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Received By</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Date</th>
                         </tr>
                     </thead>
@@ -288,9 +287,6 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <flux:text class="text-sm">{{ $payment->reference ?: '-' }}</flux:text>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <flux:text class="text-sm">{{ $payment->receivedBy->name }}</flux:text>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <flux:text class="text-sm">{{ $payment->created_at->format('M d, Y H:i') }}</flux:text>

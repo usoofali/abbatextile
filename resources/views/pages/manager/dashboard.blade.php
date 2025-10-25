@@ -163,7 +163,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
                         <flux:icon name="currency-dollar" class="size-5 sm:size-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
+                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
                         <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalRevenue, 2) }}</flux:text>
                     </div>
                 </div>
@@ -190,7 +190,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
                         <flux:icon name="clock" class="size-5 sm:size-6 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Today's Revenue</flux:text>
+                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Today's Sales</flux:text>
                         <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($todaySales, 2) }}</flux:heading>
                     </div>
                 </div>

@@ -5,9 +5,10 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class extends Component {
-    public $products;
+    use WithPagination;
     public $search = '';
     public $shop;
     public $showDeleteModal = false;
@@ -26,27 +27,25 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
             session()->flash('error', 'No shop assigned to you.');
             return;
         }
-        
-        $this->loadProducts();
     }
 
-    public function loadProducts(): void
+    public function getProductsProperty()
     {
-        if (!$this->shop) return;
+        if (!$this->shop) return collect();
         
-        $this->products = $this->shop->products()
+        return $this->shop->products()
             ->with(['category', 'saleItems'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('description', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->get();
+            ->paginate(15);
     }
 
     public function updatedSearch(): void
     {
-        $this->loadProducts();
+        $this->resetPage();
     }
 
     public function updatedBarcodeSearch(): void
@@ -208,7 +207,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 
         <!-- Products Table -->
         <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-            @if($products->count() > 0)
+            @if($this->products->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[720px]">
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
@@ -221,7 +220,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                            @foreach($products as $product)
+                            @foreach($this->products as $product)
                                 <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-3 sm:px-6 py-3">
                                         <div class="flex items-center gap-3">
@@ -233,12 +232,13 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                                 </div>
                                             @endif
                                             <div>
-                                                <flux:text class="font-medium">{{ $product->name }}</flux:text>
+                                                <flux:text class="font-medium">{{ $product->name }} | {{ ucfirst($product->unit_type) }}</flux:text>
+                                                
                                                 @if($product->description)
                                                     <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ Str::limit($product->description, 50) }}</flux:text>
                                                 @endif
                                                 <div class="flex items-center gap-2 mt-1">
-                                                    <flux:badge variant="outline" size="sm">{{ ucfirst($product->unit_type) }}</flux:badge>
+                                                    
                                                     @if($product->stock_quantity < 20)
                                                         <flux:badge variant="amber" size="sm">Low Stock</flux:badge>
                                                     @endif
@@ -303,6 +303,11 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                    {{ $this->products->links() }}
                 </div>
             @else
                 <div class="py-12 text-center">

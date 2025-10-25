@@ -151,21 +151,8 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                     <flux:icon name="currency-dollar" class="size-5 sm:size-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
+                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
                     <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalRevenue, 2) }}</flux:text>
-                </div>
-            </div>
-        </div>
-
-        <!-- New Analytics Cards -->
-        <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
-            <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-indigo-100 p-2 sm:p-3 dark:bg-indigo-900/20">
-                    <flux:icon name="chart-bar" class="size-5 sm:size-6 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div class="min-w-0 flex-1">
-                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Avg. Sale Value</flux:text>
-                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($averageSaleValue, 2) }}</flux:heading>
                 </div>
             </div>
         </div>

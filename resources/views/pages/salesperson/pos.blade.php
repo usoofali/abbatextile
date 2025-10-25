@@ -148,6 +148,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
     public function updateQuantity($index, $quantity): void
     {
         $quantity = is_numeric($quantity) ? (float) $quantity : 0;
+
         if ($quantity <= 0) {
             $this->removeFromCart($index);
             return;
@@ -162,7 +163,10 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
         $this->totalAmount = 0;
 
         foreach ($this->cart as $item) {
-            $subtotal = $item['quantity'] * $item['price'];
+            $quantity = is_numeric($item['quantity']) ? (float) $item['quantity'] : 0;
+            $price = is_numeric($item['price']) ? (float) $item['price'] : 0;
+
+            $subtotal = $quantity * $price;
             $this->totalAmount += $subtotal;
         }
     }
@@ -461,7 +465,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                                 <flux:icon name="minus" class="size-4" />
                                             </flux:button>
                                             <flux:input 
-                                                wire:model.live.debounce.300ms="cart.{{ $index }}.quantity"
+                                                wire:model.live.debounce.500ms="cart.{{ $index }}.quantity"
                                                 wire:change="updateQuantity({{ $index }}, $event.target.value)"
                                                 type="number"
                                                 min="0.01"
@@ -475,7 +479,8 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                                 class="h-8 w-8 p-0"
                                             >
                                                 <flux:icon name="plus" class="size-4" />
-                                            </flux:button>
+
+                                                </flux:button>
                                             <flux:button 
                                                 variant="ghost" 
                                                 icon="trash"
@@ -589,7 +594,6 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             </flux:modal>
         @endif
         
-        <!-- Scanner Modal -->
         <!-- Scanner Modal -->
     @if($showScanner)
     <flux:modal wire:model="showScanner" :dismissible="false" :closable="false" class="w-full max-w-xs sm:max-w-sm mx-auto">

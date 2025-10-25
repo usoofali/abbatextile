@@ -432,8 +432,6 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Salesperson</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Amount</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Mode</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Reference</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Received By</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Date</th>
                         </tr>
                     </thead>
@@ -457,13 +455,7 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                                         {{ ucfirst($payment->mode) }}
                                     </span>
                                 </td>
-                                <td class="px-3 sm:px-6 py-3">
-                                    <flux:text class="text-sm">{{ $payment->reference ?: '-' }}</flux:text>
-                                </td>
-                                <td class="px-3 sm:px-6 py-3">
-                                    <flux:text class="text-sm">{{ $payment->receivedBy->name }}</flux:text>
-                                </td>
-                                <td class="px-3 sm:px-6 py-3">
+                                <td class="px- sm:px-6 py-3">
                                     <flux:text class="text-sm">{{ $payment->created_at->format('M d, Y H:i') }}</flux:text>
                                 </td>
                             </tr>

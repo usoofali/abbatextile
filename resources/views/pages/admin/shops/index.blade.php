@@ -5,21 +5,22 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class extends Component {
-    public $shops;
+    use WithPagination;
     public $search = '';
     public $showDeleteModal = false;
     public $deleteShopId = null;
 
     public function mount(): void
     {
-        $this->loadShops();
+        // No need to load shops here
     }
 
-    public function loadShops(): void
+    public function getShopsProperty()
     {
-        $this->shops = Shop::with(['manager', 'salesTransactions' => function ($query) {
+        return Shop::with(['manager', 'salesTransactions' => function ($query) {
                 $query->where('status', '!=', 'cancelled');
             }])
             ->withCount(['salesTransactions' => function ($query) {
@@ -33,12 +34,12 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                       ->orWhere('location', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->get();
+            ->paginate(15);
     }
 
     public function updatedSearch(): void
     {
-        $this->loadShops();
+        $this->resetPage();
     }
 
     public function deleteShop(string $id): void
@@ -64,7 +65,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
         }
 
         $shop->delete();
-        $this->loadShops();
         session()->flash('success', 'Shop deleted successfully.');
     }
 
@@ -115,7 +115,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
 
     <!-- Shops Table -->
     <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-        @if($shops->count() > 0)
+        @if($this->shops->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[640px]">
                     <thead class="border-b border-neutral-200 dark:border-neutral-700">
@@ -128,7 +128,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                        @foreach($shops as $shop)
+                        @foreach($this->shops as $shop)
                             <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                 <td class="px-3 sm:px-6 py-3">
                                     <div>
@@ -188,6 +188,11 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Shops'])] class exten
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                {{ $this->shops->links() }}
             </div>
         @else
             <div class="py-12 text-center">

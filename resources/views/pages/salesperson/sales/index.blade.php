@@ -5,9 +5,10 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends Component {
-    public $sales;
+    use WithPagination;
     public $search = '';
     public $shop;
     public $dateFilter = 'all'; // all, today, week, month, year, custom
@@ -27,13 +28,11 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
         // Set default date range to current month
         $this->startDate = now()->startOfMonth()->format('Y-m-d');
         $this->endDate = now()->endOfMonth()->format('Y-m-d');
-
-        $this->loadSales();
     }
 
-    public function loadSales(): void
+    public function getSalesProperty()
     {
-        if (!$this->shop) return;
+        if (!$this->shop) return collect();
 
         $user = Auth::user();
         $query = $user->salesTransactions()
@@ -51,7 +50,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
             })
             ->latest();
 
-        $this->sales = $query->get();
+        return $query->paginate(15);
     }
 
     private function applyDateFilter($query): void
@@ -80,7 +79,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
 
     public function applyFilter(): void
     {
-        $this->loadSales();
+        // No need to call loadSales, computed property handles it
     }
 
     public function resetFilters(): void
@@ -89,35 +88,34 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
         $this->dateFilter = 'all';
         $this->startDate = now()->startOfMonth()->format('Y-m-d');
         $this->endDate = now()->endOfMonth()->format('Y-m-d');
-        $this->loadSales();
     }
 
     public function updatedSearch(): void
     {
-        $this->loadSales();
+        $this->resetPage();
     }
 
     public function updatedDateFilter(): void
     {
+        $this->resetPage();
         // Set default dates when switching to custom filter
         if ($this->dateFilter === 'custom') {
             $this->startDate = now()->startOfMonth()->format('Y-m-d');
             $this->endDate = now()->endOfMonth()->format('Y-m-d');
         }
-        $this->loadSales();
     }
 
     public function updatedStartDate(): void
     {
         if ($this->dateFilter === 'custom') {
-            $this->loadSales();
+            $this->resetPage();
         }
     }
 
     public function updatedEndDate(): void
     {
         if ($this->dateFilter === 'custom') {
-            $this->loadSales();
+            $this->resetPage();
         }
     }
 }; ?>
@@ -222,7 +220,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
 
         <!-- Sales Table -->
         <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-            @if($sales->count() > 0)
+            @if($this->sales->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[800px]">
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
@@ -235,7 +233,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                            @foreach($sales as $sale)
+                            @foreach($this->sales as $sale)
                                 <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-3 sm:px-6 py-3">
                                         <div>
@@ -294,36 +292,41 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
-                </div>
+                </table>
+            </div>
 
-                <!-- Summary -->
-                <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
-                    <div class="grid gap-4 md:grid-cols-4">
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
-                            <flux:text class="text-2xl font-bold">{{ $sales->count() }}</flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
-                            <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
-                                ₦{{ number_format($sales->sum('total_amount'), 2) }}
-                            </flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
-                            <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                ₦{{ number_format($sales->sum('total_paid'), 2) }}
-                            </flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                            <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                ₦{{ number_format($sales->avg('total_amount') ?? 0, 2) }}
-                            </flux:text>
-                        </div>
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                {{ $this->sales->links() }}
+            </div>
+
+            <!-- Summary -->
+            <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
+                <div class="grid gap-4 md:grid-cols-4">
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                        <flux:text class="text-2xl font-bold">{{ $this->sales->count() }}</flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                        <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
+                            ₦{{ number_format($this->sales->sum('total_amount'), 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
+                        <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            ₦{{ number_format($this->sales->sum('total_paid'), 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
+                        <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                            ₦{{ number_format($this->sales->avg('total_amount') ?? 0, 2) }}
+                        </flux:text>
                     </div>
                 </div>
+            </div>
             @else
                 <div class="py-12 text-center">
                     <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />

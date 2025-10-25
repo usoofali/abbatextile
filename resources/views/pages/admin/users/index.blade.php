@@ -4,9 +4,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class extends Component {
-    public $users;
+    use WithPagination;
     public $search = '';
     public $roleFilter = '';
     public $showDeleteModal = false;
@@ -14,12 +15,12 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
 
     public function mount(): void
     {
-        $this->loadUsers();
+        // No need to load users here
     }
 
-    public function loadUsers(): void
+    public function getUsersProperty()
     {
-        $this->users = User::with(['shop'])
+        return User::with(['shop'])
             ->where('role', '!=', User::ROLE_ADMIN) // Exclude admins
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {
@@ -31,17 +32,17 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
                 $query->where('role', $this->roleFilter);
             })
             ->latest()
-            ->get();
+            ->paginate(15);
     }
 
     public function updatedSearch(): void
     {
-        $this->loadUsers();
+        $this->resetPage();
     }
 
     public function updatedRoleFilter(): void
     {
-        $this->loadUsers();
+        $this->resetPage();
     }
 
     public function deleteUser(User $user): void
@@ -57,7 +58,6 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
         }
 
         $user->delete();
-        $this->loadUsers();
         session()->flash('success', 'User deleted successfully.');
     }
 
@@ -120,7 +120,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
 
     <!-- Users Table -->
     <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-        @if($users->count() > 0)
+        @if($this->users->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[820px]">
                     <thead class="border-b border-neutral-200 dark:border-neutral-700">
@@ -133,7 +133,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                        @foreach($users as $user)
+                        @foreach($this->users as $user)
                             <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                 <td class="px-3 sm:px-6 py-3">
                                     <div class="flex items-center gap-3">
@@ -203,6 +203,11 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Users'])] class exten
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                {{ $this->users->links() }}
             </div>
         @else
             <div class="py-12 text-center">

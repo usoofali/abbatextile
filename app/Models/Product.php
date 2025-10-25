@@ -98,7 +98,7 @@ class Product extends Model
     }
 
     /**
-     * Get total revenue from this product
+     * Get Total Sales from this product
      */
     public function getTotalRevenueAttribute(): float
     {

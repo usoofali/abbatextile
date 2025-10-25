@@ -4,12 +4,14 @@ use App\Models\Sale;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class extends Component {
-    public $sales;
+    use WithPagination;
     public $search = '';
     public $shop;
     public $dateFilter = 'week'; // today, week, month, year, custom, all
@@ -36,13 +38,11 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         // Set default date range to current week
         $this->startDate = now()->startOfWeek()->format('Y-m-d');
         $this->endDate = now()->endOfWeek()->format('Y-m-d');
-
-        $this->loadSales();
     }
 
-    public function loadSales(): void
+    public function getSalesProperty()
     {
-        if (!$this->shop) return;
+        if (!$this->shop) return collect();
 
         $query = $this->shop->salesTransactions()
             ->with(['salesperson', 'items.product', 'payments'])
@@ -62,7 +62,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
             })
             ->latest();
 
-        $this->sales = $query->get();
+        return $query->paginate(15);
     }
 
     private function applyDateFilter($query): void
@@ -106,7 +106,6 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         try {
             $sale->cancel();
             session()->flash('success', 'Sale cancelled successfully. Stock has been restored.');
-            $this->loadSales();
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to cancel sale: ' . $e->getMessage());
         }
@@ -234,7 +233,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         // Summary
         fwrite($handle, "\n\nSummary:\n");
         fwrite($handle, "Total Active Sales: " . $sales->count() . "\n");
-        fwrite($handle, "Total Revenue: ₦" . number_format($sales->sum('total_amount'), 2) . "\n");
+        fwrite($handle, "Total Sales: ₦" . number_format($sales->sum('total_amount'), 2) . "\n");
         fwrite($handle, "Total Paid: ₦" . number_format($sales->sum('total_paid'), 2) . "\n");
         fwrite($handle, "Total Balance: ₦" . number_format($sales->sum('balance'), 2) . "\n");
         fwrite($handle, "Average Sale: ₦" . number_format($sales->avg('total_amount') ?? 0, 2) . "\n");
@@ -262,39 +261,38 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         $this->salespersonFilter = '';
         $this->startDate = now()->startOfWeek()->format('Y-m-d');
         $this->endDate = now()->endOfWeek()->format('Y-m-d');
-        $this->loadSales();
     }
 
     public function updatedSearch(): void
     {
-        $this->loadSales();
+        $this->resetPage();
     }
 
     public function updatedDateFilter(): void
     {
+        $this->resetPage();
         if ($this->dateFilter === 'custom') {
             $this->startDate = now()->startOfMonth()->format('Y-m-d');
             $this->endDate = now()->endOfMonth()->format('Y-m-d');
         }
-        $this->loadSales();
     }
 
     public function updatedSalespersonFilter(): void
     {
-        $this->loadSales();
+        $this->resetPage();
     }
 
     public function updatedStartDate(): void
     {
         if ($this->dateFilter === 'custom') {
-            $this->loadSales();
+            $this->resetPage();
         }
     }
 
     public function updatedEndDate(): void
     {
         if ($this->dateFilter === 'custom') {
-            $this->loadSales();
+            $this->resetPage();
         }
     }
 }; ?>
@@ -308,7 +306,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         </div>
         <div class="flex items-center gap-3">
             <!-- Export Buttons -->
-            @if($shop && $sales->count() > 0)
+            @if($shop && $this->sales->count() > 0)
                 <div class="flex items-center gap-2">
                     <flux:button 
                         variant="outline" 
@@ -437,7 +435,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
 
         <!-- Sales Table -->
         <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-            @if($sales->count() > 0)
+            @if($this->sales->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[800px]">
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
@@ -452,7 +450,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                            @foreach($sales as $sale)
+                            @foreach($this->sales as $sale)
                                 <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-3 sm:px-6 py-3">
                                         <div>
@@ -542,47 +540,52 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
-                </div>
+                </table>
+            </div>
 
-                <!-- Summary -->
-                <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
-                    @php
-                        $activeSales = $sales->where('status', '!=', 'cancelled');
-                        $totalRevenue = $activeSales->sum('total_amount');
-                        $totalPaid = $activeSales->sum('total_paid');
-                        $averageSale = $activeSales->avg('total_amount') ?? 0;
-                    @endphp
-                    <div class="grid gap-4 md:grid-cols-4">
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Active Sales</flux:text>
-                            <flux:text class="text-2xl font-bold">{{ $activeSales->count() }}</flux:text>
-                            @if($sales->count() !== $activeSales->count())
-                                <flux:text class="text-xs text-neutral-500 dark:text-neutral-400">
-                                    ({{ $sales->where('status', 'cancelled')->count() }} cancelled)
-                                </flux:text>
-                            @endif
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</flux:text>
-                            <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
-                                ₦{{ number_format($totalRevenue, 2) }}
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                {{ $this->sales->links() }}
+            </div>
+
+            <!-- Summary -->
+            <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
+                @php
+                    $activeSales = $this->sales->where('status', '!=', 'cancelled');
+                    $totalRevenue = $activeSales->sum('total_amount');
+                    $totalPaid = $activeSales->sum('total_paid');
+                    $averageSale = $activeSales->avg('total_amount') ?? 0;
+                @endphp
+                <div class="grid gap-4 md:grid-cols-4">
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Active Sales</flux:text>
+                        <flux:text class="text-2xl font-bold">{{ $activeSales->count() }}</flux:text>
+                        @if($this->sales->count() !== $activeSales->count())
+                            <flux:text class="text-xs text-neutral-500 dark:text-neutral-400">
+                                ({{ $this->sales->where('status', 'cancelled')->count() }} cancelled)
                             </flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
-                            <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                ₦{{ number_format($totalPaid, 2) }}
-                            </flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                            <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                ₦{{ number_format($averageSale, 2) }}
-                            </flux:text>
-                        </div>
+                        @endif
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                        <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
+                            ₦{{ number_format($totalRevenue, 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
+                        <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            ₦{{ number_format($totalPaid, 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
+                        <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                            ₦{{ number_format($averageSale, 2) }}
+                        </flux:text>
                     </div>
                 </div>
+            </div>
             @else
                 <div class="py-12 text-center">
                     <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
