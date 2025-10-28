@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class extends Component {
     use WithPagination;
     public $search = '';
-    public $dateFilter = 'week'; // today, week, month, year, custom, all
+    public $dateFilter = 'all'; // today, week, month, year, custom, all
     public $startDate;
     public $endDate;
     public $salespersonFilter = '';
@@ -258,7 +258,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     public function resetFilters(): void
     {
         $this->search = '';
-        $this->dateFilter = 'week';
+        $this->dateFilter = 'all';
         $this->salespersonFilter = '';
         $this->shopFilter = '';
         $this->startDate = now()->startOfWeek()->format('Y-m-d');
@@ -408,7 +408,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         </div>
 
         <!-- Active Filters Badge -->
-        @if($search || $salespersonFilter || $shopFilter || $dateFilter !== 'week')
+        @if($search || $salespersonFilter || $shopFilter || $dateFilter !== 'all')
             <div class="mt-3 flex flex-wrap items-center gap-2">
                 <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Active filters:</flux:text>
                 @if($search)
@@ -441,7 +441,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                         </button>
                     </flux:badge>
                 @endif
-                @if($dateFilter !== 'week')
+                @if($dateFilter !== 'all')
                     <flux:badge variant="outline" size="sm">
                         @php
                             $filterLabels = [
@@ -454,7 +454,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                             ];
                         @endphp
                         {{ $filterLabels[$dateFilter] }}
-                        <button wire:click="$set('dateFilter', 'week')" class="ml-1 hover:text-red-500">
+                        <button wire:click="$set('dateFilter', 'all')" class="ml-1 hover:text-red-500">
                             <flux:icon name="x-mark" class="size-3" />
                         </button>
                     </flux:badge>
@@ -462,6 +462,49 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
             </div>
         @endif
     </div>
+
+    <!-- Sales Summary -->
+    @if($this->sales->count() > 0)
+        <div class="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
+            @php
+                $activeSales = $this->sales->where('status', '!=', 'cancelled');
+                $totalSalesAmount = $activeSales->sum('total_amount');
+                $totalPaidAmount = $activeSales->sum('total_paid');
+                $totalBalanceAmount = $activeSales->sum('balance');
+            @endphp
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <flux:heading size="lg">Search Results Summary</flux:heading>
+                    <flux:text class="text-neutral-600 dark:text-neutral-400">
+                        Showing {{ $this->sales->count() }} sales
+                        @if($search || $salespersonFilter || $shopFilter || $dateFilter !== 'all')
+                            matching your filters
+                        @endif
+                    </flux:text>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:flex lg:gap-6">
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                        <flux:text class="text-lg font-bold text-green-600 dark:text-green-400 sm:text-xl">
+                            ₦{{ number_format($totalSalesAmount, 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
+                        <flux:text class="text-lg font-bold text-blue-600 dark:text-blue-400 sm:text-xl">
+                            ₦{{ number_format($totalPaidAmount, 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Outstanding</flux:text>
+                        <flux:text class="text-lg font-bold text-amber-600 dark:text-amber-400 sm:text-xl">
+                            ₦{{ number_format($totalBalanceAmount, 2) }}
+                        </flux:text>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Sales Table -->
     <div class="rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
@@ -471,10 +514,12 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                     <thead class="border-b border-neutral-200 dark:border-neutral-700">
                         <tr>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sale ID</th>
+                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Shop</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Salesperson</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Items</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Amount</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Status</th>
+                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Date</th>
                             <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Actions</th>
                         </tr>
                     </thead>
@@ -488,6 +533,12 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                             {{ $sale->items->count() }} items
                                         </flux:text>
                                     </div>
+                                </td>
+                                <td class="px-3 sm:px-6 py-3">
+                                    <flux:text class="font-medium text-sm">{{ $sale->shop->name }}</flux:text>
+                                    <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">
+                                        {{ $sale->shop->location }}
+                                    </flux:text>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     <div class="flex items-center gap-3">
@@ -546,6 +597,12 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                     </flux:badge>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
+                                    <div>
+                                        <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}</flux:text>
+                                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ $sale->created_at->format('g:i A') }}</flux:text>
+                                    </div>
+                                </td>
+                                <td class="px-3 sm:px-6 py-3">
                                     @if($sale->status !== 'cancelled')
                                         <flux:button 
                                             variant="outline" 
@@ -571,50 +628,13 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 {{ $this->sales->links() }}
             </div>
 
-            <!-- Summary -->
-            <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
-                @php
-                    $activeSales = $this->sales->where('status', '!=', 'cancelled');
-                    $totalRevenue = $activeSales->sum('total_amount');
-                    $totalPaid = $activeSales->sum('total_paid');
-                    $averageSale = $activeSales->avg('total_amount') ?? 0;
-                @endphp
-                <div class="grid gap-4 md:grid-cols-4">
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Active Sales</flux:text>
-                        <flux:text class="text-2xl font-bold">{{ $activeSales->count() }}</flux:text>
-                        @if($this->sales->count() !== $activeSales->count())
-                            <flux:text class="text-xs text-neutral-500 dark:text-neutral-400">
-                                ({{ $this->sales->where('status', 'cancelled')->count() }} cancelled)
-                            </flux:text>
-                        @endif
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
-                        <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
-                            ₦{{ number_format($totalRevenue, 2) }}
-                        </flux:text>
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
-                        <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                            ₦{{ number_format($totalPaid, 2) }}
-                        </flux:text>
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                        <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                            ₦{{ number_format($averageSale, 2) }}
-                        </flux:text>
-                    </div>
-                </div>
-            </div>
+           
         @else
             <div class="py-12 text-center">
                 <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
                 <flux:heading size="lg" class="mt-4">No sales found</flux:heading>
                 <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
-                    @if($search || $salespersonFilter || $shopFilter || $dateFilter !== 'week')
+                    @if($search || $salespersonFilter || $shopFilter || $dateFilter !== 'all')
                         No sales match your current filters.
                     @else
                         No sales have been made yet.
