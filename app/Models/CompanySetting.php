@@ -60,7 +60,7 @@ class CompanySetting extends Model
     public static function getSettings()
     {
         return static::firstOrCreate([], [
-            'company_name' => 'Abba Textiles Nig. Ltd',
+            'company_name' => 'SARKIN YAKI AHK TEXTILES',
             'company_address' => 'Magizawa Plaza, Gusau, Zamfara State',
             'company_phone' => '+234 123 456 7890',
             'company_email' => 'info@abbatextiles.com',

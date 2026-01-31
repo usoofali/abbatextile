@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
         //     ShopSeeder::class,
         // ]);
         $this->call([
-            AdminUserSeeder::class
+            AdminUserSeeder::class,
         ]);
 
         // Create default company settings
         \App\Models\CompanySetting::create([
-            'company_name' => 'Abba Textiles Nig. Ltd',
+            'company_name' => 'SARKIN YAKI AHK TEXTILES',
             'company_address' => 'Magizawa Plaza, Gusau, Zamfara State',
             'company_phone' => '+234 123 456 7890',
             'company_email' => 'info@abbatextiles.com',

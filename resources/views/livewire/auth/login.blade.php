@@ -118,7 +118,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('ABBA TEXTILES NIG. LTD')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('SARKIN YAKI AHK TEXTILES')" :description="__('Enter your email and password below to log in')" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
