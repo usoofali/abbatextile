@@ -289,7 +289,8 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                                             <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}
                                             </flux:text>
                                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                {{ $sale->created_at->format('g:i A') }}</flux:text>
+                                                {{ $sale->created_at->format('g:i A') }}
+                                            </flux:text>
                                         </div>
                                     </td>
                                 </tr>
@@ -305,7 +306,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
 
                 <!-- Summary -->
                 <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
-                    <div class="grid gap-4 md:grid-cols-4">
+                    <div class="grid gap-4 md:grid-cols-3">
                         <div class="text-center">
                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
                             <flux:text class="text-2xl font-bold">{{ $this->sales->count() }}</flux:text>
@@ -320,12 +321,6 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                             <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
                             <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
                                 ₦{{ number_format($this->sales->sum('total_paid'), 2) }}
-                            </flux:text>
-                        </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                            <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                ₦{{ number_format($this->sales->avg('total_amount') ?? 0, 2) }}
                             </flux:text>
                         </div>
                     </div>

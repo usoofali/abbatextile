@@ -14,7 +14,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
     public $totalUsers;
     public $totalSales;
     public $totalRevenue;
-    public $averageSaleValue;
+    public $totalProfit;
     public $totalProducts;
     public $lowStockProducts;
     public $outOfStockProducts;
@@ -34,12 +34,11 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         $this->totalShops = Shop::count();
         $this->totalUsers = User::where('role', '!=', User::ROLE_ADMIN)->count();
         
-        // Only count non-cancelled sales
-        $this->totalSales = Sale::where('status', '!=', 'cancelled')->count();
-        $this->totalRevenue = Sale::where('status', '!=', 'cancelled')->sum('total_amount');
-        
-        // Calculate average sale value from non-cancelled sales
-        $this->averageSaleValue = $this->totalSales > 0 ? $this->totalRevenue / $this->totalSales : 0;
+        // Sales statistics
+        $activeSales = Sale::where('status', '!=', 'cancelled')->get();
+        $this->totalSales = $activeSales->count();
+        $this->totalRevenue = $activeSales->sum('total_amount');
+        $this->totalProfit = $activeSales->sum(fn($sale) => $sale->total_profit);
         
         // Product statistics
         $this->totalProducts = Product::count();
@@ -167,9 +166,10 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
 
                 // Calculate additional metrics
                 $totalInventoryValue = $shop->products()->sum(DB::raw('stock_quantity * price_per_unit'));
-                $averageSaleValue = $shop->sales_transactions_count > 0 
-                    ? ($shop->sales_transactions_sum_total_amount ?? 0) / $shop->sales_transactions_count 
-                    : 0;
+                $totalProfit = Sale::where('shop_id', $shop->id)
+                    ->where('status', '!=', 'cancelled')
+                    ->get()
+                    ->sum(fn($sale) => $sale->total_profit);
 
                 return [
                     'shop' => $shop,
@@ -177,7 +177,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                     'top_products' => $topProducts,
                     'sales_trend' => $salesTrend,
                     'total_inventory_value' => $totalInventoryValue,
-                    'average_sale_value' => $averageSaleValue,
+                    'total_profit' => $totalProfit,
                 ];
             });
     }
@@ -221,11 +221,11 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
         <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex items-center gap-3">
                 <div class="rounded-none bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
-                    <flux:icon name="shopping-cart" class="size-5 sm:size-6 text-purple-600 dark:text-purple-400" />
+                    <flux:icon name="chart-bar" class="size-5 sm:size-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div class="min-w-0 flex-1">
-                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Active Sales</flux:text>
-                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">{{ number_format($totalSales) }}</flux:heading>
+                    <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Profit</flux:text>
+                    <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($totalProfit, 2) }}</flux:heading>
                 </div>
             </div>
         </div>
@@ -320,9 +320,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                                     <flux:icon name="chart-bar" class="size-5 text-purple-600 dark:text-purple-400" />
                                 </div>
                                 <div>
-                                    <flux:text class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Avg Sale</flux:text>
+                                    <flux:text class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Profit</flux:text>
                                     <flux:text class="text-xl font-bold text-purple-600 dark:text-purple-400">
-                                        ₦{{ number_format($summary['average_sale_value'], 2) }}
+                                        ₦{{ number_format($summary['total_profit'], 2) }}
                                     </flux:text>
                                 </div>
                             </div>

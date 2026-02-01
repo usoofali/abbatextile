@@ -519,9 +519,6 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                 Shop</th>
                             <th
                                 class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                                Salesperson</th>
-                            <th
-                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
                                 Items</th>
                             <th
                                 class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
@@ -554,19 +551,6 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                     <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">
                                         {{ $sale->shop->location }}
                                     </flux:text>
-                                </td>
-                                <td class="px-3 sm:px-6 py-3">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium dark:bg-neutral-700">
-                                            {{ $sale->salesperson->initials() }}
-                                        </div>
-                                        <div>
-                                            <flux:text class="font-medium">{{ $sale->salesperson->name }}</flux:text>
-                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                {{ $sale->salesperson->email }}</flux:text>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     <div class="space-y-1 max-w-xs">
@@ -621,7 +605,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                         <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}
                                         </flux:text>
                                         <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
-                                            {{ $sale->created_at->format('g:i A') }}</flux:text>
+                                            {{ $sale->created_at->format('g:i A') }}
+                                        </flux:text>
                                     </div>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">

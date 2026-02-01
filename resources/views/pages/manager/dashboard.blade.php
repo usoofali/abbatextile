@@ -14,7 +14,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
     public $totalProducts;
     public $totalSales;
     public $totalRevenue;
-    public $averageSaleValue;
+    public $totalProfit;
     public $lowStockProducts;
     public $outOfStockProducts;
     public $recentSales;
@@ -49,8 +49,11 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
             ->where('status', '!=', 'cancelled')
             ->sum('total_amount');
         
-        // Calculate average sale value from non-cancelled sales
-        $this->averageSaleValue = $this->totalSales > 0 ? $this->totalRevenue / $this->totalSales : 0;
+        // Calculate total profit from non-cancelled sales
+        $this->totalProfit = $this->shop->salesTransactions()
+            ->where('status', '!=', 'cancelled')
+            ->get()
+            ->sum(fn($sale) => $sale->total_profit);
         
         // Stock alerts
         $this->lowStockProducts = $this->shop->products()
@@ -175,8 +178,8 @@ new #[Layout('components.layouts.app', ['title' => 'Manager Dashboard'])] class 
                         <flux:icon name="chart-bar" class="size-5 sm:size-6 text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Avg. Sale Value</flux:text>
-                        <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($averageSaleValue, 2) }}</flux:heading>
+                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Profit</flux:text>
+                        <flux:heading size="lg" class="font-bold text-base sm:text-lg">₦{{ number_format($this->totalProfit, 2) }}</flux:heading>
                     </div>
                 </div>
             </div>

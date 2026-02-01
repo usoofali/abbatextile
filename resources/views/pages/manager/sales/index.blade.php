@@ -438,9 +438,6 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                     Sale ID</th>
                                 <th
                                     class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                                    Salesperson</th>
-                                <th
-                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
                                     Items</th>
                                 <th
                                     class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
@@ -469,20 +466,6 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium dark:bg-neutral-700">
-                                                {{ $sale->salesperson->initials() }}
-                                            </div>
-                                            <div>
-                                                <flux:text class="font-medium">{{ $sale->salesperson->name }}</flux:text>
-                                                <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                    {{ $sale->salesperson->email }}
-                                                </flux:text>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3 sm:px-6 py-3">
                                         <div class="space-y-1 max-w-xs">
                                             @foreach($sale->items->take(2) as $item)
                                                 <div class="flex justify-between text-sm">
@@ -504,7 +487,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                             ₦{{ number_format($sale->total_amount, 2) }}
                                         </flux:text>
                                         <flux:text class="text-[11px] text-blue-600 dark:text-blue-400 font-medium block">
-                                            Profit: ₦{{ number_format($sale->total_profit, 2) }} ({{ $sale->getProfitMargin() }}%)
+                                            Profit: ₦{{ number_format($sale->total_profit, 2) }}
+                                            ({{ number_format($sale->getProfitMargin(), 2) }}%)
                                         </flux:text>
                                         @if($sale->total_paid > 0)
                                             <flux:text class="text-xs text-blue-600/70 dark:text-blue-400/70 block">
@@ -597,90 +581,83 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                 ₦{{ number_format($totalPaid, 2) }}
                             </flux:text>
                         </div>
-                        <div class="text-center">
-                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                            <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                ₦{{ number_format($averageSale, 2) }}
-                            </flux:text>
-                        </div>
                     </div>
-                </div>
             @else
-                <div class="py-12 text-center">
-                    <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
-                    <flux:heading size="lg" class="mt-4">No sales found</flux:heading>
-                    <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
-                        @if($search || $salespersonFilter || $dateFilter !== 'week')
-                            No sales match your current filters.
-                        @else
-                            No sales have been made yet.
-                        @endif
-                    </flux:text>
-                </div>
-            @endif
-        </div>
-
-        <!-- Cancel Sale Confirmation Modal -->
-        @if($saleToCancel)
-            <flux:modal wire:model="saleToCancel" max-width="md">
-                <div class="p-6">
-                    <div class="flex items-center gap-3">
-                        <div class="rounded-full bg-red-100 p-2 dark:bg-red-900/20">
-                            <flux:icon name="exclamation-triangle" class="size-6 text-red-600 dark:text-red-400" />
-                        </div>
-                        <div>
-                            <flux:heading size="lg">Cancel Sale</flux:heading>
-                            <flux:text class="text-neutral-600 dark:text-neutral-400">
-                                Are you sure you want to cancel this sale?
-                            </flux:text>
-                        </div>
+                    <div class="py-12 text-center">
+                        <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
+                        <flux:heading size="lg" class="mt-4">No sales found</flux:heading>
+                        <flux:text class="mt-2 text-neutral-600 dark:text-neutral-400">
+                            @if($search || $salespersonFilter || $dateFilter !== 'week')
+                                No sales match your current filters.
+                            @else
+                                No sales have been made yet.
+                            @endif
+                        </flux:text>
                     </div>
-
-                    <div class="mt-4 rounded-none bg-neutral-50 p-4 dark:bg-neutral-800">
-                        <flux:text class="font-medium">This action will:</flux:text>
-                        <ul class="mt-2 space-y-1 text-sm text-neutral-600 dark:text-neutral-400">
-                            <li>• Restore all product stock quantities</li>
-                            <li>• Mark the sale as cancelled</li>
-                            <li>• Remove the sale from revenue calculations</li>
-                        </ul>
-                    </div>
-
-                    <div class="mt-6 flex justify-end gap-3">
-                        <flux:button variant="outline" wire:click="$set('saleToCancel', null)">
-                            Keep Sale
-                        </flux:button>
-                        <flux:button variant="primary" icon="x-circle" wire:click="cancelSale('{{ $saleToCancel }}')"
-                            class="bg-red-600 hover:bg-red-700 focus:ring-red-500">
-                            Yes, Cancel Sale
-                        </flux:button>
-                    </div>
-                </div>
-            </flux:modal>
-        @endif
-    @else
-        <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
-            <div class="flex items-center gap-2">
-                <flux:icon name="exclamation-triangle" class="size-5 text-red-600 dark:text-red-400" />
-                <flux:heading size="lg" class="text-red-800 dark:text-red-200">No Shop Assigned</flux:heading>
+                @endif
             </div>
-            <flux:text class="mt-2 text-red-700 dark:text-red-300">
-                You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
-            </flux:text>
-        </div>
-    @endif
-    <!-- Flash Message -->
-    @if (session()->has('error'))
-        <div class="fixed bottom-4 right-4 z-50">
-            <x-ui.alert variant="error" :timeout="5000">
-                {{ session('error') }}
-            </x-ui.alert>
-        </div>
-    @endif
-    @if (session()->has('success'))
-        <div class="fixed bottom-4 right-4 z-50">
-            <x-ui.alert variant="success" :timeout="5000">
-                {{ session('success') }}
-            </x-ui.alert>
-        </div>
-    @endif
-</div>
+
+            <!-- Cancel Sale Confirmation Modal -->
+            @if($saleToCancel)
+                <flux:modal wire:model="saleToCancel" max-width="md">
+                    <div class="p-6">
+                        <div class="flex items-center gap-3">
+                            <div class="rounded-full bg-red-100 p-2 dark:bg-red-900/20">
+                                <flux:icon name="exclamation-triangle" class="size-6 text-red-600 dark:text-red-400" />
+                            </div>
+                            <div>
+                                <flux:heading size="lg">Cancel Sale</flux:heading>
+                                <flux:text class="text-neutral-600 dark:text-neutral-400">
+                                    Are you sure you want to cancel this sale?
+                                </flux:text>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 rounded-none bg-neutral-50 p-4 dark:bg-neutral-800">
+                            <flux:text class="font-medium">This action will:</flux:text>
+                            <ul class="mt-2 space-y-1 text-sm text-neutral-600 dark:text-neutral-400">
+                                <li>• Restore all product stock quantities</li>
+                                <li>• Mark the sale as cancelled</li>
+                                <li>• Remove the sale from revenue calculations</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-6 flex justify-end gap-3">
+                            <flux:button variant="outline" wire:click="$set('saleToCancel', null)">
+                                Keep Sale
+                            </flux:button>
+                            <flux:button variant="primary" icon="x-circle" wire:click="cancelSale('{{ $saleToCancel }}')"
+                                class="bg-red-600 hover:bg-red-700 focus:ring-red-500">
+                                Yes, Cancel Sale
+                            </flux:button>
+                        </div>
+                    </div>
+                </flux:modal>
+            @endif
+    @else
+            <div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
+                <div class="flex items-center gap-2">
+                    <flux:icon name="exclamation-triangle" class="size-5 text-red-600 dark:text-red-400" />
+                    <flux:heading size="lg" class="text-red-800 dark:text-red-200">No Shop Assigned</flux:heading>
+                </div>
+                <flux:text class="mt-2 text-red-700 dark:text-red-300">
+                    You don't have a shop assigned to you. Please contact the administrator to assign you to a shop.
+                </flux:text>
+            </div>
+        @endif
+        <!-- Flash Message -->
+        @if (session()->has('error'))
+            <div class="fixed bottom-4 right-4 z-50">
+                <x-ui.alert variant="error" :timeout="5000">
+                    {{ session('error') }}
+                </x-ui.alert>
+            </div>
+        @endif
+        @if (session()->has('success'))
+            <div class="fixed bottom-4 right-4 z-50">
+                <x-ui.alert variant="success" :timeout="5000">
+                    {{ session('success') }}
+                </x-ui.alert>
+            </div>
+        @endif
+    </div>
