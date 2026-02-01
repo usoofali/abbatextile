@@ -635,4 +635,4 @@ function resizeImage(input, maxSizeKB) {
     }
 }
 </script>
-<?php $__env->stopPush(); ?><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages/manager/products/create.blade.php ENDPATH**/ ?>
+<?php $__env->stopPush(); ?><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\pages/manager/products/create.blade.php ENDPATH**/ ?>

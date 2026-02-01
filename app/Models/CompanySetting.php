@@ -61,9 +61,9 @@ class CompanySetting extends Model
     {
         return static::firstOrCreate([], [
             'company_name' => 'SARKIN YAKI AHK TEXTILES',
-            'company_address' => 'Magizawa Plaza, Gusau, Zamfara State',
+            'company_address' => 'Polo Shops Opposite Rahim Filling Station Gusau, Zamfara State',
             'company_phone' => '+234 123 456 7890',
-            'company_email' => 'info@abbatextiles.com',
+            'company_email' => 'info@sarkinyakitextiles.com',
             'smtp_host' => 'smtp.mailtrap.io',
             'smtp_port' => 2525,
             'smtp_username' => '',

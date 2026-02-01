@@ -58,4 +58,4 @@
 <?php unset($__componentOriginalc481942d30cc0ab06077963cf20a45e8); ?>
 <?php endif; ?>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/partials/settings-heading.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/partials/settings-heading.blade.php ENDPATH**/ ?>

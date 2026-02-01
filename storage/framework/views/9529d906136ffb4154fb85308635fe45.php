@@ -46,4 +46,4 @@ $classes = Flux::classes('[grid-area:main]')
     <?php echo e($slot); ?>
 
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/main.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/main.blade.php ENDPATH**/ ?>

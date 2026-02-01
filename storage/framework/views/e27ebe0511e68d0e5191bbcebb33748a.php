@@ -506,4 +506,4 @@ $classes = Flux::classes()
         <?php endif; ?>
     </button>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/input/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/input/index.blade.php ENDPATH**/ ?>

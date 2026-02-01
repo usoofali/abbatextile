@@ -8,4 +8,4 @@ $classes = Flux::classes()
 ?>
 
 <ui-sidebar-toggle <?php echo e($attributes->class($classes)); ?> data-flux-sidebar-backdrop></ui-sidebar-toggle>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/sidebar/backdrop.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/sidebar/backdrop.blade.php ENDPATH**/ ?>

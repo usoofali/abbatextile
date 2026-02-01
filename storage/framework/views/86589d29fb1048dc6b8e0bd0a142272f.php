@@ -114,4 +114,4 @@ $indicatorClasses = Flux::classes()
 <?php unset($__componentOriginal1d609ace4b6b0700d4da371cfad55492); ?>
 <?php endif; ?>
 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/switch.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/switch.blade.php ENDPATH**/ ?>

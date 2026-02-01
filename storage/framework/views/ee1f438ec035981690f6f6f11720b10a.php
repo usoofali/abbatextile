@@ -14,4 +14,4 @@
 <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 <?php echo app('flux')->fluxAppearance(); ?>
 
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/partials/head.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/partials/head.blade.php ENDPATH**/ ?>

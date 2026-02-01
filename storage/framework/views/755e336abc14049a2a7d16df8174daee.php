@@ -67,4 +67,4 @@ unset($__defined_vars, $__key, $__value); ?>
         </span>
     <?php endif; ?>
 </ui-label>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/label.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/label.blade.php ENDPATH**/ ?>

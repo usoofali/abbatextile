@@ -63,4 +63,4 @@ $variant = $variant !== 'default' && Flux::componentExists('checkbox.variants.' 
 <?php $component = $__componentOriginale96b33a22b0abf65a3b62dc1a6ecf912; ?>
 <?php unset($__componentOriginale96b33a22b0abf65a3b62dc1a6ecf912); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/checkbox/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/checkbox/index.blade.php ENDPATH**/ ?>

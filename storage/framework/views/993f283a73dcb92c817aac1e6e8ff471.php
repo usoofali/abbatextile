@@ -190,4 +190,4 @@
         </div>
     </div>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/settings/layout.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/settings/layout.blade.php ENDPATH**/ ?>

@@ -75,4 +75,4 @@ $classes = Flux::classes('shrink-0')
         <?php break; ?>
 
 <?php endswitch; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/icon/information-circle.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/icon/information-circle.blade.php ENDPATH**/ ?>

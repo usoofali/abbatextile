@@ -1862,4 +1862,4 @@ use Livewire\Volt\Component;
     }
 })();
 </script>
-<?php $__env->stopPush(); ?><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages/salesperson/pos.blade.php ENDPATH**/ ?>
+<?php $__env->stopPush(); ?><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\pages/salesperson/pos.blade.php ENDPATH**/ ?>

@@ -191,4 +191,4 @@ $classes = Flux::classes()
 <?php $component = $__componentOriginala5f31b21bdf3246ae55ae993fe8931c7; ?>
 <?php unset($__componentOriginala5f31b21bdf3246ae55ae993fe8931c7); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/badge/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/badge/index.blade.php ENDPATH**/ ?>

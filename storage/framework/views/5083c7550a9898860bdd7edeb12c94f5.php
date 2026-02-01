@@ -63,4 +63,4 @@ $variant = $variant !== 'default' && Flux::componentExists('radio.variants.' . $
 <?php $component = $__componentOriginal265f91d25e15cdf8789a0aea59dc939c; ?>
 <?php unset($__componentOriginal265f91d25e15cdf8789a0aea59dc939c); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/radio/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/radio/index.blade.php ENDPATH**/ ?>

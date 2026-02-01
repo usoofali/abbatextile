@@ -51,4 +51,4 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginalf6b376e50e9192a3af54df033b02996a; ?>
 <?php unset($__componentOriginalf6b376e50e9192a3af54df033b02996a); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/radio/group/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/radio/group/index.blade.php ENDPATH**/ ?>

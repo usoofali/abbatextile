@@ -71,4 +71,4 @@ $classes = Flux::classes()
     <?php echo e($slot); ?>
 
 </ui-field>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/field.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/field.blade.php ENDPATH**/ ?>

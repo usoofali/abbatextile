@@ -80,4 +80,4 @@ $type = match ($method) {
 <?php $component = $__componentOriginal0bc865510ef3ecddbe48edc4e8cc9ddb; ?>
 <?php unset($__componentOriginal0bc865510ef3ecddbe48edc4e8cc9ddb); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/http-method.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/http-method.blade.php ENDPATH**/ ?>

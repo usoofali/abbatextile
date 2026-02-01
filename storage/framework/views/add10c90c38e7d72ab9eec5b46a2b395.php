@@ -3,4 +3,4 @@
     <path d="M0.75 4.75V2.75C0.75 1.922 1.422 1.25 2.25 1.25H3.958C4.54 1.25 5.069 1.587 5.316 2.114L5.614 2.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M2.75 2.75H9.25C10.355 2.75 11.25 3.645 11.25 4.75V8.25C11.25 9.355 10.355 10.25 9.25 10.25H2.75C1.645 10.25 0.75 9.355 0.75 8.25V4.75C0.75 3.645 1.645 2.75 2.75 2.75Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/folder.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/folder.blade.php ENDPATH**/ ?>

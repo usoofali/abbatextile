@@ -77,4 +77,4 @@ $classes = Flux::classes('mt-3 text-sm font-medium text-red-500 dark:text-red-40
 
     <?php endif; ?>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/error.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/error.blade.php ENDPATH**/ ?>

@@ -243,4 +243,4 @@ use Livewire\Volt\Component;
 <?php $component = $__componentOriginal8cc9d3143946b992b324617832699c5f; ?>
 <?php unset($__componentOriginal8cc9d3143946b992b324617832699c5f); ?>
 <?php endif; ?>
-</section><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\livewire/settings/delete-user-form.blade.php ENDPATH**/ ?>
+</section><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\livewire/settings/delete-user-form.blade.php ENDPATH**/ ?>

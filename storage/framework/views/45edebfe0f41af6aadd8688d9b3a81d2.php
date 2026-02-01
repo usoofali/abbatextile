@@ -60,4 +60,4 @@ $classes = Flux::classes()
     ;
 ?>
 
-<a <?php echo e($attributes->class($classes)); ?> data-flux-link <?php if ($external) : ?>target="_blank"<?php endif; ?>><?php echo e($slot); ?></a><?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/link.blade.php ENDPATH**/ ?>
+<a <?php echo e($attributes->class($classes)); ?> data-flux-link <?php if ($external) : ?>target="_blank"<?php endif; ?>><?php echo e($slot); ?></a><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/link.blade.php ENDPATH**/ ?>

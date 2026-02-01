@@ -137,4 +137,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <?php endif; ?>
 
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/with-inline-field.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/with-inline-field.blade.php ENDPATH**/ ?>

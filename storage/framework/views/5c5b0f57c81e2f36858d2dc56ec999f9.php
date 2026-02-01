@@ -38,4 +38,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
     </div>
 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/auth-session-status.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/auth-session-status.blade.php ENDPATH**/ ?>

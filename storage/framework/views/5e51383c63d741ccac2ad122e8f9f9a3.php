@@ -20,4 +20,4 @@
 <?php $component = $__componentOriginal4fdfd22d5b98c4f9898705517a788e1a; ?>
 <?php unset($__componentOriginal4fdfd22d5b98c4f9898705517a788e1a); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/layouts/auth.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/layouts/auth.blade.php ENDPATH**/ ?>

@@ -83,4 +83,4 @@ $classes = Flux::classes()
     <?php echo e($slot); ?>
 
 </select>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/select/variants/default.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/select/variants/default.blade.php ENDPATH**/ ?>

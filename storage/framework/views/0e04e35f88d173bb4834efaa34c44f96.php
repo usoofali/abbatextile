@@ -74,4 +74,4 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php unset($__componentOriginal43e8c568bbb8b06b9124aad3ccf4ec97); ?>
 <?php endif; ?>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/auth-header.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/auth-header.blade.php ENDPATH**/ ?>

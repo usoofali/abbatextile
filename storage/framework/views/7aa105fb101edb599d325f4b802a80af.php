@@ -45,4 +45,4 @@ $classes = Flux::classes()
     <?php echo e($slot); ?>
 
 </nav>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/navlist/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/navlist/index.blade.php ENDPATH**/ ?>

@@ -168,4 +168,4 @@ if ($dismissible === false) {
         <?php endif; ?>
     </dialog>
 </ui-modal>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/modal/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/modal/index.blade.php ENDPATH**/ ?>

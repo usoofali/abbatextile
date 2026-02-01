@@ -111,4 +111,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
     </div>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/navlist/group.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/navlist/group.blade.php ENDPATH**/ ?>

@@ -68,4 +68,4 @@ $classes = Flux::classes()
 <?php unset($__componentOriginal01ef35ccfb2d03cc6412dbe2dc9e1a50); ?>
 <?php endif; ?>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/checkbox/indicator.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/checkbox/indicator.blade.php ENDPATH**/ ?>

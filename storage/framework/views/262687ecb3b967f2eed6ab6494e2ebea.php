@@ -109,4 +109,4 @@
 <?php $component = $__componentOriginal6107cafe1a6b2bb3ae2fbdc60a313162; ?>
 <?php unset($__componentOriginal6107cafe1a6b2bb3ae2fbdc60a313162); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/livewire/auth/confirm-password.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/livewire/auth/confirm-password.blade.php ENDPATH**/ ?>

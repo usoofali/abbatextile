@@ -1,6 +1,6 @@
 # Application Setup Configuration
 
-This document describes the Application Setup Configuration system for the AbbaTextiles POS application. This system allows for easy configuration and deployment of the application in production environments, particularly useful for HPanel hosting environments after Git deployment.
+This document describes the Application Setup Configuration system for the sarkinyakitextiles POS application. This system allows for easy configuration and deployment of the application in production environments, particularly useful for HPanel hosting environments after Git deployment.
 
 ## Overview
 

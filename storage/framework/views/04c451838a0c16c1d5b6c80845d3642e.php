@@ -130,4 +130,4 @@ $iconClasses = Flux::classes('text-zinc-500 dark:text-zinc-400 [ui-radio[data-ch
 
     <?php endif; ?>
 </ui-radio>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/radio/variants/segmented.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/radio/variants/segmented.blade.php ENDPATH**/ ?>

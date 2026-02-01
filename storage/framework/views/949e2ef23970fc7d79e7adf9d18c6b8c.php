@@ -72,4 +72,4 @@ $classes = Flux::classes()
     <?php default: ?>
         <div <?php echo e($attributes->class($classes)); ?> data-flux-heading><?php echo e($slot); ?></div>
 <?php endswitch; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/heading.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/heading.blade.php ENDPATH**/ ?>

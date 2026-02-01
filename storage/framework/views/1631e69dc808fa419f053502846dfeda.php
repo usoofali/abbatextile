@@ -45,4 +45,4 @@
 
     </body>
 </html>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/layouts/auth/card.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/layouts/auth/card.blade.php ENDPATH**/ ?>

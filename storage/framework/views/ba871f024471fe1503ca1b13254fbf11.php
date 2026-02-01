@@ -68,4 +68,4 @@ $classes = Flux::classes('border-0 [print-color-adjust:exact]')
 <?php else: ?>
     <div data-orientation="<?php echo e($orientation); ?>" role="none" <?php echo e($attributes->class($classes, 'shrink-0')); ?> data-flux-separator></div>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/separator.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/separator.blade.php ENDPATH**/ ?>

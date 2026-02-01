@@ -964,4 +964,4 @@
         <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/layouts/app/sidebar.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/layouts/app/sidebar.blade.php ENDPATH**/ ?>

@@ -50,4 +50,4 @@ $classes = Flux::classes()
     <?php echo e($slot); ?>
 
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/subheading.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/subheading.blade.php ENDPATH**/ ?>

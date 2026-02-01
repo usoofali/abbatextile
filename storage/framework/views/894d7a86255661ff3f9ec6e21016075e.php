@@ -74,4 +74,4 @@ $classes = Flux::classes()
     ;
 ?>
 
-<?php if ($inline) : ?><span <?php echo e($attributes->class($classes)); ?> data-flux-text <?php if($color): ?> color="<?php echo e($color); ?>" <?php endif; ?>><?php echo e($slot); ?></span><?php else: ?><p <?php echo e($attributes->class($classes)); ?> data-flux-text <?php if($color): ?> data-color="<?php echo e($color); ?>" <?php endif; ?>><?php echo e($slot); ?></p><?php endif; ?><?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/text.blade.php ENDPATH**/ ?>
+<?php if ($inline) : ?><span <?php echo e($attributes->class($classes)); ?> data-flux-text <?php if($color): ?> color="<?php echo e($color); ?>" <?php endif; ?>><?php echo e($slot); ?></span><?php else: ?><p <?php echo e($attributes->class($classes)); ?> data-flux-text <?php if($color): ?> data-color="<?php echo e($color); ?>" <?php endif; ?>><?php echo e($slot); ?></p><?php endif; ?><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/text.blade.php ENDPATH**/ ?>

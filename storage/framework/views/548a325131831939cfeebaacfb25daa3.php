@@ -88,4 +88,4 @@ $classes = Flux::classes()
 <?php $component = $__componentOriginalaa38908a80414b887e964866233e69a0; ?>
 <?php unset($__componentOriginalaa38908a80414b887e964866233e69a0); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/checkbox/variants/default.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/checkbox/variants/default.blade.php ENDPATH**/ ?>

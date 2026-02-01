@@ -218,4 +218,4 @@ if (isset($__slots)) unset($__slots);
 <?php $component = $__componentOriginal951a5936e8413b65cd052beecc1fba57; ?>
 <?php unset($__componentOriginal951a5936e8413b65cd052beecc1fba57); ?>
 <?php endif; ?>
-</section><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\livewire/settings/profile.blade.php ENDPATH**/ ?>
+</section><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\livewire/settings/profile.blade.php ENDPATH**/ ?>

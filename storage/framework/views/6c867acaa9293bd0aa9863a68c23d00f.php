@@ -2,4 +2,4 @@
     <path d="M4.75 1L0.75 5L4.75 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M9.25 1L5.25 5L9.25 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/chevrons-left.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/icons/chevrons-left.blade.php ENDPATH**/ ?>

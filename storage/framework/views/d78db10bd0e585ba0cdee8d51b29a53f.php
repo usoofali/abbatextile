@@ -42,4 +42,4 @@
 <?php $component = $__componentOriginald275691d15a0a68ca98ac956f9920812; ?>
 <?php unset($__componentOriginald275691d15a0a68ca98ac956f9920812); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/layouts/app.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/layouts/app.blade.php ENDPATH**/ ?>

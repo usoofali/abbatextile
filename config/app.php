@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'sync_url' => env('SYNC_URL', 'https://abbatextiles.yumitsolutions.com/api/sync'),
+    'sync_url' => env('SYNC_URL', 'https://sarkinyakitextiles.yumitsolutions.com/api/sync'),
     'sync_timeout' => env('SYNC_TIMEOUT', 25),
     'sync_logging_enabled' => env('SYNC_LOGGING_ENABLED', true),
 

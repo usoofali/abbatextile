@@ -128,4 +128,4 @@ $classes = Flux::classes()
 
     <?php endif; ?>
 </button>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/profile.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/profile.blade.php ENDPATH**/ ?>

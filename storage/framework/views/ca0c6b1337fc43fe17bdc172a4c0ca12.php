@@ -49,4 +49,4 @@ unset($__defined_vars, $__key, $__value); ?>
     <?php echo e($slot); ?>
 
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/modal/trigger.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/modal/trigger.blade.php ENDPATH**/ ?>

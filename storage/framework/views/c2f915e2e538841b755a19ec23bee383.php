@@ -88,4 +88,4 @@ $resizeStyle = match ($resize) {
 <?php $component = $__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431; ?>
 <?php unset($__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/textarea.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/textarea.blade.php ENDPATH**/ ?>

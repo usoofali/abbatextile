@@ -335,4 +335,4 @@ $classes = Flux::classes()
 <?php $component = $__componentOriginal1bac653003a70249c8d1bced240ca490; ?>
 <?php unset($__componentOriginal1bac653003a70249c8d1bced240ca490); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/button/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/button/index.blade.php ENDPATH**/ ?>

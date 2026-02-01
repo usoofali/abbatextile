@@ -61,4 +61,4 @@ $icon = $name ?? $icon;
 <?php $component = $__componentOriginal99f5bdde02e072cb5fe2c95dd124b389; ?>
 <?php unset($__componentOriginal99f5bdde02e072cb5fe2c95dd124b389); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/icon/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/icon/index.blade.php ENDPATH**/ ?>

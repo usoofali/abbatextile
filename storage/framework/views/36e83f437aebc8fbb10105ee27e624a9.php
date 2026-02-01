@@ -72,4 +72,4 @@ unset($__defined_vars, $__key, $__value); ?>
     <path d="m7 15 5 5 5-5" />
     <path d="m7 9 5-5 5 5" />
 </svg>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/icon/chevrons-up-down.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/icon/chevrons-up-down.blade.php ENDPATH**/ ?>

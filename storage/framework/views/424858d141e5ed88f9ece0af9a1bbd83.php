@@ -106,4 +106,4 @@ if ($collapsibleOnMobile) {
     <?php echo e($slot); ?>
 
 </ui-sidebar>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/sidebar/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/sidebar/index.blade.php ENDPATH**/ ?>

@@ -45,4 +45,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
     </div>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/button-or-div.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/button-or-div.blade.php ENDPATH**/ ?>

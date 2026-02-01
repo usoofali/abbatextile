@@ -175,4 +175,4 @@ $suffixClasses = Flux::classes()
 <?php $component = $__componentOriginal41290c80ee95fab383f81660ba8bf860; ?>
 <?php unset($__componentOriginal41290c80ee95fab383f81660ba8bf860); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/menu/item.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/menu/item.blade.php ENDPATH**/ ?>

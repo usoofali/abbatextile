@@ -51,4 +51,4 @@ if (($wireModel = $attributes->wire('model')) && $wireModel->directive && ! $wir
     <?php echo e($slot); ?>
 
 </ui-dropdown>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/dropdown.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/dropdown.blade.php ENDPATH**/ ?>

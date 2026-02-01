@@ -77,4 +77,4 @@ $classes = Flux::classes('shrink-0')
         <?php break; ?>
 
 <?php endswitch; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/icon/cog.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/icon/cog.blade.php ENDPATH**/ ?>

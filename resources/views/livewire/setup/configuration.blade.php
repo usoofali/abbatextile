@@ -14,7 +14,7 @@ use Livewire\Volt\Component;
 
 new class extends Component {
     #[Validate('required|string|max:255')]
-    public string $app_name = 'AbbaTextiles POS';
+    public string $app_name = 'sarkinyakitextiles POS';
     
     #[Validate('required|string|max:255')]
     public string $app_url = '';
@@ -47,7 +47,7 @@ new class extends Component {
     public string $admin_password = '';
     
     #[Validate('required|string|max:255')]
-    public string $company_name = 'AbbaTextiles Nigeria Limited';
+    public string $company_name = 'sarkinyakitextiles Nigeria Limited';
     
     #[Validate('nullable|string|max:500')]
     public ?string $company_address = null;
@@ -71,7 +71,7 @@ new class extends Component {
         $this->initializeSetupSteps();
         
         // Try to get default values from environment
-        $this->app_name = config('app.name', 'AbbaTextiles POS');
+        $this->app_name = config('app.name', 'sarkinyakitextiles POS');
         $this->app_url = config('app.url', '');
         $this->db_host = config('database.connections.mysql.host', 'localhost');
         $this->db_port = config('database.connections.mysql.port', '3306');
@@ -473,7 +473,7 @@ new class extends Component {
                     {{ $isSetupComplete ? 'Setup Complete!' : 'Application Setup' }}
                 </h1>
                 <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">
-                    {{ $isSetupComplete ? 'Your application is ready to use' : 'Configure your AbbaTextiles POS system' }}
+                    {{ $isSetupComplete ? 'Your application is ready to use' : 'Configure your sarkinyakitextiles POS system' }}
                 </p>
             </div>
 
@@ -490,7 +490,7 @@ new class extends Component {
                             Setup Completed Successfully!
                         </h2>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Your AbbaTextiles POS system is now ready to use. You can now log in with your administrator account.
+                            Your sarkinyakitextiles POS system is now ready to use. You can now log in with your administrator account.
                         </p>
                     </div>
                     
@@ -585,7 +585,7 @@ new class extends Component {
                                             </label>
                                             <input type="text" wire:model="app_name" 
                                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                                   placeholder="AbbaTextiles POS" required>
+                                                   placeholder="sarkinyakitextiles POS" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -624,7 +624,7 @@ new class extends Component {
                                             </label>
                                             <input type="text" wire:model="db_database" 
                                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                                   placeholder="abbatextiles" required>
+                                                   placeholder="sarkinyakitextiles" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -686,7 +686,7 @@ new class extends Component {
                                             </label>
                                             <input type="text" wire:model="company_name" 
                                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                                   placeholder="AbbaTextiles Nigeria Limited" required>
+                                                   placeholder="sarkinyakitextiles Nigeria Limited" required>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -694,7 +694,7 @@ new class extends Component {
                                             </label>
                                             <input type="email" wire:model="company_email" 
                                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                                                   placeholder="info@abbatextiles.com">
+                                                   placeholder="info@sarkinyakitextiles.com">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

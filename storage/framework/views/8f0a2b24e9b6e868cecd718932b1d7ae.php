@@ -689,4 +689,4 @@ use Picqer\Barcode\BarcodeGeneratorSVG;
             document.head.appendChild(style);
         });
     </script>
-</div><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages/manager/products/barcodes.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\pages/manager/products/barcodes.blade.php ENDPATH**/ ?>

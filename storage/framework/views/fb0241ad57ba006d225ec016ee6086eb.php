@@ -22,4 +22,4 @@
 <?php unset($__componentOriginalc481942d30cc0ab06077963cf20a45e8); ?>
 <?php endif; ?>
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/menu/separator.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/menu/separator.blade.php ENDPATH**/ ?>

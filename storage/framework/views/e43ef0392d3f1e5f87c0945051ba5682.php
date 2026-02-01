@@ -1164,4 +1164,4 @@ use Livewire\WithPagination;
 <?php endif; ?>
         </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-</div><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages/manager/products/index.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\pages/manager/products/index.blade.php ENDPATH**/ ?>

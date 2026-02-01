@@ -71,4 +71,4 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431; ?>
 <?php unset($__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\vendor\livewire\flux\src/../stubs/resources/views/flux/select/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\vendor\livewire\flux\src/../stubs/resources/views/flux/select/index.blade.php ENDPATH**/ ?>

@@ -81,4 +81,4 @@ unset($__defined_vars, $__key, $__value); ?>
         </button>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
-<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/ui/alert.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/ui/alert.blade.php ENDPATH**/ ?>
