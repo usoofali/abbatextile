@@ -660,7 +660,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                     </div>
                 </div>
 
-                <div class="mt-4 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
+                <div class="mt-4 rounded-none bg-neutral-50 p-4 dark:bg-neutral-800">
                     <flux:text class="font-medium">This action will:</flux:text>
                     <ul class="mt-2 space-y-1 text-sm text-neutral-600 dark:text-neutral-400">
                         <li>• Restore all product stock quantities</li>

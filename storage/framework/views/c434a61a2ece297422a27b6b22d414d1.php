@@ -144,7 +144,7 @@ use Livewire\WithPagination;
                 
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $this->getPendingSales(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="bg-white dark:bg-neutral-800 p-4 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                        <div class="bg-white dark:bg-neutral-800 p-4 rounded-none border border-yellow-200 dark:border-yellow-700">
                             <div class="flex justify-between items-start mb-2">
                                 <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
@@ -676,7 +676,7 @@ use Livewire\WithPagination;
 <?php endif; ?>
                 
                 <div class="space-y-4">
-                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-lg">
+                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-none">
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-neutral-600 dark:text-neutral-400">Sale ID:</span>

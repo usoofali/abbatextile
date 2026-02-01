@@ -525,7 +525,7 @@ new class extends Component {
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                             @foreach ($setupSteps as $key => $step)
-                                <div class="flex items-center space-x-3 p-3 rounded-lg {{ $step['active'] ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-gray-50 dark:bg-gray-700' }}">
+                                <div class="flex items-center space-x-3 p-3 rounded-none {{ $step['active'] ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-gray-50 dark:bg-gray-700' }}">
                                     <div class="flex-shrink-0">
                                         <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
                                             {{ $step['completed'] ? 'bg-green-500 text-white' : 
@@ -553,7 +553,7 @@ new class extends Component {
 
                         @if ($isProcessing)
                             <!-- Processing Logs -->
-                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-none p-4 mb-6">
                                 <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
                                     Setup Progress
                                 </h3>
@@ -584,7 +584,7 @@ new class extends Component {
                                                 Application Name
                                             </label>
                                             <input type="text" wire:model="app_name" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="sarkinyakitextiles POS" required>
                                         </div>
                                         <div>
@@ -592,7 +592,7 @@ new class extends Component {
                                                 Application URL
                                             </label>
                                             <input type="url" wire:model="app_url" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="https://yourdomain.com" required>
                                         </div>
                                     </div>
@@ -607,7 +607,7 @@ new class extends Component {
                                                 Database Host
                                             </label>
                                             <input type="text" wire:model="db_host" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="localhost" required>
                                         </div>
                                         <div>
@@ -615,7 +615,7 @@ new class extends Component {
                                                 Database Port
                                             </label>
                                             <input type="text" wire:model="db_port" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="3306" required>
                                         </div>
                                         <div>
@@ -623,7 +623,7 @@ new class extends Component {
                                                 Database Name
                                             </label>
                                             <input type="text" wire:model="db_database" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="sarkinyakitextiles" required>
                                         </div>
                                         <div>
@@ -631,7 +631,7 @@ new class extends Component {
                                                 Database Username
                                             </label>
                                             <input type="text" wire:model="db_username" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="username" required>
                                         </div>
                                         <div class="md:col-span-2">
@@ -639,7 +639,7 @@ new class extends Component {
                                                 Database Password
                                             </label>
                                             <input type="password" wire:model="db_password" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="password" required>
                                         </div>
                                     </div>
@@ -654,7 +654,7 @@ new class extends Component {
                                                 Admin Name
                                             </label>
                                             <input type="text" wire:model="admin_name" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="Administrator" required>
                                         </div>
                                         <div>
@@ -662,7 +662,7 @@ new class extends Component {
                                                 Admin Email
                                             </label>
                                             <input type="email" wire:model="admin_email" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="admin@example.com" required>
                                         </div>
                                         <div>
@@ -670,7 +670,7 @@ new class extends Component {
                                                 Admin Password
                                             </label>
                                             <input type="password" wire:model="admin_password" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="Minimum 8 characters" required>
                                         </div>
                                     </div>
@@ -685,7 +685,7 @@ new class extends Component {
                                                 Company Name
                                             </label>
                                             <input type="text" wire:model="company_name" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="sarkinyakitextiles Nigeria Limited" required>
                                         </div>
                                         <div>
@@ -693,7 +693,7 @@ new class extends Component {
                                                 Company Email
                                             </label>
                                             <input type="email" wire:model="company_email" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="info@sarkinyakitextiles.com">
                                         </div>
                                         <div>
@@ -701,7 +701,7 @@ new class extends Component {
                                                 Company Phone
                                             </label>
                                             <input type="text" wire:model="company_phone" 
-                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                   class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                    placeholder="+234 123 456 7890">
                                         </div>
                                         <div class="md:col-span-2">
@@ -709,7 +709,7 @@ new class extends Component {
                                                 Company Address
                                             </label>
                                             <textarea wire:model="company_address" rows="3"
-                                                      class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                                                      class="w-full border border-gray-300 dark:border-gray-600 rounded-none px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                                       placeholder="Enter company address"></textarea>
                                         </div>
                                     </div>
@@ -720,7 +720,7 @@ new class extends Component {
                                     <button type="submit"
                                             wire:loading.attr="disabled"
                                             wire:target="startSetup"
-                                            class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                                            class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-none font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                                         <span wire:loading.remove wire:target="startSetup">
                                             Start Setup
                                         </span>
@@ -733,7 +733,7 @@ new class extends Component {
                                             wire:click="skipSampleData"
                                             wire:loading.attr="disabled"
                                             wire:target="skipSampleData"
-                                            class="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                                            class="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-none font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                                         <span wire:loading.remove wire:target="skipSampleData">
                                             Setup Without Sample Data
                                         </span>

@@ -40,7 +40,7 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <?php if ($expandable && $heading): ?>
     <ui-disclosure <?php echo e($attributes->class('group/disclosure')); ?> <?php if($expanded === true): ?> open <?php endif; ?> data-flux-navlist-group>
-        <button type="button" class="w-full h-10 lg:h-8 flex items-center group/disclosure-button mb-[2px] rounded-lg hover:bg-zinc-800/5 dark:hover:bg-white/[7%] text-zinc-500 hover:text-zinc-800 dark:text-white/80 dark:hover:text-white">
+        <button type="button" class="w-full h-10 lg:h-8 flex items-center group/disclosure-button mb-[2px] rounded-none hover:bg-zinc-800/5 dark:hover:bg-white/[7%] text-zinc-500 hover:text-zinc-800 dark:text-white/80 dark:hover:text-white">
             <div class="ps-3 pe-4">
                 <?php if (isset($component)) { $__componentOriginal298ff21bbc41cebb188cbb18c6c11bc0 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal298ff21bbc41cebb188cbb18c6c11bc0 = $attributes; } ?>
@@ -111,4 +111,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
     </div>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/navlist/group.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/navlist/group.blade.php ENDPATH**/ ?>

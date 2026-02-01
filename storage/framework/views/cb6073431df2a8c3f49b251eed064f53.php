@@ -143,8 +143,8 @@ $classes = Flux::classes()
         'after:absolute after:inset-0 after:inset-ring-[1px] after:inset-ring-black/7 dark:after:inset-ring-white/10',
         $circle ? 'after:rounded-full' : match($size) {
             'xl' => 'after:rounded-xl',
-            'lg' => 'after:rounded-lg',
-            default => 'after:rounded-lg',
+            'lg' => 'after:rounded-none',
+            default => 'after:rounded-none',
             'sm' => 'after:rounded-md',
             'xs' => 'after:rounded-sm',
         },
@@ -284,4 +284,4 @@ $label = $alt ?? $name;
 <?php $component = $__componentOriginal1bac653003a70249c8d1bced240ca490; ?>
 <?php unset($__componentOriginal1bac653003a70249c8d1bced240ca490); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/avatar/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/avatar/index.blade.php ENDPATH**/ ?>

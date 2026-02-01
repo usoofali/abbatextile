@@ -47,7 +47,7 @@ if (! isset($name)) {
 
 $classes = Flux::classes()
     ->add('block flex p-1')
-    ->add('rounded-lg bg-zinc-800/5 dark:bg-white/10')
+    ->add('rounded-none bg-zinc-800/5 dark:bg-white/10')
     ->add($size === 'sm' ? 'h-8 py-[3px] px-[3px]' : 'h-10 p-1')
     ->add($size === 'sm' ? '-my-px h-[calc(2rem+2px)]' : '')
     ;
@@ -77,4 +77,4 @@ $classes = Flux::classes()
 <?php $component = $__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431; ?>
 <?php unset($__componentOriginal33e2911d6f1e72999cb4ebd3c5d00431); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/radio/group/variants/segmented.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/radio/group/variants/segmented.blade.php ENDPATH**/ ?>

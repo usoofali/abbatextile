@@ -62,7 +62,7 @@ $square ??= $slot->isEmpty();
 $iconClasses = Flux::classes($square ? 'size-5!' : 'size-4!');
 
 $classes = Flux::classes()
-    ->add('h-10 lg:h-8 relative flex items-center gap-3 rounded-lg')
+    ->add('h-10 lg:h-8 relative flex items-center gap-3 rounded-none')
     ->add($square ? 'px-2.5!' : '')
     ->add('py-0 text-start w-full px-3 my-px')
     ->add('text-zinc-500 dark:text-white/80')
@@ -203,4 +203,4 @@ $classes = Flux::classes()
 <?php $component = $__componentOriginal41290c80ee95fab383f81660ba8bf860; ?>
 <?php unset($__componentOriginal41290c80ee95fab383f81660ba8bf860); ?>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/navlist/item.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/navlist/item.blade.php ENDPATH**/ ?>

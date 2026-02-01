@@ -241,7 +241,7 @@ new #[Layout('components.layouts.app', ['title' => 'Global Stock Management'])] 
             </div>
 
             <!-- Product Info -->
-            <div class="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="rounded-none border border-neutral-200 p-4 dark:border-neutral-700">
                 <div class="flex items-center gap-3">
                     @if($selectedProduct?->photo)
                         <img src="{{ Storage::disk('public')->url($selectedProduct->photo) }}" alt="{{ $selectedProduct->name }}" class="h-12 w-12 shrink-0 rounded object-cover" />
@@ -291,7 +291,7 @@ new #[Layout('components.layouts.app', ['title' => 'Global Stock Management'])] 
                 @endphp
                 
                     @if($newQuantity < 0)
-                        <div class="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800">
+                        <div class="rounded-none bg-neutral-50 p-3 dark:bg-neutral-800">
                             <flux:text class="text-xs text-red-600 mt-1">
                                 Warning: Stock cannot be negative. It will be set to 0.
                             </flux:text>

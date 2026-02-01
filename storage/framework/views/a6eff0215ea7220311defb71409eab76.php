@@ -32,14 +32,14 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <div
     x-data="{ expanded: false }"
-    class="group rounded-lg border border-neutral-200 dark:border-white/5"
+    class="group rounded-none border border-neutral-200 dark:border-white/5"
     :class="{
         'bg-white dark:bg-white/5 shadow-xs': expanded,
         'border-dashed border-neutral-300 bg-neutral-50 opacity-90 dark:border-white/10 dark:bg-white/1': !expanded,
     }"
 >
     <div
-        class="flex h-11 cursor-pointer items-center gap-3 rounded-lg pr-2.5 pl-4 hover:bg-white/50 dark:hover:bg-white/2"
+        class="flex h-11 cursor-pointer items-center gap-3 rounded-none pr-2.5 pl-4 hover:bg-white/50 dark:hover:bg-white/2"
         @click="expanded = !expanded"
     >
         <?php if (isset($component)) { $__componentOriginal6936650fa23142238a13a0689c4bfe24 = $component; } ?>

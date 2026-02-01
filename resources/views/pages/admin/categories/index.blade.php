@@ -75,7 +75,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Categories'])] class 
                 <div class="rounded-xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <div class="rounded-lg bg-blue-100 p-3 dark:bg-blue-900/20">
+                            <div class="rounded-none bg-blue-100 p-3 dark:bg-blue-900/20">
                                 <flux:icon name="tag" class="size-6 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>

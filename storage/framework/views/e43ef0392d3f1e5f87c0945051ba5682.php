@@ -770,7 +770,7 @@ use Livewire\WithPagination;
 
             <!-- Selected Products Count -->
             <!--[if BLOCK]><![endif]--><?php if(count($selectedProducts) > 0): ?>
-                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-none">
                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::text','data' => ['class' => 'text-blue-800 dark:text-blue-200 font-medium']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -796,7 +796,7 @@ use Livewire\WithPagination;
             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
             <!-- Products List -->
-            <div class="mt-6 max-h-96 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-lg">
+            <div class="mt-6 max-h-96 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-none">
                 <!--[if BLOCK]><![endif]--><?php if(count($barcodeProducts) > 0): ?>
                     <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $barcodeProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

@@ -37,7 +37,7 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 
 <?php
-    $baseClasses = 'flex items-center p-4 mb-4 text-sm rounded-lg shadow-md border transition-opacity duration-300';
+    $baseClasses = 'flex items-center p-4 mb-4 text-sm rounded-none shadow-md border transition-opacity duration-300';
     $variants = [
         'success' => 'text-green-700 bg-green-100 border-green-300',
         'error' => 'text-red-700 bg-red-100 border-red-300',
@@ -70,7 +70,7 @@ unset($__defined_vars, $__key, $__value); ?>
 
     <!--[if BLOCK]><![endif]--><?php if($dismissible): ?>
         <button type="button"
-                class="ml-auto -mx-1.5 -my-1.5 text-inherit rounded-lg focus:ring-2 p-1 hover:bg-opacity-20 inline-flex h-6 w-6"
+                class="ml-auto -mx-1.5 -my-1.5 text-inherit rounded-none focus:ring-2 p-1 hover:bg-opacity-20 inline-flex h-6 w-6"
                 @click="show = false">
             <span class="sr-only">Dismiss</span>
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

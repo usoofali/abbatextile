@@ -34,7 +34,7 @@ unset($__defined_vars, $__key, $__value); ?>
         hasCode: <?php echo e($frame->snippet() ? 'true' : 'false'); ?>
 
     }"
-    class="group rounded-lg border border-neutral-200 dark:border-white/10 overflow-hidden shadow-xs"
+    class="group rounded-none border border-neutral-200 dark:border-white/10 overflow-hidden shadow-xs"
     :class="{ 'dark:border-white/5': expanded }"
 >
     <div
@@ -42,7 +42,7 @@ unset($__defined_vars, $__key, $__value); ?>
         :class="{
             'cursor-pointer hover:bg-white/50 dark:hover:bg-white/5 hover:[&_svg]:stroke-emerald-500': hasCode,
             'dark:bg-white/5 rounded-t-lg': expanded,
-            'dark:bg-white/3 rounded-lg': !expanded
+            'dark:bg-white/3 rounded-none': !expanded
         }"
         @click="hasCode && (expanded = !expanded)"
     >

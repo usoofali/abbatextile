@@ -125,7 +125,7 @@ use Livewire\Volt\Component;
                             
                             <!--[if BLOCK]><![endif]--><?php if($settings->logo_url): ?>
                                 <div class="flex items-center space-x-4 mb-4">
-                                    <img src="<?php echo e($settings->logo_url); ?>" alt="Company Logo" class="h-16 w-16 object-contain border rounded-lg">
+                                    <img src="<?php echo e($settings->logo_url); ?>" alt="Company Logo" class="h-16 w-16 object-contain border rounded-none">
                                     <?php if (isset($component)) { $__componentOriginalc04b147acd0e65cc1a77f86fb0e81580 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc04b147acd0e65cc1a77f86fb0e81580 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::button.index','data' => ['type' => 'button','wire:click' => 'removeLogo','variant' => 'outline','size' => 'sm']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -360,4 +360,4 @@ use Livewire\Volt\Component;
 <?php $component = $__componentOriginal951a5936e8413b65cd052beecc1fba57; ?>
 <?php unset($__componentOriginal951a5936e8413b65cd052beecc1fba57); ?>
 <?php endif; ?>
-</section><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\livewire/settings/company.blade.php ENDPATH**/ ?>
+</section><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\livewire/settings/company.blade.php ENDPATH**/ ?>

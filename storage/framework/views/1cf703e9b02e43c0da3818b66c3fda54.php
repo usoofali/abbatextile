@@ -28,7 +28,7 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 
-<div class="grid gap-3 p-4 bg-neutral-50 dark:bg-transparent overflow-x-auto rounded-lg">
+<div class="grid gap-3 p-4 bg-neutral-50 dark:bg-transparent overflow-x-auto rounded-none">
     <?php if($frame->previous()): ?>
         <div class="flex">
             <?php if (isset($component)) { $__componentOriginalc33171fb5f34409a0ad661ae1625dcb2 = $component; } ?>

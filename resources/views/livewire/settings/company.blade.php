@@ -239,7 +239,7 @@ new class extends Component {
                             
                             @if($settings->logo_url)
                                 <div class="flex items-center space-x-4 mb-4">
-                                    <img src="{{ $settings->logo_url }}" alt="Company Logo" class="h-16 w-16 object-contain border rounded-lg">
+                                    <img src="{{ $settings->logo_url }}" alt="Company Logo" class="h-16 w-16 object-contain border rounded-none">
                                     <flux:button type="button" wire:click="removeLogo" variant="outline" size="sm">
                                         Remove Logo
                                     </flux:button>

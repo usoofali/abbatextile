@@ -1389,7 +1389,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
                     </div>
                 </div>
 
-                <div class="mt-4 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
+                <div class="mt-4 rounded-none bg-neutral-50 p-4 dark:bg-neutral-800">
                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::text','data' => ['class' => 'font-medium']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -1525,4 +1525,4 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 <?php endif; ?>
     </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-</div><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views\pages/admin/sales/index.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views\pages/admin/sales/index.blade.php ENDPATH**/ ?>

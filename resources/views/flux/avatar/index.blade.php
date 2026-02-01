@@ -101,8 +101,8 @@ $classes = Flux::classes()
         'after:absolute after:inset-0 after:inset-ring-[1px] after:inset-ring-black/7 dark:after:inset-ring-white/10',
         $circle ? 'after:rounded-full' : match($size) {
             'xl' => 'after:rounded-xl',
-            'lg' => 'after:rounded-lg',
-            default => 'after:rounded-lg',
+            'lg' => 'after:rounded-none',
+            default => 'after:rounded-none',
             'sm' => 'after:rounded-md',
             'xs' => 'after:rounded-sm',
         },

@@ -43,7 +43,7 @@ $invalid ??= ($name && $errors->has($name));
 
 $classes = Flux::classes()
     ->add('block p-3 w-full')
-    ->add('shadow-xs disabled:shadow-none border rounded-lg')
+    ->add('shadow-xs disabled:shadow-none border rounded-none')
     ->add('bg-white dark:bg-white/10 dark:disabled:bg-white/[7%]')
     ->add($resize ? 'resize-y' : 'resize-none')
     ->add('text-base sm:text-sm text-zinc-700 disabled:text-zinc-500 placeholder-zinc-400 disabled:placeholder-zinc-400/70 dark:text-zinc-300 dark:disabled:text-zinc-400 dark:placeholder-zinc-400 dark:disabled:placeholder-zinc-500')

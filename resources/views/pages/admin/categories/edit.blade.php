@@ -82,7 +82,7 @@ new #[Layout('components.layouts.app', ['title' => 'Edit Category'])] class exte
                     />
 
                     <!-- Category Stats -->
-                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+                    <div class="rounded-none border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
                         <flux:heading size="sm" class="mb-3">Category Statistics</flux:heading>
                         <div class="grid gap-4 md:grid-cols-2">
                             <div class="text-center">

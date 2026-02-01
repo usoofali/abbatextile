@@ -196,7 +196,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
     <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-blue-100 p-2 sm:p-3 dark:bg-blue-900/20">
+                <div class="rounded-none bg-blue-100 p-2 sm:p-3 dark:bg-blue-900/20">
                     <flux:icon name="building-office" class="size-5 sm:size-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div class="min-w-0 flex-1">
@@ -208,7 +208,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
 
         <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
+                <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
                     <flux:icon name="users" class="size-5 sm:size-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div class="min-w-0 flex-1">
@@ -220,7 +220,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
 
         <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
+                <div class="rounded-none bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
                     <flux:icon name="shopping-cart" class="size-5 sm:size-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div class="min-w-0 flex-1">
@@ -232,7 +232,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
 
         <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
             <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-yellow-100 p-2 sm:p-3 dark:bg-yellow-900/20">
+                <div class="rounded-none bg-yellow-100 p-2 sm:p-3 dark:bg-yellow-900/20">
                     <flux:icon name="currency-dollar" class="size-5 sm:size-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
                 <div class="min-w-0 flex-1">
@@ -286,9 +286,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                 <div class="p-6">
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <!-- Sales Stats -->
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-green-100 p-2 dark:bg-green-900/20">
+                                <div class="rounded-none bg-green-100 p-2 dark:bg-green-900/20">
                                     <flux:icon name="shopping-cart" class="size-5 text-green-600 dark:text-green-400" />
                                 </div>
                                 <div>
@@ -300,9 +300,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             </div>
                         </div>
 
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/20">
+                                <div class="rounded-none bg-blue-100 p-2 dark:bg-blue-900/20">
                                     <flux:icon name="currency-dollar" class="size-5 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
@@ -314,9 +314,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             </div>
                         </div>
 
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-purple-100 p-2 dark:bg-purple-900/20">
+                                <div class="rounded-none bg-purple-100 p-2 dark:bg-purple-900/20">
                                     <flux:icon name="chart-bar" class="size-5 text-purple-600 dark:text-purple-400" />
                                 </div>
                                 <div>
@@ -328,9 +328,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             </div>
                         </div>
 
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-amber-100 p-2 dark:bg-amber-900/20">
+                                <div class="rounded-none bg-amber-100 p-2 dark:bg-amber-900/20">
                                     <flux:icon name="cube" class="size-5 text-amber-600 dark:text-amber-400" />
                                 </div>
                                 <div>
@@ -345,9 +345,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
 
                     <!-- Stock Status -->
                     <div class="mt-6 grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-cyan-100 p-2 dark:bg-cyan-900/20">
+                                <div class="rounded-none bg-cyan-100 p-2 dark:bg-cyan-900/20">
                                     <flux:icon name="cube" class="size-5 text-cyan-600 dark:text-cyan-400" />
                                 </div>
                                 <div>
@@ -357,9 +357,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             </div>
                         </div>
 
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-yellow-100 p-2 dark:bg-yellow-900/20">
+                                <div class="rounded-none bg-yellow-100 p-2 dark:bg-yellow-900/20">
                                     <flux:icon name="exclamation-triangle" class="size-5 text-yellow-600 dark:text-yellow-400" />
                                 </div>
                                 <div>
@@ -371,9 +371,9 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             </div>
                         </div>
 
-                        <div class="rounded-lg border border-neutral-100 p-4 dark:border-neutral-700">
+                        <div class="rounded-none border border-neutral-100 p-4 dark:border-neutral-700">
                             <div class="flex items-center gap-3">
-                                <div class="rounded-lg bg-red-100 p-2 dark:bg-red-900/20">
+                                <div class="rounded-none bg-red-100 p-2 dark:bg-red-900/20">
                                     <flux:icon name="x-circle" class="size-5 text-red-600 dark:text-red-400" />
                                 </div>
                                 <div>
@@ -396,7 +396,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             @if($summary['recent_sales']->count() > 0)
                                 <div class="space-y-3">
                                     @foreach($summary['recent_sales'] as $sale)
-                                        <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
+                                        <div class="flex items-center justify-between rounded-none border border-neutral-100 p-3 dark:border-neutral-700">
                                             <div class="min-w-0 flex-1 pr-3">
                                                 <flux:text class="font-medium text-sm truncate">
                                                     Sale #{{ substr($sale->id, -8) }}
@@ -428,7 +428,7 @@ new #[Layout('components.layouts.app', ['title' => 'Admin Dashboard'])] class ex
                             @if($summary['top_products']->count() > 0)
                                 <div class="space-y-3">
                                     @foreach($summary['top_products'] as $product)
-                                        <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
+                                        <div class="flex items-center justify-between rounded-none border border-neutral-100 p-3 dark:border-neutral-700">
                                             <div class="min-w-0 flex-1 pr-3">
                                                 <flux:text class="font-medium text-sm truncate">{{ $product->name }}</flux:text>
                                                 <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">

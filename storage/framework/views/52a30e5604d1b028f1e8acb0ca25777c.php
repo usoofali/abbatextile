@@ -105,7 +105,7 @@ $classes = Flux::classes()
     ->add('relative items-center font-medium justify-center gap-2 whitespace-nowrap')
     ->add('disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none')
     ->add(match ($size) { // Size...
-        'base' => 'h-10 text-sm rounded-lg' . ' ' . (
+        'base' => 'h-10 text-sm rounded-none' . ' ' . (
             $square
                 ? 'w-10'
                 // If we have an icon, we want to reduce the padding on the side that has the icon...

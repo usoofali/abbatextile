@@ -361,7 +361,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 
             <!-- Selected Products Count -->
             @if(count($selectedProducts) > 0)
-                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-none">
                     <flux:text class="text-blue-800 dark:text-blue-200 font-medium">
                         {{ count($selectedProducts) }} product(s) selected for barcode generation
                     </flux:text>
@@ -369,7 +369,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
             @endif
 
             <!-- Products List -->
-            <div class="mt-6 max-h-96 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-lg">
+            <div class="mt-6 max-h-96 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-none">
                 @if(count($barcodeProducts) > 0)
                     <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
                         @foreach($barcodeProducts as $product)

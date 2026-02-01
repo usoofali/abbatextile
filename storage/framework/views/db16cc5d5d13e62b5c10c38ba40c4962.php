@@ -478,7 +478,7 @@ use Livewire\WithPagination;
                 </div>
 
                 <!-- Product Info -->
-                <div class="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+                <div class="rounded-none border border-neutral-200 p-4 dark:border-neutral-700">
                     <div class="flex items-center gap-3">
                         <!--[if BLOCK]><![endif]--><?php if($selectedProduct?->photo): ?>
                             <img src="<?php echo e(Storage::disk('public')->url($selectedProduct->photo)); ?>" alt="<?php echo e($selectedProduct->name); ?>" class="h-12 w-12 shrink-0 rounded object-cover" />
@@ -650,7 +650,7 @@ use Livewire\WithPagination;
                     ?>
                     
                     <!--[if BLOCK]><![endif]--><?php if($newQuantity < 0): ?>
-                        <div class="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800">
+                        <div class="rounded-none bg-neutral-50 p-3 dark:bg-neutral-800">
                             <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::text','data' => ['class' => 'text-xs text-red-600 mt-1']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>

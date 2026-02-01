@@ -335,7 +335,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     @if($products->count() > 0)
                         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                             @foreach($products as $product)
-                            <div class="rounded-lg border border-neutral-200 p-4 hover:border-blue-300 dark:border-neutral-700 dark:hover:border-blue-600">
+                            <div class="rounded-none border border-neutral-200 p-4 hover:border-blue-300 dark:border-neutral-700 dark:hover:border-blue-600">
                                 <!-- Product Image and Details -->
                                 <div class="flex gap-3 mb-3">
                                     <!-- Product Image -->
@@ -344,11 +344,11 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                                             <img 
                                                 src="{{ Storage::url($product->photo) }}" 
                                                 alt="{{ $product->name }}"
-                                                class="w-16 h-16 rounded-lg object-cover border border-neutral-200 dark:border-neutral-600"
+                                                class="w-16 h-16 rounded-none object-cover border border-neutral-200 dark:border-neutral-600"
                                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iI0YzRjNGMyIvPgo8cGF0aCBkPSJNMzIgMzZDMzUuMzEzNyAzNiAzOCAzMy4zMTM3IDM4IDMwQzM4IDI2LjY4NjMgMzUuMzEzNyAyNCAzMiAyNEMyOC42ODYzIDI0IDI2IDI2LjY4NjMgMjYgMzBDMjYgMzMuMzEzNyAyOC42ODYzIDM2IDMyIDM2WiIgZmlsbD0iIzlDQTBBQyIvPgo8cGF0aCBkPSJNNDQgNDRWMjBDNDQgMTguODk1NCA0My4xMDQ2IDE4IDQyIDE4SDIyQzIwLjg5NTQgMTggMjAgMTguODk1NCAyMCAyMFY0NEMyMCA0NS4xMDQ2IDIwLjg5NTQgNDYgMjIgNDZINDRDNDUuMTA0NiA0NiA0NiA0NS4xMDQ2IDQ2IDQ0VjQ0WiIgZmlsbD0iIzlDQTBBQyIvPgo8L3N2Zz4K'"
                                             >
                                         @else
-                                            <div class="w-16 h-16 rounded-lg bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
+                                            <div class="w-16 h-16 rounded-none bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
                                                 <flux:icon name="photo" class="size-6 text-neutral-400" />
                                             </div>
                                         @endif
@@ -448,7 +448,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                     @if(count($cart) > 0)
                         <div class="space-y-3 mb-4 max-h-96 overflow-y-auto">
                             @foreach($cart as $index => $item)
-                                <div class="rounded-lg border border-neutral-200 p-3 dark:border-neutral-700">
+                                <div class="rounded-none border border-neutral-200 p-3 dark:border-neutral-700">
                                     <div class="mb-2">
                                         <flux:text class="font-medium">{{ $item['name'] }}</flux:text>
                                     </div>
@@ -538,7 +538,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
                 <flux:heading size="xl">Payment Details</flux:heading>
                 
                 <div class="space-y-4">
-                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-lg">
+                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-none">
                         <div class="flex justify-between">
                             <flux:text class="font-medium">Total Amount:</flux:text>
                             <flux:text class="font-bold">₦{{ number_format($totalAmount, 2) }}</flux:text>
@@ -612,7 +612,7 @@ new #[Layout('components.layouts.app', ['title' => 'Point of Sale'])] class exte
             x-on:click="activateAudio()"
             class="space-y-3 max-h-[70vh] overflow-hidden"
         >
-            <div class="rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
+            <div class="rounded-none overflow-hidden border border-neutral-200 dark:border-neutral-700 relative">
                 <video x-ref="video" playsinline class="w-full h-36 sm:h-48 object-cover bg-black"></video>
                 <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
                     <div class="w-2/3 h-16 sm:h-24 border-2 border-green-400/70 rounded"></div>

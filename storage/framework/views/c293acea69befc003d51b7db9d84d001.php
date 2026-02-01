@@ -58,7 +58,7 @@ $iconClasses = Flux::classes('text-zinc-400 dark:text-white/80 group-hover:text-
 
 $classes = Flux::classes()
     ->add('group flex items-center')
-    ->add('rounded-lg has-data-[circle=true]:rounded-full')
+    ->add('rounded-none has-data-[circle=true]:rounded-full')
     ->add('[ui-dropdown>&]:w-full') // Without this, the "name" won't get truncated in a sidebar dropdown...
     ->add('p-1 hover:bg-zinc-800/5 dark:hover:bg-white/10')
     ;

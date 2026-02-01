@@ -127,7 +127,7 @@ $inputLoadingClasses = Flux::classes()
     ;
 
 $classes = Flux::classes()
-    ->add('w-full border rounded-lg block disabled:shadow-none dark:shadow-none')
+    ->add('w-full border rounded-none block disabled:shadow-none dark:shadow-none')
     ->add('appearance-none') // Without this, input[type="date"] on mobile doesn't respect w-full...
     ->add(match ($size) {
         default => 'text-base sm:text-sm py-2 h-10 leading-[1.375rem]', // This makes the height of the input 40px (same as buttons and such...)
@@ -506,4 +506,4 @@ $classes = Flux::classes()
         <?php endif; ?>
     </button>
 <?php endif; ?>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/flux/input/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/flux/input/index.blade.php ENDPATH**/ ?>

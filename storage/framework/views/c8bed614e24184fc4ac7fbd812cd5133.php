@@ -188,7 +188,7 @@ use Livewire\Volt\Component;
         <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-blue-100 p-2 sm:p-3 dark:bg-blue-900/20">
+                    <div class="rounded-none bg-blue-100 p-2 sm:p-3 dark:bg-blue-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'cube','class' => 'size-5 sm:size-6 text-blue-600 dark:text-blue-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -237,7 +237,7 @@ use Livewire\Volt\Component;
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
+                    <div class="rounded-none bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'shopping-cart','class' => 'size-5 sm:size-6 text-purple-600 dark:text-purple-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -286,7 +286,7 @@ use Livewire\Volt\Component;
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
+                    <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'currency-dollar','class' => 'size-5 sm:size-6 text-green-600 dark:text-green-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -336,7 +336,7 @@ use Livewire\Volt\Component;
                 <!--[if BLOCK]><![endif]--><?php if(Auth::user()->isSalesperson() && config('app.mode') === 'slave'): ?>
                 <div wire:poll.15s="checkConnectivity" class="rounded-xl border <?php echo e($isOnline ? 'border-green-200' : 'border-red-200'); ?> bg-white p-6 dark:bg-gray-800 <?php echo e($isOnline ? 'dark:border-green-700' : 'dark:border-red-700'); ?>">
                     <div class="flex items-center gap-3">
-                        <div class="rounded-lg bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
+                        <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
                             <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'wifi','class' => 'size-5 sm:size-6 '.e($isOnline ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400').'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -373,7 +373,7 @@ use Livewire\Volt\Component;
         <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-yellow-100 p-2 sm:p-3 dark:bg-yellow-900/20">
+                    <div class="rounded-none bg-yellow-100 p-2 sm:p-3 dark:bg-yellow-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'clock','class' => 'size-5 sm:size-6 text-yellow-600 dark:text-yellow-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -422,7 +422,7 @@ use Livewire\Volt\Component;
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-orange-100 p-2 sm:p-3 dark:bg-orange-900/20">
+                    <div class="rounded-none bg-orange-100 p-2 sm:p-3 dark:bg-orange-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'currency-dollar','class' => 'size-5 sm:size-6 text-orange-600 dark:text-orange-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -471,7 +471,7 @@ use Livewire\Volt\Component;
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-amber-100 p-2 sm:p-3 dark:bg-amber-900/20">
+                    <div class="rounded-none bg-amber-100 p-2 sm:p-3 dark:bg-amber-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'exclamation-triangle','class' => 'size-5 sm:size-6 text-amber-600 dark:text-amber-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -520,7 +520,7 @@ use Livewire\Volt\Component;
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-lg bg-cyan-100 p-2 sm:p-3 dark:bg-cyan-900/20">
+                    <div class="rounded-none bg-cyan-100 p-2 sm:p-3 dark:bg-cyan-900/20">
                         <?php if (isset($component)) { $__componentOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7d5f44bf2a2d803ed0b55f72f1f82e2 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.index','data' => ['name' => 'trophy','class' => 'size-5 sm:size-6 text-cyan-600 dark:text-cyan-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -615,7 +615,7 @@ use Livewire\Volt\Component;
                 <!--[if BLOCK]><![endif]--><?php if($recentSales->count() > 0): ?>
                     <div class="space-y-3 sm:space-y-4">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $recentSales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
+                            <div class="flex items-center justify-between rounded-none border border-neutral-100 p-3 dark:border-neutral-700">
                                 <div class="min-w-0 flex-1 pr-3">
                                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
@@ -777,7 +777,7 @@ use Livewire\Volt\Component;
                 <!--[if BLOCK]><![endif]--><?php if($topProducts->count() > 0): ?>
                     <div class="space-y-3 sm:space-y-4">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $topProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
+                            <div class="flex items-center justify-between rounded-none border border-neutral-100 p-3 dark:border-neutral-700">
                                 <div class="min-w-0 flex-1 pr-3">
                                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
@@ -940,7 +940,7 @@ use Livewire\Volt\Component;
                 <!--[if BLOCK]><![endif]--><?php if($salesTrend->count() > 0): ?>
                     <div class="space-y-3 sm:space-y-4">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $salesTrend; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between rounded-lg border border-neutral-100 p-3 dark:border-neutral-700">
+                            <div class="flex items-center justify-between rounded-none border border-neutral-100 p-3 dark:border-neutral-700">
                                 <div class="min-w-0 flex-1 pr-3">
                                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>
@@ -1103,7 +1103,7 @@ use Livewire\Volt\Component;
                 <!--[if BLOCK]><![endif]--><?php if($lowStockProducts->count() > 0): ?>
                     <div class="space-y-3 sm:space-y-4">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $lowStockProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between rounded-lg border border-amber-100 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-900/20">
+                            <div class="flex items-center justify-between rounded-none border border-amber-100 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-900/20">
                                 <div class="min-w-0 flex-1 pr-3">
                                     <?php if (isset($component)) { $__componentOriginal0638ebfbd490c7a414275d493e14cb4e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal0638ebfbd490c7a414275d493e14cb4e = $attributes; } ?>

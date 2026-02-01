@@ -255,7 +255,7 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                 
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach($this->getPendingSales() as $sale)
-                        <div class="bg-white dark:bg-neutral-800 p-4 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                        <div class="bg-white dark:bg-neutral-800 p-4 rounded-none border border-yellow-200 dark:border-yellow-700">
                             <div class="flex justify-between items-start mb-2">
                                 <flux:text class="font-medium">Sale #{{ substr($sale->id, -8) }}</flux:text>
                                 <span class="text-sm text-yellow-600 dark:text-yellow-400">Pending</span>
@@ -511,7 +511,7 @@ new #[Layout('components.layouts.app', ['title' => 'Payment Management'])] class
                 <flux:heading size="xl">Add Payment</flux:heading>
                 
                 <div class="space-y-4">
-                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-lg">
+                    <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-none">
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-neutral-600 dark:text-neutral-400">Sale ID:</span>
