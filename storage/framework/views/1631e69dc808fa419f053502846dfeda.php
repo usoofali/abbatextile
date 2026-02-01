@@ -7,7 +7,6 @@
         <div class="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
             <div class="flex w-full max-w-md flex-col gap-6">
                 <a href="<?php echo e(route('home')); ?>" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-                    <!-- <span class="flex items-center justify-center"> -->
                         <?php if (isset($component)) { $__componentOriginalab7941ded31f89d628e7a7441c552025 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalab7941ded31f89d628e7a7441c552025 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-auth-logo','data' => ['class' => '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -28,11 +27,8 @@
 <?php $component = $__componentOriginalab7941ded31f89d628e7a7441c552025; ?>
 <?php unset($__componentOriginalab7941ded31f89d628e7a7441c552025); ?>
 <?php endif; ?>
-                    <!-- </span> -->
-
                     <span class="sr-only"><?php echo e(config('app.name', 'Laravel')); ?></span>
                 </a>
-
                 <div class="flex flex-col gap-6">
                     <div class="rounded-xl border bg-white dark:bg-stone-950 dark:border-stone-800 text-stone-800 shadow-xs">
                         <div class="px-10 py-8"><?php echo e($slot); ?></div>
