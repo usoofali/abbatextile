@@ -8,10 +8,10 @@
             <div class="flex w-full max-w-md flex-col gap-6">
                 <a href="<?php echo e(route('home')); ?>" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
                     <!-- <span class="flex items-center justify-center"> -->
-                        <?php if (isset($component)) { $__componentOriginal7b17d80ff7900603fe9e5f0b453cc7c3 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal7b17d80ff7900603fe9e5f0b453cc7c3 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-logo','data' => ['class' => '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('app-logo'); ?>
+                        <?php if (isset($component)) { $__componentOriginalab7941ded31f89d628e7a7441c552025 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalab7941ded31f89d628e7a7441c552025 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-auth-logo','data' => ['class' => '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-auth-logo'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -20,13 +20,13 @@
 <?php $component->withAttributes(['class' => '']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal7b17d80ff7900603fe9e5f0b453cc7c3)): ?>
-<?php $attributes = $__attributesOriginal7b17d80ff7900603fe9e5f0b453cc7c3; ?>
-<?php unset($__attributesOriginal7b17d80ff7900603fe9e5f0b453cc7c3); ?>
+<?php if (isset($__attributesOriginalab7941ded31f89d628e7a7441c552025)): ?>
+<?php $attributes = $__attributesOriginalab7941ded31f89d628e7a7441c552025; ?>
+<?php unset($__attributesOriginalab7941ded31f89d628e7a7441c552025); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal7b17d80ff7900603fe9e5f0b453cc7c3)): ?>
-<?php $component = $__componentOriginal7b17d80ff7900603fe9e5f0b453cc7c3; ?>
-<?php unset($__componentOriginal7b17d80ff7900603fe9e5f0b453cc7c3); ?>
+<?php if (isset($__componentOriginalab7941ded31f89d628e7a7441c552025)): ?>
+<?php $component = $__componentOriginalab7941ded31f89d628e7a7441c552025; ?>
+<?php unset($__componentOriginalab7941ded31f89d628e7a7441c552025); ?>
 <?php endif; ?>
                     <!-- </span> -->
 
@@ -45,4 +45,4 @@
 
     </body>
 </html>
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/layouts/auth/card.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/layouts/auth/card.blade.php ENDPATH**/ ?>

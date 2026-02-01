@@ -11,7 +11,12 @@
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-<?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+<?php if(file_exists(public_path('build/manifest.json'))): ?>
+    <link rel="stylesheet" href="<?php echo e(asset('build/assets/app-CXuiAMJ-.css')); ?>">
+    <script type="module" src="<?php echo e(asset('build/assets/app-l0sNRNKZ.js')); ?>"></script>
+<?php else: ?>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+<?php endif; ?>
 <?php echo app('flux')->fluxAppearance(); ?>
 
-<?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/partials/head.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/partials/head.blade.php ENDPATH**/ ?>
