@@ -61,17 +61,17 @@ if ($loading && $type !== 'submit' && ! $isJsMethod) {
 }
 
 $classes = Flux::classes()
-    ->add('relative items-center font-medium justify-center gap-2 whitespace-nowrap')
+    ->add('relative items-center font-medium justify-center gap-3 whitespace-nowrap transition-colors duration-200')
     ->add('disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none')
     ->add(match ($size) { // Size...
-        'base' => 'h-10 text-sm rounded-lg' . ' ' . (
+        'base' => 'h-10 text-sm rounded-none' . ' ' . (
             $square
-                ? 'w-10'
+                ? 'w-11'
                 // If we have an icon, we want to reduce the padding on the side that has the icon...
-                : ($iconLeading && $iconLeading !== '' ? 'ps-3' : 'ps-4') . ' ' . ($iconTrailing && $iconTrailing !== '' ? 'pe-3' : 'pe-4')
+                : ($iconLeading && $iconLeading !== '' ? 'ps-3' : 'ps-5') . ' ' . ($iconTrailing && $iconTrailing !== '' ? 'pe-3' : 'pe-5')
         ),
-        'sm' => 'h-8 text-sm rounded-md' . ' ' . ($square ? 'w-8' : 'px-3'),
-        'xs' => 'h-6 text-xs rounded-md' . ' ' . ($square ? 'w-6' : 'px-2'),
+        'sm' => 'h-9 text-sm rounded-none' . ' ' . ($square ? 'w-9' : 'px-3'),
+        'xs' => 'h-6 text-xs rounded-none' . ' ' . ($square ? 'w-6' : 'px-2'),
     })
     ->add('inline-flex') // Buttons are inline by default but links are blocks, so inline-flex is needed here to ensure link-buttons are displayed the same as buttons...
     ->add($inset ? match ($size) { // Inset...

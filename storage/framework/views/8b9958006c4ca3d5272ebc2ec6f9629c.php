@@ -21,5 +21,5 @@
 <?php endif; ?>
 </div>
 <div class="ms-1 grid flex-1 text-start text-sm">
-    <span class="mb-0.5 truncate leading-tight font-semibold">SARKIN YAKI</span>
-</div><?php /**PATH C:\Users\MSA\Laravel\sarkinyakitextile\resources\views/components/app-logo.blade.php ENDPATH**/ ?>
+    <span class="mb-0.5 truncate leading-tight font-semibold">SARKIN YAKI AHK</span>
+</div><?php /**PATH C:\Users\MSA\Laravel\abbatextile\resources\views/components/app-logo.blade.php ENDPATH**/ ?>
