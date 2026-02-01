@@ -46,7 +46,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                     $q->whereHas('items.product', function ($productQuery) {
                         $productQuery->where('name', 'like', '%' . $this->search . '%');
                     })
-                    ->orWhere('id', 'like', '%' . $this->search . '%');
+                        ->orWhere('id', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->salespersonFilter, function ($query) {
@@ -90,7 +90,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     public function cancelSale($saleId): void
     {
         $sale = Sale::find($saleId);
-        
+
         if (!$sale) {
             session()->flash('error', 'Sale not found.');
             return;
@@ -109,7 +109,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     public function exportSales($format = 'csv'): StreamedResponse
     {
         $fileName = $this->generateFileName($format);
-        
+
         return response()->streamDownload(function () use ($format) {
             $this->generateExportData($format);
         }, $fileName);
@@ -118,13 +118,13 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     private function generateFileName($format): string
     {
         $dateRange = $this->getDateRangeForFileName();
-        
+
         if ($this->shopFilter) {
             $shop = Shop::find($this->shopFilter);
             $shopName = $shop ? Str::slug($shop->name) : 'selected-shop';
             return "sales-report-{$shopName}-{$dateRange}.{$format}";
         }
-        
+
         return "sales-report-all-shops-{$dateRange}.{$format}";
     }
 
@@ -144,7 +144,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     private function generateExportData($format): void
     {
         $activeSales = $this->sales->where('status', '!=', 'cancelled');
-        
+
         if ($format === 'csv') {
             $this->generateCSV($activeSales);
         } else {
@@ -155,10 +155,10 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     private function generateCSV($sales): void
     {
         $handle = fopen('php://output', 'w');
-        
+
         // Add BOM for UTF-8
         fwrite($handle, "\xEF\xBB\xBF");
-        
+
         // Headers
         fputcsv($handle, [
             'Sale ID',
@@ -167,6 +167,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
             'Items Count',
             'Products',
             'Total Amount',
+            'Total Profit',
+            'Profit Margin',
             'Amount Paid',
             'Balance',
             'Status',
@@ -187,6 +189,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 $sale->items->count(),
                 $products,
                 number_format($sale->total_amount, 2),
+                number_format($sale->total_profit, 2),
+                $sale->getProfitMargin() . '%',
                 number_format($sale->total_paid, 2),
                 number_format($sale->balance, 2),
                 ucfirst($sale->status),
@@ -201,14 +205,14 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     private function generateExcel($sales): void
     {
         $handle = fopen('php://output', 'w');
-        
+
         // Add headers for Excel
         fwrite($handle, "Sales Report - All Shops\n");
         fwrite($handle, "Generated on: " . now()->format('Y-m-d H:i:s') . "\n");
         fwrite($handle, "Date Range: " . $this->getDateRangeDisplay() . "\n\n");
-        
+
         // Headers
-        fwrite($handle, "Sale ID\tShop\tSalesperson\tItems Count\tProducts\tTotal Amount\tAmount Paid\tBalance\tStatus\tDate\tTime\n");
+        fwrite($handle, "Sale ID\tShop\tSalesperson\tItems Count\tProducts\tTotal Amount\tTotal Profit\tProfit Margin\tAmount Paid\tBalance\tStatus\tDate\tTime\n");
 
         // Data rows
         foreach ($sales as $sale) {
@@ -216,13 +220,16 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 return $item->product->name . ' (' . number_format($item->quantity, 2) . ' units)';
             })->implode('; ');
 
-            fwrite($handle, 
+            fwrite(
+                $handle,
                 '#' . substr($sale->id, -8) . "\t" .
                 $sale->shop->name . "\t" .
                 $sale->salesperson->name . "\t" .
                 $sale->items->count() . "\t" .
                 $products . "\t" .
                 number_format($sale->total_amount, 2) . "\t" .
+                number_format($sale->total_profit, 2) . "\t" .
+                $sale->getProfitMargin() . "%\t" .
                 number_format($sale->total_paid, 2) . "\t" .
                 number_format($sale->balance, 2) . "\t" .
                 ucfirst($sale->status) . "\t" .
@@ -235,6 +242,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
         fwrite($handle, "\n\nSummary:\n");
         fwrite($handle, "Total Active Sales: " . $sales->count() . "\n");
         fwrite($handle, "Total Sales: ₦" . number_format($sales->sum('total_amount'), 2) . "\n");
+        fwrite($handle, "Total Profit: ₦" . number_format($sales->sum(fn($sale) => $sale->total_profit), 2) . "\n");
         fwrite($handle, "Total Paid: ₦" . number_format($sales->sum('total_paid'), 2) . "\n");
         fwrite($handle, "Total Balance: ₦" . number_format($sales->sum('balance'), 2) . "\n");
         fwrite($handle, "Average Sale: ₦" . number_format($sales->avg('total_amount') ?? 0, 2) . "\n");
@@ -311,39 +319,31 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
             <flux:heading size="xl" level="1">Sales Report - All Shops</flux:heading>
             <flux:subheading size="lg">Administrator View</flux:subheading>
         </div>
-        
+
     </div>
     <div class="flex items-center justify-between gap-3">
-    <!-- Left side content -->
-    <div class="flex items-center gap-2">
-        @if($this->sales->count() > 0)
-            <flux:button 
-                variant="outline" 
-                icon="document-text"
-                wire:click="exportSales('csv')"
-                class="shrink-0"
-            >
-                Export CSV
-            </flux:button>
-        @endif
+        <!-- Left side content -->
+        <div class="flex items-center gap-2">
+            @if($this->sales->count() > 0)
+                <flux:button variant="outline" icon="document-text" wire:click="exportSales('csv')" class="shrink-0">
+                    Export CSV
+                </flux:button>
+            @endif
+        </div>
+
+        <!-- Right side button -->
+        <flux:button variant="outline" :href="route('admin.dashboard')" wire:navigate>
+            <flux:icon name="arrow-left" />
+            Back to Dashboard
+        </flux:button>
     </div>
-    
-    <!-- Right side button -->
-    <flux:button variant="outline" :href="route('admin.dashboard')" wire:navigate>
-        <flux:icon name="arrow-left" />
-        Back to Dashboard
-    </flux:button>
-</div>
     <!-- Filters -->
     <div class="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <!-- Search -->
             <div class="flex-1">
-                <flux:input
-                    wire:model.live.debounce.300ms="search"
-                    placeholder="Search by product name or sale ID..."
-                    icon="magnifying-glass"
-                />
+                <flux:input wire:model.live.debounce.300ms="search" placeholder="Search by product name or sale ID..."
+                    icon="magnifying-glass" />
             </div>
 
             <!-- Filters -->
@@ -386,17 +386,9 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 <!-- Custom Date Range -->
                 @if($dateFilter === 'custom')
                     <div class="flex items-center gap-2">
-                        <flux:input
-                            type="date"
-                            wire:model.live="startDate"
-                            class="min-w-[140px]"
-                        />
+                        <flux:input type="date" wire:model.live="startDate" class="min-w-[140px]" />
                         <flux:text class="text-neutral-500">to</flux:text>
-                        <flux:input
-                            type="date"
-                            wire:model.live="endDate"
-                            class="min-w-[140px]"
-                        />
+                        <flux:input type="date" wire:model.live="endDate" class="min-w-[140px]" />
                     </div>
                 @endif
 
@@ -482,11 +474,17 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                         @endif
                     </flux:text>
                 </div>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:flex lg:gap-6">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:flex lg:gap-6">
                     <div class="text-center">
                         <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
                         <flux:text class="text-lg font-bold text-green-600 dark:text-green-400 sm:text-xl">
                             ₦{{ number_format($totalSalesAmount, 2) }}
+                        </flux:text>
+                    </div>
+                    <div class="text-center">
+                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Profit</flux:text>
+                        <flux:text class="text-lg font-bold text-indigo-600 dark:text-indigo-400 sm:text-xl">
+                            ₦{{ number_format($activeSales->sum(fn($sale) => $sale->total_profit), 2) }}
                         </flux:text>
                     </div>
                     <div class="text-center">
@@ -513,14 +511,30 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 <table class="w-full min-w-[900px]">
                     <thead class="border-b border-neutral-200 dark:border-neutral-700">
                         <tr>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sale ID</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Shop</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Salesperson</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Items</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Amount</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Status</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Date</th>
-                            <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Actions</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Sale ID</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Shop</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Salesperson</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Items</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Total Amount</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Status</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Date</th>
+                            <th
+                                class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -528,7 +542,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                             <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                 <td class="px-3 sm:px-6 py-3">
                                     <div>
-                                        <flux:text class="font-mono text-sm font-medium">#{{ substr($sale->id, -8) }}</flux:text>
+                                        <flux:text class="font-mono text-sm font-medium">#{{ substr($sale->id, -8) }}
+                                        </flux:text>
                                         <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">
                                             {{ $sale->items->count() }} items
                                         </flux:text>
@@ -542,12 +557,14 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     <div class="flex items-center gap-3">
-                                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium dark:bg-neutral-700">
+                                        <div
+                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium dark:bg-neutral-700">
                                             {{ $sale->salesperson->initials() }}
                                         </div>
                                         <div>
                                             <flux:text class="font-medium">{{ $sale->salesperson->name }}</flux:text>
-                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ $sale->salesperson->email }}</flux:text>
+                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
+                                                {{ $sale->salesperson->email }}</flux:text>
                                         </div>
                                     </div>
                                 </td>
@@ -572,13 +589,16 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                     <flux:text class="font-medium text-green-600 dark:text-green-400">
                                         ₦{{ number_format($sale->total_amount, 2) }}
                                     </flux:text>
+                                    <flux:text class="text-[11px] text-blue-600 dark:text-blue-400 font-medium block">
+                                        Profit: ₦{{ number_format($sale->total_profit, 2) }} ({{ $sale->getProfitMargin() }}%)
+                                    </flux:text>
                                     @if($sale->total_paid > 0)
-                                        <flux:text class="text-xs text-blue-600 dark:text-blue-400 block">
+                                        <flux:text class="text-xs text-blue-600/70 dark:text-blue-400/70 block">
                                             Paid: ₦{{ number_format($sale->total_paid, 2) }}
                                         </flux:text>
                                     @endif
                                     @if($sale->balance > 0)
-                                        <flux:text class="text-xs text-amber-600 dark:text-amber-400 block">
+                                        <flux:text class="text-xs text-amber-600/70 dark:text-amber-400/70 block">
                                             Balance: ₦{{ number_format($sale->balance, 2) }}
                                         </flux:text>
                                     @endif
@@ -598,19 +618,17 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     <div>
-                                        <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}</flux:text>
-                                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ $sale->created_at->format('g:i A') }}</flux:text>
+                                        <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}
+                                        </flux:text>
+                                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
+                                            {{ $sale->created_at->format('g:i A') }}</flux:text>
                                     </div>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3">
                                     @if($sale->status !== 'cancelled')
-                                        <flux:button 
-                                            variant="outline" 
-                                            icon="x-circle"
-                                            size="sm" 
+                                        <flux:button variant="outline" icon="x-circle" size="sm"
                                             wire:click="$set('saleToCancel', '{{ $sale->id }}')"
-                                            class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                                        >
+                                            class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
                                             Cancel
                                         </flux:button>
                                     @else
@@ -628,7 +646,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                 {{ $this->sales->links() }}
             </div>
 
-           
+
         @else
             <div class="py-12 text-center">
                 <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
@@ -673,12 +691,8 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
                     <flux:button variant="outline" wire:click="$set('saleToCancel', null)">
                         Keep Sale
                     </flux:button>
-                    <flux:button 
-                        variant="primary" 
-                        icon="x-circle"
-                        wire:click="cancelSale('{{ $saleToCancel }}')"
-                        class="bg-red-600 hover:bg-red-700 focus:ring-red-500"
-                    >
+                    <flux:button variant="primary" icon="x-circle" wire:click="cancelSale('{{ $saleToCancel }}')"
+                        class="bg-red-600 hover:bg-red-700 focus:ring-red-500">
                         Yes, Cancel Sale
                     </flux:button>
                 </div>
@@ -688,16 +702,16 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Report'])] class exten
     <!-- Flash Message -->
     @if (session()->has('error'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="error" :timeout="5000">
-            {{ session('error') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="error" :timeout="5000">
+                {{ session('error') }}
+            </x-ui.alert>
+        </div>
     @endif
     @if (session()->has('success'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="success" :timeout="5000">
-            {{ session('success') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="success" :timeout="5000">
+                {{ session('success') }}
+            </x-ui.alert>
+        </div>
     @endif
 </div>

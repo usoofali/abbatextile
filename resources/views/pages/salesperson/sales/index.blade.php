@@ -32,7 +32,8 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
 
     public function getSalesProperty()
     {
-        if (!$this->shop) return collect();
+        if (!$this->shop)
+            return collect();
 
         $user = Auth::user();
         $query = $user->salesTransactions()
@@ -42,7 +43,7 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                     $q->whereHas('items.product', function ($productQuery) {
                         $productQuery->where('name', 'like', '%' . $this->search . '%');
                     })
-                    ->orWhere('id', 'like', '%' . $this->search . '%');
+                        ->orWhere('id', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->dateFilter !== 'all', function ($query) {
@@ -139,11 +140,8 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
             <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <!-- Search -->
                 <div class="flex-1">
-                    <flux:input
-                        wire:model.live.debounce.300ms="search"
-                        placeholder="Search sales by product name or sale ID..."
-                        icon="magnifying-glass"
-                    />
+                    <flux:input wire:model.live.debounce.300ms="search"
+                        placeholder="Search sales by product name or sale ID..." icon="magnifying-glass" />
                 </div>
 
                 <!-- Date Filters -->
@@ -152,11 +150,11 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                     <div class="flex items-center gap-2">
                         <flux:label value="Date Range:" class="shrink-0 text-sm font-medium" />
                         <flux:select wire:model.live="dateFilter" class="min-w-[120px]">
-                            <option value="all">All Time</option>
                             <option value="today">Today</option>
                             <option value="week">This Week</option>
                             <option value="month">This Month</option>
                             <option value="year">This Year</option>
+                            <option value="all">All Time</option>
                             <option value="custom">Custom Range</option>
                         </flux:select>
                     </div>
@@ -164,17 +162,9 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                     <!-- Custom Date Range -->
                     @if($dateFilter === 'custom')
                         <div class="flex items-center gap-2">
-                            <flux:input
-                                type="date"
-                                wire:model.live="startDate"
-                                class="min-w-[140px]"
-                            />
+                            <flux:input type="date" wire:model.live="startDate" class="min-w-[140px]" />
                             <flux:text class="text-neutral-500">to</flux:text>
-                            <flux:input
-                                type="date"
-                                wire:model.live="endDate"
-                                class="min-w-[140px]"
-                            />
+                            <flux:input type="date" wire:model.live="endDate" class="min-w-[140px]" />
                         </div>
                     @endif
 
@@ -225,11 +215,21 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                     <table class="w-full min-w-[800px]">
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
                             <tr>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sale ID</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Items</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Amount</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Status</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Date</th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                    Sale ID</th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                    Items</th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                    Total Amount</th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                    Status</th>
+                                <th
+                                    class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                                    Date</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -237,7 +237,8 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                                 <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-3 sm:px-6 py-3">
                                         <div>
-                                            <flux:text class="font-mono text-sm font-medium">#{{ substr($sale->id, -8) }}</flux:text>
+                                            <flux:text class="font-mono text-sm font-medium">#{{ substr($sale->id, -8) }}
+                                            </flux:text>
                                             <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">
                                                 {{ $sale->items->count() }} items
                                             </flux:text>
@@ -285,48 +286,50 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
                                         <div>
-                                            <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}</flux:text>
-                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ $sale->created_at->format('g:i A') }}</flux:text>
+                                            <flux:text class="text-sm font-medium">{{ $sale->created_at->format('M j, Y') }}
+                                            </flux:text>
+                                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">
+                                                {{ $sale->created_at->format('g:i A') }}</flux:text>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                </table>
-            </div>
+                    </table>
+                </div>
 
-            <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
-                {{ $this->sales->links() }}
-            </div>
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
+                    {{ $this->sales->links() }}
+                </div>
 
-            <!-- Summary -->
-            <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
-                <div class="grid gap-4 md:grid-cols-4">
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
-                        <flux:text class="text-2xl font-bold">{{ $this->sales->count() }}</flux:text>
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
-                        <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
-                            ₦{{ number_format($this->sales->sum('total_amount'), 2) }}
-                        </flux:text>
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
-                        <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                            ₦{{ number_format($this->sales->sum('total_paid'), 2) }}
-                        </flux:text>
-                    </div>
-                    <div class="text-center">
-                        <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
-                        <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                            ₦{{ number_format($this->sales->avg('total_amount') ?? 0, 2) }}
-                        </flux:text>
+                <!-- Summary -->
+                <div class="border-t border-neutral-200 p-6 dark:border-neutral-700">
+                    <div class="grid gap-4 md:grid-cols-4">
+                        <div class="text-center">
+                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                            <flux:text class="text-2xl font-bold">{{ $this->sales->count() }}</flux:text>
+                        </div>
+                        <div class="text-center">
+                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</flux:text>
+                            <flux:text class="text-2xl font-bold text-green-600 dark:text-green-400">
+                                ₦{{ number_format($this->sales->sum('total_amount'), 2) }}
+                            </flux:text>
+                        </div>
+                        <div class="text-center">
+                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Total Paid</flux:text>
+                            <flux:text class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                ₦{{ number_format($this->sales->sum('total_paid'), 2) }}
+                            </flux:text>
+                        </div>
+                        <div class="text-center">
+                            <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">Average Sale</flux:text>
+                            <flux:text class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                ₦{{ number_format($this->sales->avg('total_amount') ?? 0, 2) }}
+                            </flux:text>
+                        </div>
                     </div>
                 </div>
-            </div>
             @else
                 <div class="py-12 text-center">
                     <flux:icon name="shopping-cart" class="mx-auto size-12 text-neutral-400" />
@@ -363,16 +366,16 @@ new #[Layout('components.layouts.app', ['title' => 'My Sales'])] class extends C
     <!-- Flash Message -->
     @if (session()->has('error'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="error" :timeout="5000">
-            {{ session('error') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="error" :timeout="5000">
+                {{ session('error') }}
+            </x-ui.alert>
+        </div>
     @endif
     @if (session()->has('success'))
         <div class="fixed bottom-4 right-4 z-50">
-        <x-ui.alert variant="success" :timeout="5000">
-            {{ session('success') }}
-        </x-ui.alert>
-    </div>
+            <x-ui.alert variant="success" :timeout="5000">
+                {{ session('success') }}
+            </x-ui.alert>
+        </div>
     @endif
 </div>

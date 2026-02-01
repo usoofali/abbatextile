@@ -23,6 +23,8 @@ class Sale extends Model
         'status',
     ];
 
+    protected $appends = ['total_paid', 'balance', 'total_profit'];
+
     protected function casts(): array
     {
         return [
@@ -113,6 +115,28 @@ class Sale extends Model
         } elseif ($this->isPartiallyPaid()) {
             $this->update(['status' => 'pending']);
         }
+    }
+
+    /**
+     * Get total profit from this sale
+     */
+    public function getTotalProfitAttribute(): float
+    {
+        return $this->items->sum(function ($item) {
+            return $item->calculateProfit();
+        });
+    }
+
+    /**
+     * Get overall profit margin percentage for this sale
+     */
+    public function getProfitMargin(): float
+    {
+        if ($this->total_amount <= 0) {
+            return 0;
+        }
+
+        return ($this->total_profit / $this->total_amount) * 100;
     }
 
     /**

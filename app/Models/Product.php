@@ -23,16 +23,18 @@ class Product extends Model
         'photo',
         'barcode',
         'price_per_unit',
+        'purchase_price',
         'stock_quantity',
     ];
 
-    protected $appends = ['current_value', 'total_sold', 'total_revenue'];
+    protected $appends = ['current_value', 'total_sold', 'total_revenue', 'total_profit', 'profit_margin'];
 
     protected function casts(): array
     {
         return [
             'stock_quantity' => 'decimal:2',
             'price_per_unit' => 'decimal:2',
+            'purchase_price' => 'decimal:2',
         ];
     }
 
@@ -44,7 +46,7 @@ class Product extends Model
             if (empty($product->id)) {
                 $product->id = (string) Str::uuid();
             }
-            
+
             if (empty($product->barcode)) {
                 $product->barcode = self::generateBarcode();
             }
@@ -106,11 +108,46 @@ class Product extends Model
     }
 
     /**
-     * Get current inventory value
+     * Get current inventory value (based on sale price)
      */
     public function getCurrentValueAttribute(): float
     {
         return $this->stock_quantity * $this->price_per_unit;
+    }
+
+    /**
+     * Get current inventory cost (based on purchase price)
+     */
+    public function getInventoryCostAttribute(): float
+    {
+        return $this->stock_quantity * ($this->purchase_price ?? 0);
+    }
+
+    /**
+     * Get total profit from all sales of this product
+     */
+    public function getTotalProfitAttribute(): float
+    {
+        return $this->saleItems()
+            ->selectRaw('SUM((price - purchase_price) * quantity) as profit')
+            ->value('profit') ?? 0;
+    }
+
+    /**
+     * Get profit margin percentage for this product
+     */
+    public function getProfitMarginAttribute(): float
+    {
+        if ($this->price_per_unit <= 0) {
+            return 0;
+        }
+
+        $purchasePrice = $this->purchase_price ?? 0;
+        if ($purchasePrice <= 0) {
+            return 100;
+        }
+
+        return (($this->price_per_unit - $purchasePrice) / $this->price_per_unit) * 100;
     }
 
     /**

@@ -149,7 +149,7 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
 
     @if($shop)
         <!-- Stats Cards -->
-        <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
                     <div class="rounded-none bg-blue-100 p-2 sm:p-3 dark:bg-blue-900/20">
@@ -164,59 +164,32 @@ new #[Layout('components.layouts.app', ['title' => 'Sales Dashboard'])] class ex
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-none bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20">
+                    <div class="rounded-none bg-purple-100 p-2 sm:p-3 dark:bg-purple-900/20 shrink-0">
                         <flux:icon name="shopping-cart" class="size-5 sm:size-6 text-purple-600 dark:text-purple-400" />
                     </div>
-                    <div class="min-w-0 flex-1">
+                    <div class="min-w-0 flex-1 overflow-hidden">
                         <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">My Total Sales</flux:text>
-                        <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{{ number_format($totalSales) }}</div>
+                        <div class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100 truncate">{{ number_format($totalSales) }}</div>
                     </div>
                 </div>
             </div>
 
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
-                    <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
+                    <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20 shrink-0">
                         <flux:icon name="currency-dollar" class="size-5 sm:size-6 text-green-600 dark:text-green-400" />
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">My Total Sales</flux:text>
-                        <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">₦{{ number_format($totalRevenue, 2) }}</div>
+                    <div class="min-w-0 flex-1 overflow-hidden">
+                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">My Total Revenue</flux:text>
+                        <div class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100 truncate">₦{{ number_format($totalRevenue, 2) }}</div>
                     </div>
                 </div>
             </div>
-
-                @if(Auth::user()->isSalesperson() && config('app.mode') === 'slave')
-                <div wire:poll.15s="checkConnectivity" class="rounded-xl border {{ $isOnline ? 'border-green-200' : 'border-red-200' }} bg-white p-6 dark:bg-gray-800 {{ $isOnline ? 'dark:border-green-700' : 'dark:border-red-700' }}">
-                    <div class="flex items-center gap-3">
-                        <div class="rounded-none bg-green-100 p-2 sm:p-3 dark:bg-green-900/20">
-                            <flux:icon name="wifi" class="size-5 sm:size-6 {{ $isOnline ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400' }}" />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Internet Connection</p>
-                            <p class="text-2xl font-bold {{ $isOnline ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400' }}">{{ $isOnline ? 'Online' : 'Offline' }}</p>
-                        </div>
-                    </div>
-                </div>
-                @endif
-            <!-- </div> -->
         </div>
         
 
         <!-- Additional Stats Cards -->
-        <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
-                <div class="flex items-center gap-3">
-                    <div class="rounded-none bg-yellow-100 p-2 sm:p-3 dark:bg-yellow-900/20">
-                        <flux:icon name="clock" class="size-5 sm:size-6 text-yellow-600 dark:text-yellow-400" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <flux:text class="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-400">Today's Sales</flux:text>
-                        <div class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{{ $todaySales }}</div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <div class="rounded-xl border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-700 dark:bg-neutral-800">
                 <div class="flex items-center gap-3">
                     <div class="rounded-none bg-orange-100 p-2 sm:p-3 dark:bg-orange-900/20">

@@ -22,7 +22,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     {
         $user = Auth::user();
         $this->shop = $user->managedShop;
-        
+
         if (!$this->shop) {
             session()->flash('error', 'No shop assigned to you.');
             return;
@@ -31,13 +31,14 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 
     public function getProductsProperty()
     {
-        if (!$this->shop) return collect();
-        
+        if (!$this->shop)
+            return collect();
+
         return $this->shop->products()
             ->with(['category', 'saleItems'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%');
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(15);
@@ -55,12 +56,13 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 
     public function searchBarcodeProducts(): void
     {
-        if (!$this->shop) return;
+        if (!$this->shop)
+            return;
 
         $this->barcodeProducts = $this->shop->products()
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('name', 'like', '%' . $this->barcodeSearch . '%')
-                      ->orWhere('barcode', 'like', '%' . $this->barcodeSearch . '%');
+                    ->orWhere('barcode', 'like', '%' . $this->barcodeSearch . '%');
             })
             ->limit(10)
             ->get();
@@ -70,13 +72,13 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     public function toggleProductSelection($productId): void
     {
         $productId = (string) $productId;
-        
+
         if (in_array($productId, $this->selectedProducts)) {
             $this->selectedProducts = array_values(array_diff($this->selectedProducts, [$productId]));
         } else {
             $this->selectedProducts = array_values([...$this->selectedProducts, $productId]);
         }
-        
+
         // Force reactivity
         $this->dispatch('selected-products-updated');
     }
@@ -106,7 +108,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
 
         // Store the selected products in session and redirect
         session(['barcode_products' => $validProductIds]);
-        
+
         // Redirect to the barcode printable Volt component
         $this->redirectRoute('manager.products.barcodes');
     }
@@ -155,7 +157,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
     public function promptDelete($productId): void
     {
         $product = Product::find($productId);
-        
+
         // Verify the product belongs to the manager's shop
         if (!$product || $product->shop_id !== $this->shop->id) {
             session()->flash('error', 'Product not found in your shop.');
@@ -213,9 +215,9 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                         <thead class="border-b border-neutral-200 dark:border-neutral-700">
                             <tr>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Product</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Price / Unit</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Pricing</th>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Stock</th>
-                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sales Stats</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Sales & Profit</th>
                                 <th class="px-3 sm:px-6 py-3 text-left text-sm font-medium text-neutral-600 dark:text-neutral-400">Actions</th>
                             </tr>
                         </thead>
@@ -233,12 +235,12 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                             @endif
                                             <div>
                                                 <flux:text class="font-medium">{{ $product->name }} | {{ ucfirst($product->unit_type) }}</flux:text>
-                                                
+
                                                 @if($product->description)
                                                     <flux:text class="text-sm text-neutral-600 dark:text-neutral-400">{{ Str::limit($product->description, 50) }}</flux:text>
                                                 @endif
                                                 <div class="flex items-center gap-2 mt-1">
-                                                    
+
                                                     @if($product->stock_quantity < 20)
                                                         <flux:badge variant="amber" size="sm">Low Stock</flux:badge>
                                                     @endif
@@ -255,8 +257,22 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
-                                        <div class="text-sm">
-                                            <flux:text class="font-medium">₦{{ number_format($product->price_per_unit, 2) }} / {{ $product->unit_type }}</flux:text>
+                                        <div class="text-sm space-y-1">
+                                            <div>
+                                                <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">Sale Price</flux:text>
+                                                <flux:text class="font-medium block">₦{{ number_format($product->price_per_unit, 2) }}</flux:text>
+                                            </div>
+                                            @if($product->purchase_price && $product->purchase_price > 0)
+                                                <div>
+                                                    <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">Cost</flux:text>
+                                                    <flux:text class="block">₦{{ number_format($product->purchase_price, 2) }}</flux:text>
+                                                </div>
+                                                <div class="pt-1">
+                                                    <flux:badge variant="green" size="sm">
+                                                        {{ number_format($product->profit_margin, 1) }}% margin
+                                                    </flux:badge>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
@@ -269,11 +285,24 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                                         </flux:text>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
-                                        <div class="text-sm">
-                                            <flux:text class="font-medium">{{ number_format($product->total_sold) }} sold</flux:text>
-                                            <flux:text class="text-neutral-600 dark:text-neutral-400">
-                                                ₦{{ number_format($product->total_revenue, 2) }} revenue
-                                            </flux:text>
+                                        <div class="text-sm space-y-1">
+                                            <div>
+                                                <flux:text class="font-medium">{{ number_format($product->total_sold) }} sold</flux:text>
+                                            </div>
+                                            <div>
+                                                <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">Revenue:</flux:text>
+                                                <flux:text class="text-green-600 dark:text-green-400 font-medium">
+                                                    ₦{{ number_format($product->total_revenue, 2) }}
+                                                </flux:text>
+                                            </div>
+                                            @if($product->purchase_price && $product->purchase_price > 0)
+                                                <div>
+                                                    <flux:text class="text-xs text-neutral-600 dark:text-neutral-400">Profit:</flux:text>
+                                                    <flux:text class="text-blue-600 dark:text-blue-400 font-medium">
+                                                        ₦{{ number_format($product->total_profit, 2) }}
+                                                    </flux:text>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="px-3 sm:px-6 py-3">
@@ -304,7 +333,7 @@ new #[Layout('components.layouts.app', ['title' => 'Manage Products'])] class ex
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Pagination -->
                 <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-700">
                     {{ $this->products->links() }}

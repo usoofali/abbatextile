@@ -17,6 +17,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
     public $photo = null;
     public $barcode = '';
     public $price_per_unit = '';
+    public $purchase_price = '';
     public $stock_quantity = '';
     public $category_id = '';
     public $categories = [];
@@ -42,6 +43,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
             'photo' => 'nullable|image|max:2048',
             'barcode' => 'nullable|string|max:255|unique:products,barcode',
             'price_per_unit' => 'required|numeric|min:0',
+            'purchase_price' => 'nullable|numeric|min:0',
             'stock_quantity' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
         ];
@@ -75,6 +77,7 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
             'photo' => $photoPath,
             'barcode' => $this->barcode ?: null,
             'price_per_unit' => $this->price_per_unit,
+            'purchase_price' => $this->purchase_price ?: 0,
             'stock_quantity' => $this->stock_quantity,
         ]);
 
@@ -162,14 +165,31 @@ new #[Layout('components.layouts.app', ['title' => 'Create Product'])] class ext
                             <div class="grid gap-4 md:grid-cols-2">
                                 <flux:input
                                     wire:model="price_per_unit"
-                                    label="Price per {{ $current_unit }}"
+                                    label="Sale Price per {{ $current_unit }}"
                                     type="number"
                                     step="0.01"
                                     min="0"
                                     placeholder="0.00"
                                     required
                                 />
+                                <flux:input
+                                    wire:model="purchase_price"
+                                    label="Purchase Price per {{ $current_unit }}"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
+                                />
                             </div>
+                            @if($price_per_unit && $purchase_price && $purchase_price > 0)
+                                <div class="rounded-lg bg-green-50 dark:bg-green-900/20 p-3">
+                                    <flux:text class="text-sm text-green-800 dark:text-green-200">
+                                        <strong>Profit Margin:</strong> 
+                                        {{ number_format((($price_per_unit - $purchase_price) / $price_per_unit) * 100, 2) }}%
+                                        (₦{{ number_format($price_per_unit - $purchase_price, 2) }} per {{ $current_unit }})
+                                    </flux:text>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Stock Information -->

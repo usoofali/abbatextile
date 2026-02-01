@@ -19,6 +19,7 @@ class SaleItem extends Model
         'product_id',
         'quantity',
         'price',
+        'purchase_price',
         'subtotal',
     ];
 
@@ -27,6 +28,7 @@ class SaleItem extends Model
         return [
             'quantity' => 'decimal:2',
             'price' => 'decimal:2',
+            'purchase_price' => 'decimal:2',
             'subtotal' => 'decimal:2',
         ];
     }
@@ -37,7 +39,12 @@ class SaleItem extends Model
             if (empty($saleItem->id)) {
                 $saleItem->id = (string) Str::uuid();
             }
-            
+
+            // Auto-populate purchase_price from product if not set
+            if (is_null($saleItem->purchase_price) && $saleItem->product) {
+                $saleItem->purchase_price = (float) ($saleItem->product->purchase_price ?? 0);
+            }
+
             // Auto-calculate subtotal
             $saleItem->subtotal = $saleItem->calculateSubtotal();
         });
@@ -69,5 +76,31 @@ class SaleItem extends Model
     public function calculateSubtotal(): float
     {
         return $this->quantity * $this->price;
+    }
+
+    /**
+     * Calculate profit for this sale item
+     */
+    public function calculateProfit(): float
+    {
+        $purchasePrice = $this->purchase_price ?? 0;
+        return ($this->price - $purchasePrice) * $this->quantity;
+    }
+
+    /**
+     * Get profit margin percentage for this sale item
+     */
+    public function getProfitMargin(): float
+    {
+        if ($this->price <= 0) {
+            return 0;
+        }
+
+        $purchasePrice = $this->purchase_price ?? 0;
+        if ($purchasePrice <= 0) {
+            return 100;
+        }
+
+        return (($this->price - $purchasePrice) / $this->price) * 100;
     }
 }
